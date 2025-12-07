@@ -201,3 +201,44 @@ document.addEventListener("DOMContentLoaded", () => {
     form.reset();
   });
 })();
+// =========================
+// PRICING PAGE MINI-CHAT
+// =========================
+
+(function setupPricingChat() {
+  const chatWindow = document.getElementById("pricing-chat-window");
+  const chatForm = document.getElementById("pricing-chat-form");
+  const chatInput = document.getElementById("pricing-chat-input");
+
+  if (!chatWindow || !chatForm || !chatInput) return;
+
+  function appendMessage(text, sender = "bot") {
+    const msg = document.createElement("div");
+    msg.className = `chat-message ${sender}`;
+    msg.innerHTML = `<p>${text}</p>`;
+    chatWindow.appendChild(msg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  function simulatePlanResponse(userText) {
+    const reply =
+      "Based on what you shared, here’s a simple rule of thumb:\n\n" +
+      "• If you love DIY and just want direction → AI Starter.\n" +
+      "• If you’re busy and want more structure → AI Core.\n" +
+      "• If you have a big deadline (mortgage, major move, etc.) → AI Elite.\n\n" +
+      "This is not legal or financial advice — just a starting point.";
+
+    setTimeout(() => appendMessage(reply.replace(/\n/g, "<br>"), "bot"), 600);
+  }
+
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    appendMessage(text, "user");
+    chatInput.value = "";
+    simulatePlanResponse(text);
+  });
+})();
+
