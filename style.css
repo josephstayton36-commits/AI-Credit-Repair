@@ -763,3 +763,58 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* ===== Upload Page Styles ===== */
+.upload-section {
+  padding: 3rem 1rem;
+  background: #0b1220; /* Deep navy */
+  color: #f1f5f9;
+  display: flex;
+  justify-content: center;
+}
+
+.upload-card {
+  max-width: 850px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem 2.5rem;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.upload-card h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.upload-card h2 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-card ol {
+  margin-left: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-upload {
+  display: inline-block;
+  padding: 1rem 1.8rem;
+  background: linear-gradient(135deg, #ffd700, #ffbf00);
+  color: #111;
+  font-weight: 700;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+}
+
+.btn-upload:hover {
+  transform: scale(1.03);
+  box-shadow: 0 18px 40px rgba(255, 215, 0, 0.6);
+}
+
+.note {
+  margin-top: 1rem;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
