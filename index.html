@@ -1,557 +1,187 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Credit Repair | Smart, Legal, AI-Powered Credit Help</title>
+  <title>AI Credit Repair | Smart Disputes. Real Results.</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="AI Credit Repair uses smart disputes, real laws, and automation to help you clean up your credit and rebuild your financial life."
+  />
 
-  <!-- BASIC SEO -->
-  <meta name="description"
-        content="AI Credit Repair uses real credit laws + advanced AI to help you clean up your reports, dispute errors, and rebuild your credit with smart, secure technology." />
-  <meta name="keywords"
-        content="AI credit repair, credit repair, dispute errors, credit score help, fix credit report, credit coaching" />
-
-  <!-- OPEN GRAPH FOR SOCIAL SHARING -->
-  <meta property="og:title" content="AI Credit Repair | Smart, Legal, AI-Powered Credit Help" />
-  <meta property="og:description"
-        content="Ask AI any credit question, get a step-by-step plan, and let smart automation help you repair your credit the right way." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://josephstayton36-commits.github.io/AI-Credit-Repair/" />
-  <meta property="og:image" content="https://josephstayton36-commits.github.io/AI-Credit-Repair/assets/ai-credit-repair-og.png" />
-
-  <!-- STRUCTURED DATA (SCHEMA.ORG) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    'name': "AI Credit Repair",
-    "url": "https://josephstayton36-commits.github.io/AI-Credit-Repair/",
-    "description": "AI-powered credit repair service combining credit laws with smart automation to help consumers dispute errors and rebuild credit.",
-    "areaServed": "US",
-    "serviceType": "Credit Repair",
-    "provider": {
-      "@type": "Person",
-      "name": "Joseph C. Stayton"
-    }
-  }
-  </script>
-  // =========================
-// LOAD AI CREDIT REPAIR DATA
-// =========================
-async function loadCreditData() {
-  const res = await fetch("data.json");
-  if (!res.ok) {
-    console.error("Failed to load data.json");
-    return null;
-  }
-  return await res.json();
-}
-
-// =========================
-// AI RESPONSE HANDLER
-// =========================
-async function aiReply(userQuestion) {
-  const data = await loadCreditData();
-  if (!data) return;
-
-  const responses = data.aiResponses;
-  const random = responses[Math.floor(Math.random() * responses.length)];
-
-  const output = document.querySelector(".ai-output");
-
-  output.innerHTML = `
-    <div class="ai-bubble">
-      <div class="ai-label">${data.brandName} • Ask AI</div>
-      <p><strong>Q:</strong> ${userQuestion || "No question asked — but we still got you."}</p>
-      <p><strong>AI:</strong> ${random}</p>
-    </div>
-  `;
-}
-
-// =========================
-// SHOW RANDOM CREDIT LAW
-// =========================
-async function showRandomLaw() {
-  const data = await loadCreditData();
-  if (!data) return;
-
-  const law = data.creditLaws[Math.floor(Math.random() * data.creditLaws.length)];
-  const lawBox = document.querySelector(".law-box");
-
-  lawBox.innerHTML = `
-    <h3>${law.title}</h3>
-    <p>${law.summary}</p>
-    <p><strong>Power Move:</strong> ${law.power}</p>
-  `;
-}
-
-// =========================
-// SHOW SCORE BOOST TIP
-// =========================
-async function showScoreTip() {
-  const data = await loadCreditData();
-  if (!data) return;
-
-  const tip = data.scoreBoostTips[Math.floor(Math.random() * data.scoreBoostTips.length)];
-  const tipBox = document.querySelector(".tip-box");
-
-  tipBox.textContent = "🔥 " + tip;
-}
-
-// =========================
-// HOOK UP BUTTONS
-// =========================
-document.addEventListener("DOMContentLoaded", () => {
-  const askBtn = document.querySelector("#askAI");
-  const lawBtn = document.querySelector("#showLaw");
-  const tipBtn = document.querySelector("#showTip");
-
-  if (askBtn) {
-    askBtn.addEventListener("click", () => {
-      const q = document.querySelector("#userQuestion").value;
-      aiReply(q);
-    });
-  }
-
-  if (lawBtn) {
-    lawBtn.addEventListener("click", showRandomLaw);
-  }
-
-  if (tipBtn) {
-    tipBtn.addEventListener("click", showScoreTip);
-  }
-});
-
+  <!-- Main Styles -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Main Script (uses data.json) -->
   <script defer src="script.js"></script>
 </head>
 
 <body>
-  <section class="ai-credit-section">
-  <h2>Ask AI Credit Repair</h2>
-  <p>Ask any credit question. Our AI uses real laws and real strategy to guide you.</p>
+  <!-- ======================= HEADER ======================= -->
+  <header class="site-header">
+    <div class="container nav">
+      <div class="brand">
+        <!-- Optional logo image later -->
+        <!-- <img src="assets/logo.png" alt="AI Credit Repair Logo" class="logo" /> -->
 
-  <div class="ai-input-row">
-    <input
-      id="userQuestion"
-      type="text"
-      placeholder="Example: How do I remove a charge-off?"
-    />
-    <button id="askAI">Ask AI</button>
-  </div>
-
-  <div class="ai-output"></div>
-</section>
-
-<hr>
-
-<section class="law-section">
-  <h2>Credit Law Spotlight</h2>
-  <button id="showLaw">Show a Law</button>
-  <div class="law-box"></div>
-</section>
-
-<hr>
-
-<section class="tip-section">
-  <h2>Score Boost Tip</h2>
-  <button id="showTip">Give Me a Tip</button>
-  <div class="tip-box"></div>
-</section>
-  <div class="page-wrapper">
-    <!-- ============ HEADER / NAV ============ -->
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">
-          <div class="logo-circle">AI</div>
-          <div class="brand-text">
-            <span class="brand-name">AI Credit Repair</span>
-            <span class="brand-tagline">Smart Laws · Real Strategy · AI on Your Side</span>
-          </div>
-        </div>
-
-        <nav class="main-nav">
-          <a href="#how-it-works">How It Works</a>
-          <a href="#smart-form">Free Analysis</a>
-          <a href="#features">Why AI?</a>
-          <a href="#faq">FAQ</a>
-          <a href="snapshot.html" class="nav-cta">Your Credit Snapshot</a>
-        </nav>
-      </div>
-    </header>
-
-    <!-- ============ HERO ============ -->
-    <section class="hero" id="hero">
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <p class="eyebrow">AI-POWERED CREDIT REPAIR</p>
-          <h1>Repair your credit with <span class="highlight">AI that knows the rules.</span></h1>
-          <p class="hero-subtitle">
-            Ask real questions. Get real, law-based answers.
-            AI Credit Repair helps you dispute errors, clean up your reports, and build a stronger credit future —
-            without the confusion or pressure.
-          </p>
-
-          <div class="hero-actions">
-            <a href="#smart-form" class="btn primary-btn">Start Free Credit Analysis</a>
-            <button class="btn ghost-btn" id="open-chat-btn">Ask AI a Credit Question</button>
-          </div>
-
-          <div class="hero-trust">
-            <p><strong>Bank-level security.</strong> Encrypted forms, SSL-ready deployment, no shady shortcuts.</p>
-            <p class="disclaimer-small">
-              Not a law firm. We use publicly available laws, regulations, and best practices to help you advocate
-              for yourself with the credit bureaus and creditors.
-            </p>
-          </div>
-        </div>
-
-        <!-- HERO AI CHAT PREVIEW -->
-        <div class="hero-chat-card">
-          <div class="chat-header">
-            <span>Ask AI about your credit</span>
-            <span class="chat-status-dot"></span>
-          </div>
-          <div class="chat-window" id="chat-window">
-            <div class="chat-message bot">
-              <p>Hey 👋 I'm your AI Credit Coach. Ask me anything about credit scores, disputes, or reports.</p>
-            </div>
-          </div>
-          <form id="chat-form" class="chat-input-row">
-            <input
-              type="text"
-              id="chat-input"
-              placeholder="Example: How do I remove a late payment?"
-              autocomplete="off"
-              required
-            />
-            <button type="submit" class="btn chat-send-btn">Send</button>
-          </form>
-          <p class="chat-note">
-            Powered by NLP & AI. Initial responses are automated. For complex issues, a human can review your situation.
-          </p>
+        <div class="brand-text">
+          <span class="brand-name">AI Credit Repair</span>
+          <span class="brand-tagline">Smart Disputes. Real Results.</span>
         </div>
       </div>
-    </section>
 
-    <!-- ============ TRUST BAR ============ -->
-    <section class="trust-bar">
-      <div class="container trust-grid">
-        <div class="trust-item">
-          <span class="trust-label">AI + Human Strategy</span>
-          <p>We combine automation with real credit rules — not myths.</p>
-        </div>
-        <div class="trust-item">
-          <span class="trust-label">Secure by Design</span>
-          <p>SSL-ready deployment with encrypted forms and secure storage on the backend.</p>
-        </div>
-        <div class="trust-item">
-          <span class="trust-label">Built to Scale</span>
-          <p>Tech stack ready for growth, analytics, and additional AI tools.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ HOW IT WORKS ============ -->
-    <section class="section" id="how-it-works">
-      <div class="container">
-        <div class="section-header">
-          <h2>How AI Credit Repair Works</h2>
-          <p>Simple steps. Serious strategy. Designed to convert visitors into confident clients.</p>
-        </div>
-
-        <div class="steps-grid">
-          <div class="step-card">
-            <span class="step-number">1</span>
-            <h3>Ask AI or Start the Form</h3>
-            <p>
-              Start by asking a question in the AI chat or filling out the free analysis form.
-              The system collects key details about your goals and situation.
-            </p>
-          </div>
-
-          <div class="step-card">
-            <span class="step-number">2</span>
-            <h3>Smart Analysis & Snapshot Plan</h3>
-            <p>
-              Behind the scenes, AI maps your answers to known credit rules and dispute strategies
-              to generate a custom snapshot plan and recommended next steps.
-            </p>
-          </div>
-
-          <div class="step-card">
-            <span class="step-number">3</span>
-            <h3>Dispute, Clean, & Build</h3>
-            <p>
-              Use guided templates, timelines, and reminders to dispute errors, negotiate with
-              creditors, and build healthier credit habits over time.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ SMART FORM (LEAD CAPTURE) ============ -->
-    <section class="section alt-section" id="smart-form">
-      <div class="container smart-form-grid">
-        <div class="section-header">
-          <h2>Get Your Free AI-Powered Credit Analysis</h2>
-          <p>
-            Answer a few smart questions. Our AI will translate your answers into a simple,
-            human-readable plan you can follow.
-          </p>
-          <ul class="benefit-list">
-            <li>Know which negative items to focus on first</li>
-            <li>Learn which disputes make sense — and which don’t</li>
-            <li>Understand realistic timelines and expectations</li>
-          </ul>
-        </div>
-
-        <div class="form-card">
-          <form id="analysis-form" novalidate>
-            <div class="form-row">
-              <label for="name">Full Name</label>
-              <input type="text" id="name" name="name" required />
-            </div>
-
-            <div class="form-row">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required />
-            </div>
-
-            <div class="form-row">
-              <label for="phone">Phone (optional)</label>
-              <input type="tel" id="phone" name="phone" placeholder="xxx-xxx-xxxx" />
-            </div>
-
-            <div class="form-row">
-              <label for="score-range">Estimated Credit Score Range</label>
-              <select id="score-range" name="scoreRange" required>
-                <option value="">Select one</option>
-                <option value="300-579">Poor (300-579)</option>
-                <option value="580-669">Fair (580-669)</option>
-                <option value="670-739">Good (670-739)</option>
-                <option value="740-799">Very Good (740-799)</option>
-                <option value="800-850">Excellent (800-850)</option>
-                <option value="unknown">Not sure</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <label for="main-goal">Main Credit Goal</label>
-              <select id="main-goal" name="mainGoal" required>
-                <option value="">Select one</option>
-                <option value="buy-home">Get ready to buy a home</option>
-                <option value="buy-car">Qualify for a better auto loan</option>
-                <option value="lower-rates">Lower interest rates & cards</option>
-                <option value="recover">Recover from collections/charge-offs</option>
-                <option value="rebuild">Rebuild after a tough season</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <label for="biggest-issue">Biggest credit frustration right now</label>
-              <textarea
-                id="biggest-issue"
-                name="biggestIssue"
-                rows="4"
-                placeholder="Example: a collection that isn’t mine, late payments, or old accounts still reporting..."
-              ></textarea>
-            </div>
-
-            <div class="form-row checkbox-row">
-              <label>
-                <input type="checkbox" id="terms" required />
-                I agree to the Terms, Privacy Policy, and understand this is not legal or tax advice.
-              </label>
-            </div>
-
-            <button type="submit" class="btn primary-btn full-width">Generate My Snapshot Plan</button>
-            <p id="form-message" class="form-message"></p>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FEATURES / WHY AI ============ -->
-    <section class="section" id="features">
-      <div class="container">
-        <div class="section-header">
-          <h2>Why AI Credit Repair Hits Different</h2>
-          <p>Most credit repair is either old-school or automated junk. This is built for what’s next.</p>
-        </div>
-
-        <div class="features-grid">
-          <div class="feature-card">
-            <h3>Natural Language Support (NLP)</h3>
-            <p>
-              Clients can type questions in plain English. NLP understands intent, routes to the correct
-              answers, and escalates to human review for complex cases.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <h3>Smart Forms, Not Static PDFs</h3>
-            <p>
-              Dynamic intake forms capture the data you actually need, validate it in real-time,
-              and send it securely to your backend for processing and follow-up.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <h3>Built for SSL & Security</h3>
-            <p>
-              Designed to sit behind SSL, with best practices for secure form handling and API calls.
-              Ready for serious hosting, not hobby projects.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <h3>SEO-Ready Out of the Box</h3>
-            <p>
-              Clean HTML structure, fast load times, and targeted copy help search engines understand
-              exactly what you do and who you help.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <h3>OpenAI-Ready Backend Hooks</h3>
-            <p>
-              Frontend is wired to talk to your backend (Node, Python, etc.). From there, you can safely
-              integrate OpenAI or other LLM APIs without exposing keys.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <h3>Analytics & Growth Ready</h3>
-            <p>
-              Structured sections and clear CTAs make it easy to plug in analytics, A/B testing,
-              funnels, and ad tracking as you scale.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FAQ ============ -->
-    <section class="section alt-section" id="faq">
-      <div class="container">
-        <div class="section-header">
-          <h2>Frequently Asked Questions</h2>
-          <p>If your question isn’t here, just ask the AI chat in the corner.</p>
-        </div>
-
-        <div class="faq-grid">
-          <div class="faq-item">
-            <h3>Is this legal? You’re using AI for credit repair.</h3>
-            <p>
-              Yes. AI is used as a tool to research public information, help organize your options,
-              and draft ideas. You still make your own decisions, and where needed, you should also
-              consult a qualified professional. We do not give legal, tax, or financial advice.
-            </p>
-          </div>
-
-          <div class="faq-item">
-            <h3>Do you work with all three credit bureaus?</h3>
-            <p>
-              We help you understand how to communicate with the major bureaus and creditors.
-              We are not affiliated with Equifax, Experian, or TransUnion.
-            </p>
-          </div>
-
-          <div class="faq-item">
-            <h3>Can the AI remove accurate negative items?</h3>
-            <p>
-              No. Accurate information that is reporting within the allowed timeframes generally
-              cannot be removed. AI helps you focus on errors, outdated items, and strategy —
-              not “magic deletion.”
-            </p>
-          </div>
-
-          <div class="faq-item">
-            <h3>Is my information secure?</h3>
-            <p>
-              The frontend is built to run over SSL. Sensitive data should be stored and processed
-              on a secure backend that you control, not directly inside the browser.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FINAL CTA / CONTACT ============ -->
-    <section class="section closing-cta" id="contact">
-      <div class="container closing-grid">
-        <div>
-          <h2>Ready to stop guessing and start repairing?</h2>
-          <p>
-            Let AI Credit Repair give you clear, real-world steps. No shame. No pressure.
-            Just a smarter way to clean up your credit.
-          </p>
-        </div>
-        <div class="closing-actions">
-          <a href="#smart-form" class="btn primary-btn">Start Free Credit Analysis</a>
-          <a href="snapshot.html" class="btn ghost-btn">See Credit Snapshot Options</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- FLOATING CHAT WIDGET -->
-    <button class="floating-chat-toggle" id="floating-chat-toggle" aria-label="Open AI chat">
-      Ask AI
-    </button>
-
-    <div class="floating-chat-panel" id="floating-chat-panel">
-      <div class="floating-chat-header">
-        <span>AI Credit Coach</span>
-        <button id="close-floating-chat" aria-label="Close chat">×</button>
-      </div>
-      <div class="floating-chat-body" id="floating-chat-body">
-        <div class="chat-message bot">
-          <p>I'm here to answer your credit questions. What's on your mind?</p>
-        </div>
-      </div>
-      <form id="floating-chat-form" class="floating-chat-input-row">
-        <input
-          type="text"
-          id="floating-chat-input"
-          placeholder="Type your question..."
-          autocomplete="off"
-          required
-        />
-        <button type="submit" class="btn chat-send-btn">Send</button>
-      </form>
+      <nav class="main-nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="snapshot.html">Credit Snapshot</a>
+        <a href="upload.html">Upload Reports</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <h3>AI Credit Repair</h3>
-          <p>AI-driven tools, real credit rules, and a clear path forward.</p>
-        </div>
-        <div>
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#smart-form">Free Analysis</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="snapshot.html">Credit Snapshot</a></li>
+  <!-- ======================= HERO ======================= -->
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <h1>Fix Your Credit With AI, Not Guesswork.</h1>
+          <p>
+            AI Credit Repair combines credit law, smart strategy, and automation
+            to challenge negative items, coach you on score growth, and guide you
+            step-by-step.
+          </p>
+          <div class="hero-actions">
+            <a href="snapshot.html" class="btn primary">Get My Credit Snapshot</a>
+            <a href="upload.html" class="btn ghost">Upload My Credit Reports</a>
+          </div>
+          <ul class="hero-points">
+            <li>⚡ Uses real laws like FCRA & FDCPA</li>
+            <li>📈 Score-boost tips based on your situation</li>
+            <li>🤖 AI guidance, human-level clarity</li>
           </ul>
         </div>
-        <div>
-          <h4>Compliance & Disclaimers</h4>
-          <p class="disclaimer-small">
-            AI Credit Repair does not provide legal, tax, or investment advice.
-            All information is educational and should be double-checked against current laws and your own situation.
-          </p>
+
+        <div class="hero-card">
+          <h2>Quick Credit Overview</h2>
+          <p>Not legal advice. Just clear strategy.</p>
+          <ul class="hero-metrics">
+            <li><span class="label">Goal:</span> 700+ Score</li>
+            <li><span class="label">Focus:</span> Collections & Charge-offs</li>
+            <li><span class="label">Plan:</span> Disputes + Utilization + Age</li>
+          </ul>
+          <a href="pricing.html" class="btn full-width">See Plans & Pricing</a>
         </div>
       </div>
-      <div class="container footer-bottom">
-        <p>© <span id="year-span"></span> AI Credit Repair. All rights reserved.</p>
+    </section>
+
+    <!-- ======================= ASK AI SECTION ======================= -->
+    <section class="ai-credit-section">
+      <h2>Ask AI Credit Repair</h2>
+      <p>
+        Ask any credit question. Our AI uses real laws and strategy to guide your next move.
+      </p>
+
+      <div class="ai-input-row">
+        <input
+          id="userQuestion"
+          type="text"
+          placeholder="Example: How do I remove a charge-off or collection?"
+        />
+        <button id="askAI">Ask AI</button>
       </div>
-    </footer>
-  </div>
+
+      <div class="ai-output">
+        <!-- JS will inject the AI response bubble here -->
+      </div>
+    </section>
+
+    <!-- ======================= LAW SPOTLIGHT ======================= -->
+    <section class="law-section">
+      <h2>Credit Law Spotlight</h2>
+      <p>
+        These are some of the core laws that protect you and your credit reports.
+      </p>
+      <button id="showLaw">Show a Law</button>
+      <div class="law-box">
+        <!-- JS will inject a random law here -->
+      </div>
+    </section>
+
+    <!-- ======================= SCORE TIP ======================= -->
+    <section class="tip-section">
+      <h2>Score Boost Tip</h2>
+      <p>
+        Small moves matter. Click below for a simple, real-world credit improvement tip.
+      </p>
+      <button id="showTip">Give Me a Tip</button>
+      <div class="tip-box">
+        <!-- JS will inject a tip here -->
+      </div>
+    </section>
+
+    <!-- ======================= HOW IT WORKS ======================= -->
+    <section class="how-it-works">
+      <div class="container">
+        <h2>How AI Credit Repair Works</h2>
+        <div class="steps-grid">
+          <div class="step">
+            <h3>1. Snapshot</h3>
+            <p>
+              We review your credit reports and identify inaccurate, incomplete,
+              and unverifiable items hurting your score.
+            </p>
+          </div>
+          <div class="step">
+            <h3>2. Strategy</h3>
+            <p>
+              Our AI highlights which laws apply and creates a plan:
+              disputes, utilization, and score-boost habits.
+            </p>
+          </div>
+          <div class="step">
+            <h3>3. Smart Disputes</h3>
+            <p>
+              You send targeted disputes, track responses, and adjust based on
+              bureau replies and score changes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h4>AI Credit Repair</h4>
+        <p>Smart disputes, real strategy, and guided next steps for your credit.</p>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="snapshot.html">Credit Snapshot</a></li>
+          <li><a href="upload.html">Upload Reports</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Disclaimer</h4>
+        <p>
+          Not legal or financial advice. Results are not guaranteed. Always review
+          your own situation and consult a professional if needed.
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <small>&copy; <span id="year"></span> AI Credit Repair. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <!-- Optional small inline script just for the year -->
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
