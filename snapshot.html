@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Elite Credit Snapshot | AI Credit Repair</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="description"
+        content="See a preview of your Elite Credit Snapshot and unlock the full $100 membership details, dispute strategy, and roadmap." />
+
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <!-- HEADER / NAV (same as home, but Snapshot link active) -->
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <div class="logo-circle">AI</div>
+          <div class="brand-text">
+            <span class="brand-name">AI Credit Repair</span>
+            <span class="brand-tagline">Smart Laws · Real Strategy · AI on Your Side</span>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <a href="index.html#how-it-works">How It Works</a>
+          <a href="index.html#smart-form">Free Analysis</a>
+          <a href="index.html#features">Why AI?</a>
+          <a href="index.html#faq">FAQ</a>
+          <a href="snapshot.html" class="nav-cta">Your Credit Snapshot</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- SNAPSHOT PAGE HERO -->
+    <section class="section" id="snapshot-hero">
+      <div class="container">
+        <h1>Your Elite Credit Snapshot</h1>
+        <p>
+          This page gives you a high-level preview of what we see in your credit picture
+          and what’s possible. Unlock the full Elite Snapshot to see the exact strategy,
+          dispute targets, and roadmap we’d use for you.
+        </p>
+      </div>
+    </section>
+
+    <!-- SNAPSHOT SECTION (moved from home) -->
+    <section id="snapshot" class="snapshot-section">
+      <div class="container">
+        <h2>Your Credit Snapshot (Preview)</h2>
+        <p class="snapshot-intro">
+          Based on what you shared, here’s a high-level preview.
+          This is just the surface. Your full Elite Snapshot includes
+          exact dispute targets, timelines, and letter strategy.
+        </p>
+
+        <div class="snapshot-preview">
+          <ul>
+            <li><strong>Overall Status:</strong> Credit is rebuildable with focused work in the next 6–12 months.</li>
+            <li><strong>Payment History:</strong> A few key negatives are holding you back more than the rest.</li>
+            <li><strong>Utilization:</strong> Balances are higher than ideal. There’s room for strategic pay-downs.</li>
+            <li><strong>Account Mix:</strong> Lacking some positive, long-standing trade lines.</li>
+            <li><strong>Big Opportunity:</strong> Removing just 1–3 items could create the biggest score jump.</li>
+          </ul>
+          <p class="snapshot-note">
+            This is a preview only. It does <em>not</em> show your exact accounts, creditors, or dispute language.
+          </p>
+        </div>
+
+        <!-- LOCKED FULL SNAPSHOT -->
+        <div class="snapshot-locked-wrapper">
+          <h3>Your Full Elite Snapshot (Locked)</h3>
+          <div class="snapshot-locked blurred" id="fullSnapshotBox">
+            <ul>
+              <li><strong>Targeted Accounts:</strong> Detailed list of which negative accounts to attack first and why.</li>
+              <li><strong>Dispute Strategy:</strong> Which laws apply, what angles we use, and how we stack rounds.</li>
+              <li><strong>Timeline:</strong> 30, 60, 90-day roadmap customized to your situation.</li>
+              <li><strong>Score Strategy:</strong> When to add trade lines, when to pay down, and what to leave alone.</li>
+              <li><strong>Template Pack:</strong> Exact letter set we’d use for you (goodwill, validation, factual disputes, etc.).</li>
+            </ul>
+            <div class="locked-overlay">
+              <span class="lock-icon">🔒</span>
+              <span class="locked-text">Full Snapshot & Membership Details – Locked</span>
+            </div>
+          </div>
+
+          <div class="snapshot-cta">
+            <p class="price-line">
+              Unlock your <strong>full Elite Snapshot + membership details</strong> for a
+              <strong>$100 one-time payment.</strong>
+            </p>
+            <button id="unlockSnapshotBtn" class="btn-primary">
+              Unlock Full Snapshot – $100
+            </button>
+            <p class="snapshot-guarantee">
+              One-time payment. No long-term contract. We give you the exact gameplan
+              people pay thousands for.
+            </p>
+          </div>
+
+          <div class="already-paid">
+            <button id="alreadyPaidToggle" class="link-btn">
+              I already paid – enter my access code
+            </button>
+            <form id="accessForm" class="access-form hidden">
+              <input
+                type="password"
+                id="accessCode"
+                placeholder="Enter your access code"
+                autocomplete="off"
+              />
+              <button type="submit" class="btn-secondary">Unlock</button>
+              <p id="accessError" class="error-message"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OPTIONAL: LINK BACK -->
+    <section class="section">
+      <div class="container">
+        <p>
+          Ready for your free analysis first?
+          <a href="index.html#smart-form">Go back to the Free AI-Powered Credit Analysis form.</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h3>AI Credit Repair</h3>
+          <p>AI-driven tools, real credit rules, and a clear path forward.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html#hero">Home</a></li>
+            <li><a href="index.html#smart-form">Free Analysis</a></li>
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Compliance & Disclaimers</h4>
+          <p class="disclaimer-small">
+            AI Credit Repair does not provide legal, tax, or investment advice.
+            All information is educational and should be double-checked against current laws and your own situation.
+          </p>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>© <span id="year-span"></span> AI Credit Repair. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
