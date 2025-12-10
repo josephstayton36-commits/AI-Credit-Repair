@@ -149,7 +149,118 @@
       </div>
     </section>
   </main>
+    <!-- ======================= CONTACT / SNAPSHOT FORM ======================= -->
+    <section class="contact-section" id="contact">
+      <div class="container">
+        <h2>Start Your AI Credit Repair Snapshot</h2>
+        <p>
+          Fill this out after you buy a membership or when you’re ready for your
+          AI Credit Repair Snapshot. We’ll review your info and reach out with
+          your next steps.
+        </p>
 
+        <form id="snapshotForm" class="contact-form">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fullName">Full Name</label>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                required
+                placeholder="First and last name"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="you@email.com"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="phone">Phone (optional)</label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Best number to reach you"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="status">What best describes you?</label>
+              <select id="status" name="status" required>
+                <option value="">Select one...</option>
+                <option value="member">
+                  I already bought a membership
+                </option>
+                <option value="snapshot">
+                  I’m ready for my credit snapshot
+                </option>
+                <option value="questions">
+                  I have questions before I start
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="scoreRange">Current Credit Score Range (estimate)</label>
+              <select id="scoreRange" name="scoreRange">
+                <option value="">Not sure / rather not say</option>
+                <option value="300-549">300 – 549</option>
+                <option value="550-619">550 – 619</option>
+                <option value="620-679">620 – 679</option>
+                <option value="680-739">680 – 739</option>
+                <option value="740+">740+</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="goal">Main Credit Goal</label>
+              <input
+                id="goal"
+                name="goal"
+                type="text"
+                placeholder="Buy a car, house, get approvals, etc."
+              />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="details">Anything we should know before we review?</label>
+            <textarea
+              id="details"
+              name="details"
+              rows="4"
+              placeholder="Collections, charge-offs, late payments, identity theft, etc."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn primary full-width">
+            Send My Snapshot Details
+          </button>
+
+          <p class="form-note">
+            No hard pull. No obligation. This just gives us what we need to
+            prepare your strategy.
+          </p>
+          <p class="form-success" id="formSuccess" hidden>
+            ✅ Thank you! Your info was sent. We’ll review it and follow up with
+            your next steps.
+          </p>
+        </form>
+      </div>
+    </section>
   <!-- ======================= FOOTER ======================= -->
   <footer class="site-footer">
     <div class="container footer-grid">
