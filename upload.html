@@ -2,58 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secure Credit Report Upload | Elite AI Credit Repair</title>
+  <title>Upload Your Credit Reports | AI Credit Repair</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+        content="Securely upload your credit reports so AI Credit Repair can review your situation and build a better strategy." />
   <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <div class="brand">
-        <img src="assets/mad_scientist.png" class="logo" alt="Mascot" />
-        <span class="brand-name">Elite <strong>AI</strong> Credit Repair</span>
+  <div class="page-wrapper">
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <div class="logo-circle">AI</div>
+          <div class="brand-text">
+            <span class="brand-name">AI Credit Repair</span>
+            <span class="brand-tagline">Smart Laws · Real Strategy · AI on Your Side</span>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <a href="index.html#how-it-works">How It Works</a>
+          <a href="index.html#smart-form">Free Analysis</a>
+          <a href="index.html#features">Why AI?</a>
+          <a href="index.html#faq">FAQ</a>
+          <a href="upload.html" class="nav-cta">Upload Reports</a>
+          <a href="snapshot.html">Elite Snapshot</a>
+        </nav>
       </div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="upload.html" class="active">Upload Reports</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-  </header>
+    </header>
 
-  <!-- ================= SECURE UPLOAD SECTION ================= -->
-  <section id="secure-upload" class="upload-section">
-    <div class="upload-card">
-      <h1>🔒 Secure Credit Report Upload</h1>
-      <p>
-        Upload your credit reports safely using our encrypted secure portal.
-        Your documents are NOT stored on our website — they are kept in a
-        protected private vault to build your personalized dispute strategy.
-      </p>
+    <section class="section" id="upload-hero">
+      <div class="container">
+        <h1>Upload Your Credit Reports</h1>
+        <p>
+          This is where you securely send us your credit reports so we can review your situation
+          and build a smarter game plan for you.
+        </p>
+      </div>
+    </section>
 
-      <h2>How to Upload:</h2>
-      <ol>
-        <li>Download your credit reports from Experian, Equifax, and TransUnion.</li>
-        <li>Save them as PDF files.</li>
-        <li>Click the upload button below.</li>
-        <li>Attach your reports and submit them securely.</li>
-      </ol>
+    <section class="section alt-section">
+      <div class="container">
+        <h2>How to Upload</h2>
+        <p>
+          For now, this page can link to a secure Dropbox, Google Drive, or other upload portal
+          that you control. Later, this can be wired to Firebase, S3, or your own backend.
+        </p>
 
-      <!-- 🔗 Replace THIS link with your secure upload portal link -->
-      <a
-        <a href="upload.html" class="btn">Upload Your Credit Reports</a>
-        class="btn-upload"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Upload Your Credit Reports 🔐
-      </a>
+        <!-- Placeholder upload block for now -->
+        <div class="form-card">
+          <p><strong>Option 1:</strong> Email your reports to: <span>your-email@example.com</span></p>
+          <p><strong>Option 2:</strong> Upload using this secure link:</p>
+          <p><a href="#!" class="btn primary-btn">Open Secure Upload Portal</a></p>
+          <p class="disclaimer-small">
+            Never text or DM your full SSN or sensitive documents through social media.
+            Always use a secure channel that you control.
+          </p>
+        </div>
 
-      <p class="note">
-        If you need help pulling your reports, text or call us anytime.
-      </p>
-    </div>
-  </section>
+        <p style="margin-top: 1.5rem;">
+          Need to pull your credit reports? Visit
+          <a href="https://www.annualcreditreport.com" target="_blank" rel="noopener">AnnualCreditReport.com</a>
+          for official access.
+        </p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h3>AI Credit Repair</h3>
+          <p>AI-driven tools, real credit rules, and a clear path forward.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html#hero">Home</a></li>
+            <li><a href="index.html#smart-form">Free Analysis</a></li>
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="upload.html">Upload Reports</a></li>
+            <li><a href="snapshot.html">Elite Snapshot</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Compliance & Disclaimers</h4>
+          <p class="disclaimer-small">
+            AI Credit Repair does not provide legal, tax, or investment advice.
+            All information is educational and should be double-checked against current laws and your own situation.
+          </p>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>© <span id="year-span"></span> AI Credit Repair. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
