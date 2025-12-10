@@ -35,6 +35,92 @@
     }
   }
   </script>
+  // =========================
+// LOAD AI CREDIT REPAIR DATA
+// =========================
+async function loadCreditData() {
+  const res = await fetch("data.json");
+  if (!res.ok) {
+    console.error("Failed to load data.json");
+    return null;
+  }
+  return await res.json();
+}
+
+// =========================
+// AI RESPONSE HANDLER
+// =========================
+async function aiReply(userQuestion) {
+  const data = await loadCreditData();
+  if (!data) return;
+
+  const responses = data.aiResponses;
+  const random = responses[Math.floor(Math.random() * responses.length)];
+
+  const output = document.querySelector(".ai-output");
+
+  output.innerHTML = `
+    <div class="ai-bubble">
+      <div class="ai-label">${data.brandName} • Ask AI</div>
+      <p><strong>Q:</strong> ${userQuestion || "No question asked — but we still got you."}</p>
+      <p><strong>AI:</strong> ${random}</p>
+    </div>
+  `;
+}
+
+// =========================
+// SHOW RANDOM CREDIT LAW
+// =========================
+async function showRandomLaw() {
+  const data = await loadCreditData();
+  if (!data) return;
+
+  const law = data.creditLaws[Math.floor(Math.random() * data.creditLaws.length)];
+  const lawBox = document.querySelector(".law-box");
+
+  lawBox.innerHTML = `
+    <h3>${law.title}</h3>
+    <p>${law.summary}</p>
+    <p><strong>Power Move:</strong> ${law.power}</p>
+  `;
+}
+
+// =========================
+// SHOW SCORE BOOST TIP
+// =========================
+async function showScoreTip() {
+  const data = await loadCreditData();
+  if (!data) return;
+
+  const tip = data.scoreBoostTips[Math.floor(Math.random() * data.scoreBoostTips.length)];
+  const tipBox = document.querySelector(".tip-box");
+
+  tipBox.textContent = "🔥 " + tip;
+}
+
+// =========================
+// HOOK UP BUTTONS
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+  const askBtn = document.querySelector("#askAI");
+  const lawBtn = document.querySelector("#showLaw");
+  const tipBtn = document.querySelector("#showTip");
+
+  if (askBtn) {
+    askBtn.addEventListener("click", () => {
+      const q = document.querySelector("#userQuestion").value;
+      aiReply(q);
+    });
+  }
+
+  if (lawBtn) {
+    lawBtn.addEventListener("click", showRandomLaw);
+  }
+
+  if (tipBtn) {
+    tipBtn.addEventListener("click", showScoreTip);
+  }
+});
 
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
