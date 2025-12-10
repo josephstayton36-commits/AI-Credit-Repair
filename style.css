@@ -1000,3 +1000,81 @@ body {
   opacity: 0.8;
   font-size: 0.9rem;
 }
+.ai-credit-section,
+.law-section,
+.tip-section {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: #0b1020;
+  color: #f5f5f5;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.ai-credit-section h2,
+.law-section h2,
+.tip-section h2 {
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+.ai-input-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ai-input-row input {
+  flex: 1;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #3a4a6a;
+  background: #050814;
+  color: #f5f5f5;
+}
+
+.ai-input-row button,
+.law-section button,
+.tip-section button {
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #1e88e5;
+  color: #fff;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.ai-input-row button:hover,
+.law-section button:hover,
+.tip-section button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.ai-bubble {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: #10172f;
+  border: 1px solid #263557;
+}
+
+.ai-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-bottom: 0.3rem;
+}
+
+.law-box,
+.tip-box {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #050814;
+  border: 1px solid #263557;
+}
