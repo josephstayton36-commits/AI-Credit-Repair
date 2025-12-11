@@ -6,37 +6,45 @@ const SITE_CONFIG = {
   creditLaws: [
     {
       title: "FCRA §609",
-      summary: "You can request all information a bureau has on you, including the source of each account.",
-      power: "Use this to force bureaus to prove an account is valid or delete it."
+      summary:
+        "You can request all information a bureau has on you, including the source of each account.",
+      power: "Use this to force bureaus to prove an account is valid or delete it.",
     },
     {
       title: "FCRA §611",
-      summary: "You have the right to dispute any inaccurate, incomplete, or unverifiable information.",
-      power: "If they can’t verify it in 30 days, it must be corrected or deleted."
+      summary:
+        "You have the right to dispute any inaccurate, incomplete, or unverifiable information.",
+      power:
+        "If they can’t verify it in 30 days, it must be corrected or deleted.",
     },
     {
       title: "FDCPA",
-      summary: "Debt collectors must follow strict rules when trying to collect.",
-      power: "Great for attacking collections that use illegal tactics or bad notices."
-    }
+      summary:
+        "Debt collectors must follow strict rules when trying to collect.",
+      power:
+        "Great for attacking collections that use illegal tactics or bad notices.",
+    },
   ],
 
   aiResponses: [
     "Your credit is fixable. What matters is the moves you make from today forward.",
     "If it’s not verified, it doesn’t belong on your report. Let’s challenge it.",
     "AI Credit Repair uses the law + strategy. We don’t guess—we attack.",
-    "Small, smart moves stack up. Your future score will not look like your past."
+    "Small, smart moves stack up. Your future score will not look like your past.",
   ],
 
   scoreBoostTips: [
     "Keep credit card utilization under 10% for the best score impact.",
     "Pay before the statement date, not just the due date.",
     "Dispute any account that is inaccurate, incomplete, or unverifiable.",
-    "Avoid closing old positive accounts—they help your age of credit."
-  ]
+    "Avoid closing old positive accounts—they help your age of credit.",
+  ],
 };
 
-// Run wiring once DOM is ready
+// =============== GLOBAL ACCESS CODE (OPTION A) ===============
+const ACCESS_CODE = "ELITE100"; // <- this is the universal code you give after Cash App payment
+const ACCESS_KEY = "aiCreditPaidAccess"; // stored in localStorage
+
 document.addEventListener("DOMContentLoaded", () => {
   applyBranding();
   wireAskAi();
@@ -44,9 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
   wireScoreBoostTips();
   wireSnapshotForm();
   wireSnapshotAccess();
+  wireUploadAccess();
   wirePricingChat();
   wireFloatingChat();
   setYearSpan();
+  applyAccessLockState(); // apply lock/unlock on every page after DOM is ready
 });
 
 // =============== BRAND NAME + TAGLINE ===============
@@ -56,6 +66,44 @@ function applyBranding() {
 
   if (brandNameEl) brandNameEl.textContent = SITE_CONFIG.brandName;
   if (taglineEl) taglineEl.textContent = SITE_CONFIG.tagline;
+}
+
+// =============== ACCESS HELPERS ===============
+function isAccessUnlocked() {
+  return localStorage.getItem(ACCESS_KEY) === "true";
+}
+
+function unlockAccess() {
+  localStorage.setItem(ACCESS_KEY, "true");
+  applyAccessLockState();
+}
+
+// Runs on page load and whenever we unlock
+function applyAccessLockState() {
+  const unlocked = isAccessUnlocked();
+
+  // Upload page lock/unlock
+  const uploadLocked = document.getElementById("uploadLocked");
+  const uploadUnlocked = document.getElementById("uploadUnlocked");
+  if (uploadLocked && uploadUnlocked) {
+    if (unlocked) {
+      uploadLocked.classList.add("hidden");
+      uploadUnlocked.classList.remove("hidden");
+    } else {
+      uploadLocked.classList.remove("hidden");
+      uploadUnlocked.classList.add("hidden");
+    }
+  }
+
+  // Snapshot page lock/unlock
+  const fullSnapshotBox = document.getElementById("fullSnapshotBox");
+  if (fullSnapshotBox) {
+    if (unlocked) {
+      fullSnapshotBox.classList.remove("blurred");
+      const overlay = fullSnapshotBox.querySelector(".locked-overlay");
+      if (overlay) overlay.remove();
+    }
+  }
 }
 
 // =============== ASK AI ABOUT CREDIT (index) ===============
@@ -72,7 +120,7 @@ function wireAskAi() {
     const question = input.value.trim();
     if (!question) {
       output.innerHTML =
-        "<p><strong>Tip:</strong> Ask something specific like “How do I deal with an old charge-off?”</p>";
+        '<p><strong>Tip:</strong> Ask something specific like “How do I deal with an old charge-off?”</p>';
       return;
     }
 
@@ -183,12 +231,10 @@ function wireSnapshotForm() {
 
 // =============== SNAPSHOT UNLOCK (snapshot.html) ===============
 function wireSnapshotAccess() {
-  const unlockBtn = document.getElementById("unlockSnapshotBtn");
   const toggleBtn = document.getElementById("alreadyPaidToggle");
   const form = document.getElementById("accessForm");
   const codeInput = document.getElementById("accessCode");
   const error = document.getElementById("accessError");
-  const box = document.getElementById("fullSnapshotBox");
 
   if (toggleBtn && form) {
     toggleBtn.addEventListener("click", () => {
@@ -197,16 +243,13 @@ function wireSnapshotAccess() {
     });
   }
 
-  if (form && codeInput && error && box) {
+  if (form && codeInput && error) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const code = codeInput.value.trim();
 
-      // Demo code – in real life, validate on backend
-      if (code === "ELITE100") {
-        box.classList.remove("blurred");
-        const overlay = box.querySelector(".locked-overlay");
-        if (overlay) overlay.remove();
+      if (code === ACCESS_CODE) {
+        unlockAccess(); // unlock globally (snapshot + upload)
         error.textContent = "";
       } else {
         error.textContent =
@@ -214,17 +257,31 @@ function wireSnapshotAccess() {
       }
     });
   }
-
-  if (unlockBtn) {
-    unlockBtn.addEventListener("click", () => {
-      alert(
-        "This is where you’ll link to your real checkout (Cash App, Stripe, etc.). For now, this is just a preview."
-      );
-    });
-  }
 }
 
-// =============== PRICING PAGE CHAT (on pricing.html hero) ===============
+// =============== UPLOAD UNLOCK (upload.html) ===============
+function wireUploadAccess() {
+  const form = document.getElementById("uploadAccessForm");
+  const codeInput = document.getElementById("uploadAccessCode");
+  const error = document.getElementById("uploadAccessError");
+
+  if (!form || !codeInput || !error) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const code = codeInput.value.trim();
+
+    if (code === ACCESS_CODE) {
+      unlockAccess();
+      error.textContent = "";
+    } else {
+      error.textContent =
+        "Invalid access code. Check the code we sent you after payment.";
+    }
+  });
+}
+
+// =============== PRICING CHAT (optional, pricing.html) ===============
 function wirePricingChat() {
   const form = document.getElementById("pricing-chat-form");
   const input = document.getElementById("pricing-chat-input");
@@ -237,10 +294,7 @@ function wirePricingChat() {
     const text = input.value.trim();
     if (!text) return;
 
-    // Add user message
     appendChatMessage(windowEl, "user", text);
-
-    // Generate simple plan suggestion
     const reply = getPlanSuggestion(text);
     appendChatMessage(windowEl, "bot", reply);
 
@@ -249,7 +303,7 @@ function wirePricingChat() {
   });
 }
 
-// =============== FLOATING CHAT (pricing page bottom-right) ===============
+// =============== FLOATING CHAT (optional, pricing.html) ===============
 function wireFloatingChat() {
   const toggle = document.getElementById("floating-chat-toggle");
   const panel = document.getElementById("floating-chat-panel");
@@ -284,27 +338,30 @@ function wireFloatingChat() {
   });
 }
 
-// Plan suggestion logic reused in both chats
 function getPlanSuggestion(text) {
   const lower = text.toLowerCase();
   let suggestion = "";
 
   if (lower.includes("home") || lower.includes("house") || lower.includes("mortgage")) {
     suggestion =
-      "For a home goal in the next 6–18 months, AI Core or AI Elite usually makes sense. " +
-      "Core gives you structure and letters. Elite adds tighter check-ins and scripts for tough calls.";
+      "For a home goal in the next 6–18 months, AI Core or AI Elite usually makes sense. Core gives you structure and letters. Elite adds tighter check-ins and scripts for tough calls.";
   } else if (lower.includes("car") || lower.includes("auto")) {
     suggestion =
-      "If you’re mainly trying to get approved for a car, AI Starter or AI Core is usually enough. " +
-      "Focus on cleaning up a few key negatives and lowering utilization.";
-  } else if (lower.includes("apartment") || lower.includes("rent") || lower.includes("lease")) {
+      "If you’re mainly trying to get approved for a car, AI Starter or AI Core is usually enough. Focus on cleaning up a few key negatives and lowering utilization.";
+  } else if (
+    lower.includes("apartment") ||
+    lower.includes("rent") ||
+    lower.includes("lease")
+  ) {
     suggestion =
-      "For apartment or rental approvals, AI Starter is a good entry point if you’re a DIY type. " +
-      "If you want more structure and letter help, AI Core is safer.";
-  } else if (lower.includes("budget") || lower.includes("money") || lower.includes("broke")) {
+      "For apartment or rental approvals, AI Starter is a good entry point if you’re a DIY type. If you want more structure and letter help, AI Core is safer.";
+  } else if (
+    lower.includes("budget") ||
+    lower.includes("money") ||
+    lower.includes("broke")
+  ) {
     suggestion =
-      "If money is tight, start with AI Starter and treat it like a gym membership for your credit. " +
-      "You can always upgrade to AI Core later once you see movement.";
+      "If money is tight, start with AI Starter and treat it like a gym membership for your credit. You can always upgrade to AI Core later once you see movement.";
   } else {
     suggestion =
       "Quick rule of thumb:\n" +
