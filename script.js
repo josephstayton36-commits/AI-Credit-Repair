@@ -1,4 +1,4 @@
-// =============== SITE CONFIG (from your JSON) ===============
+// =============== SITE CONFIG ===============
 const SITE_CONFIG = {
   brandName: "AI Credit Repair",
   tagline: "Smart Disputes. Real Results.",
@@ -44,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
   wireScoreBoostTips();
   wireSnapshotForm();
   wireSnapshotAccess();
+  wirePricingChat();
+  wireFloatingChat();
   setYearSpan();
 });
 
@@ -56,7 +58,7 @@ function applyBranding() {
   if (taglineEl) taglineEl.textContent = SITE_CONFIG.tagline;
 }
 
-// =============== ASK AI ABOUT CREDIT ===============
+// =============== ASK AI ABOUT CREDIT (index) ===============
 function wireAskAi() {
   const form = document.getElementById("askAiForm");
   const input = document.getElementById("askAiInput");
@@ -95,7 +97,7 @@ function wireAskAi() {
   });
 }
 
-// =============== CREDIT LAW DECODER ===============
+// =============== CREDIT LAW DECODER (index) ===============
 function wireCreditLawDecoder() {
   const input = document.getElementById("creditLawInput");
   const btn = document.getElementById("creditLawBtn");
@@ -147,7 +149,7 @@ function findMatchingLaw(query) {
   return null;
 }
 
-// =============== SCORE BOOST TIP OF THE DAY ===============
+// =============== SCORE BOOST TIP (index) ===============
 function wireScoreBoostTips() {
   const btn = document.getElementById("scoreTipBtn");
   const text = document.getElementById("scoreTipText");
@@ -160,7 +162,7 @@ function wireScoreBoostTips() {
   });
 }
 
-// =============== SNAPSHOT CONTACT FORM (on index page) ===============
+// =============== SNAPSHOT REQUEST FORM (index) ===============
 function wireSnapshotForm() {
   const form = document.getElementById("snapshotForm");
   const message = document.getElementById("snapshotMessage");
@@ -188,7 +190,6 @@ function wireSnapshotAccess() {
   const error = document.getElementById("accessError");
   const box = document.getElementById("fullSnapshotBox");
 
-  // Already paid? Show/hide access code form
   if (toggleBtn && form) {
     toggleBtn.addEventListener("click", () => {
       form.classList.toggle("hidden");
@@ -196,13 +197,12 @@ function wireSnapshotAccess() {
     });
   }
 
-  // Fake access code unlock (front-end only)
   if (form && codeInput && error && box) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const code = codeInput.value.trim();
 
-      // NOTE: Front-end demo only – in real life this should be validated on the server.
+      // Demo code – in real life, validate on backend
       if (code === "ELITE100") {
         box.classList.remove("blurred");
         const overlay = box.querySelector(".locked-overlay");
@@ -215,7 +215,6 @@ function wireSnapshotAccess() {
     });
   }
 
-  // Unlock button – placeholder for real checkout
   if (unlockBtn) {
     unlockBtn.addEventListener("click", () => {
       alert(
@@ -223,6 +222,98 @@ function wireSnapshotAccess() {
       );
     });
   }
+}
+
+// =============== PRICING PAGE CHAT (on pricing.html hero) ===============
+function wirePricingChat() {
+  const form = document.getElementById("pricing-chat-form");
+  const input = document.getElementById("pricing-chat-input");
+  const windowEl = document.getElementById("pricing-chat-window");
+
+  if (!form || !input || !windowEl) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Add user message
+    appendChatMessage(windowEl, "user", text);
+
+    // Generate simple plan suggestion
+    const reply = getPlanSuggestion(text);
+    appendChatMessage(windowEl, "bot", reply);
+
+    input.value = "";
+    windowEl.scrollTop = windowEl.scrollHeight;
+  });
+}
+
+// =============== FLOATING CHAT (pricing page bottom-right) ===============
+function wireFloatingChat() {
+  const toggle = document.getElementById("floating-chat-toggle");
+  const panel = document.getElementById("floating-chat-panel");
+  const closeBtn = document.getElementById("close-floating-chat");
+  const form = document.getElementById("floating-chat-form");
+  const input = document.getElementById("floating-chat-input");
+  const body = document.getElementById("floating-chat-body");
+
+  if (!toggle || !panel || !form || !input || !body) return;
+
+  toggle.addEventListener("click", () => {
+    panel.classList.add("open");
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      panel.classList.remove("open");
+    });
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    appendChatMessage(body, "user", text);
+    const reply = getPlanSuggestion(text);
+    appendChatMessage(body, "bot", reply);
+
+    input.value = "";
+    body.scrollTop = body.scrollHeight;
+  });
+}
+
+// Plan suggestion logic reused in both chats
+function getPlanSuggestion(text) {
+  const lower = text.toLowerCase();
+  let suggestion = "";
+
+  if (lower.includes("home") || lower.includes("house") || lower.includes("mortgage")) {
+    suggestion =
+      "For a home goal in the next 6–18 months, AI Core or AI Elite usually makes sense. " +
+      "Core gives you structure and letters. Elite adds tighter check-ins and scripts for tough calls.";
+  } else if (lower.includes("car") || lower.includes("auto")) {
+    suggestion =
+      "If you’re mainly trying to get approved for a car, AI Starter or AI Core is usually enough. " +
+      "Focus on cleaning up a few key negatives and lowering utilization.";
+  } else if (lower.includes("apartment") || lower.includes("rent") || lower.includes("lease")) {
+    suggestion =
+      "For apartment or rental approvals, AI Starter is a good entry point if you’re a DIY type. " +
+      "If you want more structure and letter help, AI Core is safer.";
+  } else if (lower.includes("budget") || lower.includes("money") || lower.includes("broke")) {
+    suggestion =
+      "If money is tight, start with AI Starter and treat it like a gym membership for your credit. " +
+      "You can always upgrade to AI Core later once you see movement.";
+  } else {
+    suggestion =
+      "Quick rule of thumb:\n" +
+      "• AI Starter – best if you’re a DIY person and just need guidance.\n" +
+      "• AI Core – best if you’re busy and want clearer structure and letters.\n" +
+      "• AI Elite – best if you have big goals and tight timelines.";
+  }
+
+  return suggestion;
 }
 
 // =============== FOOTER YEAR ===============
@@ -245,4 +336,16 @@ function randomFromArray(arr) {
   if (!arr || !arr.length) return "";
   const index = Math.floor(Math.random() * arr.length);
   return arr[index];
+}
+
+function appendChatMessage(container, role, text) {
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("chat-message");
+  wrapper.classList.add(role === "user" ? "user" : "bot");
+
+  const p = document.createElement("p");
+  p.textContent = text;
+  wrapper.appendChild(p);
+
+  container.appendChild(wrapper);
 }
