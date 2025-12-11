@@ -4,21 +4,27 @@
   <meta charset="UTF-8" />
   <title>Your Elite Credit Snapshot | AI Credit Repair</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description"
-        content="See a preview of your Elite Credit Snapshot and unlock the full membership details, dispute strategy, and roadmap." />
+  <meta
+    name="description"
+    content="See a preview of your Elite Credit Snapshot and unlock the full membership details, dispute strategy, and roadmap."
+  />
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
 
 <body>
-  <div class="page-wrapper">
+  <!-- use .page so it matches your main layout CSS -->
+  <div class="page">
     <header class="site-header">
       <div class="container nav">
         <div class="brand">
           <div class="logo-circle">AI</div>
           <div class="brand-text">
-            <span class="brand-name">AI Credit Repair</span>
-            <span class="brand-tagline">Smart Laws · Real Strategy · AI on Your Side</span>
+            <!-- IDs so script.js can apply branding from config -->
+            <span class="brand-name" id="brandName">AI Credit Repair</span>
+            <span class="brand-tagline" id="brandTagline">
+              Smart Laws · Real Strategy · AI on Your Side
+            </span>
           </div>
         </div>
 
@@ -75,6 +81,8 @@
               <li><strong>Score Strategy:</strong> When to add trade lines, when to pay down, and what to leave alone.</li>
               <li><strong>Template Pack:</strong> Exact letter set we’d use for you (goodwill, validation, factual disputes, etc.).</li>
             </ul>
+
+            <!-- overlay that disappears when unlocked -->
             <div class="locked-overlay">
               <span class="lock-icon">🔒</span>
               <span class="locked-text">Full Snapshot & Membership Details – Locked</span>
@@ -99,6 +107,7 @@
             <button id="alreadyPaidToggle" class="link-btn">
               I already paid – enter my access code
             </button>
+
             <form id="accessForm" class="access-form hidden">
               <input
                 type="password"
