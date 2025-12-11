@@ -17,7 +17,6 @@
     <header class="site-header">
       <div class="container nav">
         <div class="brand">
-          <!-- You can swap this for your logo image later -->
           <div class="logo-circle">AI</div>
           <div class="brand-text">
             <span class="brand-name" id="brandName">AI Credit Repair</span>
@@ -50,17 +49,58 @@
 
     <section class="section alt-section">
       <div class="container">
-        <h2>How to Upload</h2>
+        <h2>Access Required</h2>
         <p>
-          Use the secure upload portal below. Your files go directly to your private folder —
-          we only use them to review your credit and build your strategy.
+          To protect our time and keep things fair, report uploads are available only
+          after your Elite Snapshot payment is confirmed.
         </p>
 
-        <div class="form-card">
-          <p><strong>Option 1:</strong> Email your reports to: <span>your-email@example.com</span></p>
-          <p><strong>Option 2:</strong> Upload using this secure link:</p>
-
+        <!-- 🔒 LOCKED STATE (shows when not unlocked) -->
+        <div id="uploadLocked" class="form-card">
+          <h3>Step 1: Send Payment</h3>
           <p>
+            Send your <strong>$100 Elite Snapshot</strong> payment via Cash App to:<br />
+            <strong>$YourCashtagHere</strong> <!-- <-- put your real $cashtag -->
+          </p>
+
+          <h3 style="margin-top: 1rem;">Step 2: Enter Your Access Code</h3>
+          <p class="disclaimer-small">
+            After payment, we send you a one-time access code. Enter it below to unlock
+            your upload portal and Elite Snapshot content on this device.
+          </p>
+
+          <form id="uploadAccessForm" class="access-form">
+            <input
+              type="password"
+              id="uploadAccessCode"
+              placeholder="Enter access code"
+              autocomplete="off"
+              required
+            />
+            <button type="submit" class="btn-primary">Unlock Uploads</button>
+            <p id="uploadAccessError" class="error-message"></p>
+          </form>
+
+          <p class="disclaimer-small" style="margin-top: 0.6rem;">
+            Once unlocked, this device will remember your access unless you clear your browser data.
+          </p>
+        </div>
+
+        <!-- ✅ UNLOCKED STATE (shows after correct code or if already unlocked) -->
+        <div id="uploadUnlocked" class="form-card hidden">
+          <h3>Upload Your Credit Reports</h3>
+          <p>
+            You’re unlocked. Use the secure upload link below to send your full
+            3-bureau reports (Experian, Equifax, TransUnion).
+          </p>
+
+          <ol class="upload-steps">
+            <li><strong>Pull</strong> your reports (3-in-1 or individual bureaus).</li>
+            <li><strong>Save</strong> them as PDF files (or clear screenshots if needed).</li>
+            <li><strong>Click</strong> the button below to upload them securely.</li>
+          </ol>
+
+          <p style="margin-top: 0.75rem;">
             <a
               href="https://www.dropbox.com/request/4kOaQyM6uqhX5ZskJjeq"
               target="_blank"
@@ -71,9 +111,9 @@
             </a>
           </p>
 
-          <p class="disclaimer-small">
-            Never text or DM your full SSN or sensitive documents through social media.
-            Always use a secure, encrypted channel that you control.
+          <p class="upload-note">
+            🔒 Your files go directly into your private folder on our side. We only use them
+            to review your credit and build your plan.
           </p>
         </div>
 
