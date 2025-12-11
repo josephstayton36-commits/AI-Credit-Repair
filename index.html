@@ -2,297 +2,262 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Credit Repair | Smart Disputes. Real Results.</title>
+  <title>AI Credit Repair | Smart Credit, Real Laws, AI Help</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="AI Credit Repair uses smart disputes, real laws, and automation to help you clean up your credit and rebuild your financial life."
+    content="AI Credit Repair uses real credit laws, plain-English explanations, and an AI coach to help you understand and improve your credit."
   />
 
-  <!-- Main Styles -->
+  <!-- STYLES -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Main Script (uses data.json) -->
+  <!-- SCRIPTS -->
   <script defer src="script.js"></script>
 </head>
 
 <body>
-  <!-- ======================= HEADER ======================= -->
-  <header class="site-header">
-    <div class="container nav">
-      <div class="brand">
-        <!-- Optional logo image later -->
-        <!-- <img src="assets/logo.png" alt="AI Credit Repair Logo" class="logo" /> -->
-
-        <div class="brand-text">
-          <span class="brand-name">AI Credit Repair</span>
-          <span class="brand-tagline">Smart Disputes. Real Results.</span>
+  <div class="page">
+    <!-- ======================= HEADER / NAV ======================= -->
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <!-- 🔹 PUT YOUR LOGO IMAGE AT: assets/ai_credit_logo.png -->
+          <img
+            src="assets/ai_credit_logo.png"
+            alt="AI Credit Repair Logo"
+            class="logo"
+          />
+          <div class="brand-text">
+            <span class="brand-name">AI Credit Repair</span>
+            <span class="brand-tagline">
+              Smart Laws · Real Strategy · AI + Human Heart
+            </span>
+          </div>
         </div>
+
+        <nav class="main-nav">
+          <a href="#hero">Home</a>
+          <a href="#ask-ai">Ask AI</a>
+          <a href="#credit-law">Credit Laws</a>
+          <a href="#score-tip">Score Tips</a>
+          <a href="#upload-reports">Upload</a>
+          <a href="#snapshot-contact">Snapshot Plan</a>
+        </nav>
       </div>
+    </header>
 
-      <nav class="main-nav">
-        <a href="index.html" class="active">Home</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="snapshot.html">Credit Snapshot</a>
-        <a href="upload.html">Upload Reports</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- ======================= HERO ======================= -->
-  <main>
-    <section class="hero">
+    <!-- ======================= HERO ======================= -->
+    <section id="hero" class="hero">
       <div class="container hero-grid">
         <div class="hero-text">
-          <h1>Fix Your Credit With AI, Not Guesswork.</h1>
+          <h1>Fix Your Credit the Smart, Legal, AI-Powered Way.</h1>
           <p>
-            AI Credit Repair combines credit law, smart strategy, and automation
-            to challenge negative items, coach you on score growth, and guide you
-            step-by-step.
+            No hype. No fairy tales. Just real credit laws, real strategy,
+            and an AI credit coach that speaks your language.
           </p>
-          <div class="hero-actions">
-            <a href="snapshot.html" class="btn primary">Get My Credit Snapshot</a>
-            <a href="upload.html" class="btn ghost">Upload My Credit Reports</a>
+
+          <div class="hero-buttons">
+            <a href="#ask-ai" class="btn-primary">Ask AI About My Credit</a>
+            <a href="#upload-reports" class="btn-secondary">Upload My Reports</a>
           </div>
-          <ul class="hero-points">
-            <li>⚡ Uses real laws like FCRA & FDCPA</li>
-            <li>📈 Score-boost tips based on your situation</li>
-            <li>🤖 AI guidance, human-level clarity</li>
+
+          <ul class="hero-bullets">
+            <li>✅ Uses FCRA, FDCPA, and real consumer laws</li>
+            <li>✅ Breaks down confusing legal language in plain English</li>
+            <li>✅ Helps you think through your next credit moves</li>
           </ul>
         </div>
 
         <div class="hero-card">
-          <h2>Quick Credit Overview</h2>
-          <p>Not legal advice. Just clear strategy.</p>
-          <ul class="hero-metrics">
-            <li><span class="label">Goal:</span> 700+ Score</li>
-            <li><span class="label">Focus:</span> Collections & Charge-offs</li>
-            <li><span class="label">Plan:</span> Disputes + Utilization + Age</li>
-          </ul>
-          <a href="pricing.html" class="btn full-width">See Plans & Pricing</a>
+          <h2>Your Credit Snapshot Plan</h2>
+          <p>
+            Upload your 3-bureau reports and tell us your goals.
+            We build a clear Snapshot Plan with dispute strategy and next steps.
+          </p>
+          <a href="#snapshot-contact" class="btn-primary hero-card-btn">
+            Get My Snapshot Plan
+          </a>
+          <p class="hero-card-note">
+            No sugar-coating. Just honest feedback and a path forward.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ======================= ASK AI SECTION ======================= -->
-    <section class="ai-credit-section">
-      <h2>Ask AI Credit Repair</h2>
-      <p>
-        Ask any credit question. Our AI uses real laws and strategy to guide your next move.
-      </p>
+    <!-- ======================= MAIN CONTENT ======================= -->
+    <main class="container main-content">
 
-      <div class="ai-input-row">
-        <input
-          id="userQuestion"
-          type="text"
-          placeholder="Example: How do I remove a charge-off or collection?"
-        />
-        <button id="askAI">Ask AI</button>
-      </div>
-
-      <div class="ai-output">
-        <!-- JS will inject the AI response bubble here -->
-      </div>
-    </section>
-
-    <!-- ======================= LAW SPOTLIGHT ======================= -->
-    <section class="law-section">
-      <h2>Credit Law Spotlight</h2>
-      <p>
-        These are some of the core laws that protect you and your credit reports.
-      </p>
-      <button id="showLaw">Show a Law</button>
-      <div class="law-box">
-        <!-- JS will inject a random law here -->
-      </div>
-    </section>
-
-    <!-- ======================= SCORE TIP ======================= -->
-    <section class="tip-section">
-      <h2>Score Boost Tip</h2>
-      <p>
-        Small moves matter. Click below for a simple, real-world credit improvement tip.
-      </p>
-      <button id="showTip">Give Me a Tip</button>
-      <div class="tip-box">
-        <!-- JS will inject a tip here -->
-      </div>
-    </section>
-
-    <!-- ======================= HOW IT WORKS ======================= -->
-    <section class="how-it-works">
-      <div class="container">
-        <h2>How AI Credit Repair Works</h2>
-        <div class="steps-grid">
-          <div class="step">
-            <h3>1. Snapshot</h3>
-            <p>
-              We review your credit reports and identify inaccurate, incomplete,
-              and unverifiable items hurting your score.
-            </p>
-          </div>
-          <div class="step">
-            <h3>2. Strategy</h3>
-            <p>
-              Our AI highlights which laws apply and creates a plan:
-              disputes, utilization, and score-boost habits.
-            </p>
-          </div>
-          <div class="step">
-            <h3>3. Smart Disputes</h3>
-            <p>
-              You send targeted disputes, track responses, and adjust based on
-              bureau replies and score changes.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-    <!-- ======================= CONTACT / SNAPSHOT FORM ======================= -->
-    <section class="contact-section" id="contact">
-      <div class="container">
-        <h2>Start Your AI Credit Repair Snapshot</h2>
-        <p>
-          Fill this out after you buy a membership or when you’re ready for your
-          AI Credit Repair Snapshot. We’ll review your info and reach out with
-          your next steps.
+      <!-- ASK AI -->
+      <section id="ask-ai" class="feature-card">
+        <h2>Ask AI About Your Credit</h2>
+        <p class="feature-subtitle">
+          Ask about collections, charge-offs, late payments, inquiries, or disputes.
+          The AI coach gives you a realistic way to think about it.
         </p>
 
-        <form id="snapshotForm" class="contact-form">
+        <form id="askAiForm" class="ask-ai-form">
+          <textarea
+            id="askAiInput"
+            rows="3"
+            placeholder="Example: “How do I get a paid collection off my credit report?”"
+          ></textarea>
+          <button type="submit" class="btn-primary">Ask AI</button>
+        </form>
+
+        <div id="askAiResponse" class="ai-response-box">
+          <span class="placeholder-text">
+            Your AI credit answer will show up here.
+          </span>
+        </div>
+      </section>
+
+      <!-- CREDIT LAW DECODER -->
+      <section id="credit-law" class="feature-card">
+        <h2>Credit Law Decoder</h2>
+        <p class="feature-subtitle">
+          Type a law, section, or phrase you don’t understand.
+          We’ll explain it in plain English so you know what it really means.
+        </p>
+
+        <div class="inline-form">
+          <input
+            type="text"
+            id="creditLawInput"
+            placeholder="Example: “15 U.S.C. 1681i” or “statute of limitations”"
+          />
+          <button id="creditLawBtn" class="btn-secondary">Explain It</button>
+        </div>
+
+        <div id="creditLawResult" class="ai-response-box">
+          <span class="placeholder-text">
+            We’ll break the law down here in simple terms.
+          </span>
+        </div>
+      </section>
+
+      <!-- SCORE BOOST TIP -->
+      <section id="score-tip" class="feature-card">
+        <h2>Score Boost Tip of the Day</h2>
+        <p id="scoreTipText" class="feature-subtitle">
+          Tap the button to get a small, legal tip that can help your score over time.
+        </p>
+        <button id="scoreTipBtn" class="btn-primary">Get a Score Boost Tip</button>
+      </section>
+
+      <!-- UPLOAD REPORTS -->
+      <section id="upload-reports" class="feature-card upload-section">
+        <h2>Securely Upload Your Credit Reports</h2>
+        <p class="feature-subtitle">
+          We need your full 3-bureau reports to see the whole picture and build your Snapshot Plan.
+        </p>
+
+        <ol class="upload-steps">
+          <li><strong>Download</strong> your reports from Experian, Equifax, TransUnion, or your favorite site.</li>
+          <li><strong>Save as PDF</strong> (or clear screenshots if PDF isn’t available).</li>
+          <li><strong>Use the secure upload link</strong> we’ll provide (Dropbox / file request coming next).</li>
+        </ol>
+
+        <!-- We’ll replace this with your actual Dropbox link later -->
+        <button class="btn-primary upload-btn" type="button" disabled>
+          Secure Upload Link Coming Soon
+        </button>
+
+        <p class="upload-note">
+          🔒 Your data is used ONLY to review your credit and build your plan. We don’t sell your information.
+        </p>
+      </section>
+
+      <!-- SNAPSHOT CONTACT FORM -->
+      <section id="snapshot-contact" class="feature-card">
+        <h2>Request Your AI Credit Snapshot Plan</h2>
+        <p class="feature-subtitle">
+          Already bought a membership or ready for help? Fill this out so we know who you are
+          when we see your reports.
+        </p>
+
+        <form id="snapshotForm" class="snapshot-form">
           <div class="form-row">
-            <div class="form-field">
+            <div class="form-group">
               <label for="fullName">Full Name</label>
               <input
+                type="text"
                 id="fullName"
                 name="fullName"
-                type="text"
+                placeholder="Your full legal name"
                 required
-                placeholder="First and last name"
               />
             </div>
-
-            <div class="form-field">
+            <div class="form-group">
               <label for="email">Email</label>
               <input
+                type="email"
                 id="email"
                 name="email"
-                type="email"
+                placeholder="you@example.com"
                 required
-                placeholder="you@email.com"
               />
             </div>
           </div>
 
           <div class="form-row">
-            <div class="form-field">
+            <div class="form-group">
               <label for="phone">Phone (optional)</label>
               <input
+                type="tel"
                 id="phone"
                 name="phone"
-                type="tel"
                 placeholder="Best number to reach you"
               />
             </div>
-
-            <div class="form-field">
-              <label for="status">What best describes you?</label>
-              <select id="status" name="status" required>
-                <option value="">Select one...</option>
-                <option value="member">
-                  I already bought a membership
-                </option>
-                <option value="snapshot">
-                  I’m ready for my credit snapshot
-                </option>
-                <option value="questions">
-                  I have questions before I start
-                </option>
+            <div class="form-group">
+              <label for="memberStatus">Member Status</label>
+              <select id="memberStatus" name="memberStatus">
+                <option value="yes">Yes, I already paid / joined</option>
+                <option value="no">Not yet, just getting info</option>
               </select>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-field">
-              <label for="scoreRange">Current Credit Score Range (estimate)</label>
-              <select id="scoreRange" name="scoreRange">
-                <option value="">Not sure / rather not say</option>
-                <option value="300-549">300 – 549</option>
-                <option value="550-619">550 – 619</option>
-                <option value="620-679">620 – 679</option>
-                <option value="680-739">680 – 739</option>
-                <option value="740+">740+</option>
-              </select>
-            </div>
-
-            <div class="form-field">
-              <label for="goal">Main Credit Goal</label>
-              <input
-                id="goal"
-                name="goal"
-                type="text"
-                placeholder="Buy a car, house, get approvals, etc."
-              />
-            </div>
-          </div>
-
-          <div class="form-field">
-            <label for="details">Anything we should know before we review?</label>
+          <div class="form-group">
+            <label for="goals">Main Credit Goal (next 6–12 months)</label>
             <textarea
-              id="details"
-              name="details"
-              rows="4"
-              placeholder="Collections, charge-offs, late payments, identity theft, etc."
+              id="goals"
+              name="goals"
+              rows="3"
+              placeholder="Example: Get approved for a car, qualify for an apartment, buy a home, remove a collection, etc."
             ></textarea>
           </div>
 
-          <button type="submit" class="btn primary full-width">
-            Send My Snapshot Details
+          <button type="submit" class="btn-primary">
+            Submit My Snapshot Request
           </button>
 
-          <p class="form-note">
-            No hard pull. No obligation. This just gives us what we need to
-            prepare your strategy.
-          </p>
-          <p class="form-success" id="formSuccess" hidden>
-            ✅ Thank you! Your info was sent. We’ll review it and follow up with
-            your next steps.
+          <p class="upload-note" id="snapshotMessage">
+            After submitting, be sure your reports are ready to upload so we can actually build your plan.
           </p>
         </form>
-      </div>
-    </section>
-  <!-- ======================= FOOTER ======================= -->
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <h4>AI Credit Repair</h4>
-        <p>Smart disputes, real strategy, and guided next steps for your credit.</p>
-      </div>
-      <div>
-        <h4>Links</h4>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="snapshot.html">Credit Snapshot</a></li>
-          <li><a href="upload.html">Upload Reports</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Disclaimer</h4>
-        <p>
-          Not legal or financial advice. Results are not guaranteed. Always review
-          your own situation and consult a professional if needed.
-        </p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <small>&copy; <span id="year"></span> AI Credit Repair. All rights reserved.</small>
-    </div>
-  </footer>
+      </section>
+    </main>
 
-  <!-- Optional small inline script just for the year -->
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+    <!-- ======================= FOOTER ======================= -->
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <strong>AI Credit Repair</strong><br />
+          Smart, legal, AI-powered credit strategies.
+        </div>
+        <div class="footer-links">
+          <a href="#hero">Home</a>
+          <a href="#ask-ai">Ask AI</a>
+          <a href="#upload-reports">Upload</a>
+          <a href="#snapshot-contact">Contact</a>
+        </div>
+        <div class="footer-small">
+          Educational only. Not legal, tax, or financial advice. Results vary and are not guaranteed.
+        </div>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
