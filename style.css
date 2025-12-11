@@ -572,3 +572,285 @@ a {
     position: static;
   }
 }
+/* ======= PRICING PAGE HERO & LAYOUT ======= */
+.hero-content .eyebrow {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9aa6dd;
+  margin-bottom: 0.5rem;
+}
+
+.hero-content h1 {
+  margin: 0 0 0.4rem;
+}
+
+.hero-content .highlight {
+  color: #4aedc4;
+}
+
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: #c7d2ff;
+  max-width: 420px;
+  margin-bottom: 1rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* generic .btn for pricing page */
+.btn {
+  display: inline-block;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #19b1ff, #4aedc4);
+  color: #020515;
+  box-shadow: 0 6px 18px rgba(0, 255, 200, 0.4);
+}
+
+.ghost-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #dbe3ff;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* nav pill highlight */
+.nav-cta {
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(74, 237, 196, 0.12);
+  border: 1px solid rgba(74, 237, 196, 0.7);
+}
+
+/* ======= PRICING CHAT CARD ======= */
+.hero-chat-card {
+  background: #070b1b;
+  border-radius: 14px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #cbd5ff;
+}
+
+.chat-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4aedc4;
+}
+
+.chat-window {
+  background: #050814;
+  border-radius: 10px;
+  padding: 0.6rem;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chat-message {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  max-width: 100%;
+}
+
+.chat-message.bot p {
+  background: #111735;
+  display: inline-block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+}
+
+.chat-message.user {
+  text-align: right;
+}
+
+.chat-message.user p {
+  display: inline-block;
+  background: linear-gradient(135deg, #19b1ff, #4aedc4);
+  color: #020515;
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.chat-input-row input[type="text"] {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #050814;
+  color: #ffffff;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.6rem;
+}
+
+.chat-send-btn {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+}
+
+.chat-note {
+  font-size: 0.75rem;
+  color: #8a95c3;
+}
+
+/* ======= PLANS & FAQ ======= */
+.section-header {
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  margin-bottom: 0.3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.plan-price {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.feature-card-highlight {
+  border-color: #22c55e !important;
+  box-shadow: 0 22px 45px rgba(34, 197, 94, 0.55) !important;
+}
+
+.benefit-list {
+  margin: 0.3rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.faq-item h3 {
+  margin-bottom: 0.3rem;
+}
+
+/* ======= FLOATING CHAT ======= */
+.floating-chat-toggle {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  border-radius: 999px;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #19b1ff, #4aedc4);
+  color: #020515;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  z-index: 40;
+}
+
+.floating-chat-panel {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 4rem;
+  width: 280px;
+  max-width: 90vw;
+  background: #050814;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.7);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 45;
+}
+
+.floating-chat-panel.open {
+  display: flex;
+}
+
+.floating-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  background: #0a1024;
+  font-size: 0.85rem;
+}
+
+.floating-chat-header button {
+  background: none;
+  border: none;
+  color: #dbe3ff;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.floating-chat-body {
+  padding: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #050814;
+}
+
+.floating-chat-input-row {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.4rem 0.5rem 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.floating-chat-input-row input[type="text"] {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #050814;
+  color: #ffffff;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+}
+
+/* Responsive tweak */
+@media (max-width: 800px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-chat-card {
+    margin-top: 1rem;
+  }
+}
