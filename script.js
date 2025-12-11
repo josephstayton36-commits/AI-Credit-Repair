@@ -1,244 +1,156 @@
-// =========================
-// BASIC UTILITIES
-// =========================
-
-// Smooth scroll for internal links
-document.addEventListener("click", (e) => {
-  const link = e.target.closest('a[href^="#"]');
-  if (!link) return;
-
-  const href = link.getAttribute("href");
-  if (!href || href === "#") return;
-
-  const target = document.querySelector(href);
-  if (!target) return;
-
-  e.preventDefault();
-  window.scrollTo({
-    top: target.offsetTop - 80,
-    behavior: "smooth",
-  });
-});
-
-// Set current year in footer
+// Ensure everything wires up after the DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const yearSpan = document.getElementById("year-span");
-  if (yearSpan) {
-    yearSpan.textContent = new Date().getFullYear();
-  }
+  wireAskAi();
+  wireCreditLawDecoder();
+  wireScoreBoostTips();
+  wireSnapshotForm();
 });
 
-// =========================
-// HERO CHAT (INLINE)
-// =========================
+// =============== ASK AI ABOUT CREDIT ===============
+function wireAskAi() {
+  const form = document.getElementById("askAiForm");
+  const input = document.getElementById("askAiInput");
+  const output = document.getElementById("askAiResponse");
 
-(function setupHeroChat() {
-  const chatWindow = document.getElementById("chat-window");
-  const chatForm = document.getElementById("chat-form");
-  const chatInput = document.getElementById("chat-input");
-
-  if (!chatWindow || !chatForm || !chatInput) return;
-
-  function appendMessage(text, sender = "bot") {
-    const msg = document.createElement("div");
-    msg.className = `chat-message ${sender}`;
-    msg.innerHTML = `<p>${text}</p>`;
-    chatWindow.appendChild(msg);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-
-  function simulateAIResponse(userText) {
-    // NOTE:
-    // This is a placeholder. In production, you will send
-    // `userText` to your secure backend (Node, Python, etc.)
-    // and call OpenAI or another LLM from there.
-    const templates = [
-      "Great question. First, pull all three of your reports. Look for anything that’s inaccurate, outdated, or incomplete. Those are your priority items for disputes.",
-      "In general, on-time payments, lower utilization, and a clean mix of accounts move the needle most. Late payments and high balances keep scores stuck.",
-      "If an account truly isn’t yours, you’ll want to dispute it with both the bureaus and the creditor, and request documentation that proves you’re responsible for the debt.",
-      "Every situation is different, but I can outline which items are most harmful and where to start. Focus on errors and outdated negatives first.",
-    ];
-
-    const reply =
-      templates[Math.floor(Math.random() * templates.length)] +
-      " (This is general education only. For legal or tax questions, talk to a licensed professional.)";
-
-    setTimeout(() => appendMessage(reply, "bot"), 600);
-  }
-
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = chatInput.value.trim();
-    if (!text) return;
-
-    appendMessage(text, "user");
-    chatInput.value = "";
-    simulateAIResponse(text);
-  });
-})();
-
-// =========================
-// FLOATING CHAT WIDGET
-// =========================
-
-(function setupFloatingChat() {
-  const toggleBtn = document.getElementById("floating-chat-toggle");
-  const panel = document.getElementById("floating-chat-panel");
-  const closeBtn = document.getElementById("close-floating-chat");
-  const body = document.getElementById("floating-chat-body");
-  const form = document.getElementById("floating-chat-form");
-  const input = document.getElementById("floating-chat-input");
-
-  if (!toggleBtn || !panel || !body || !form || !input) return;
-
-  function openChat() {
-    panel.classList.add("open");
-  }
-
-  function closeChat() {
-    panel.classList.remove("open");
-  }
-
-  function appendMessage(text, sender = "bot") {
-    const msg = document.createElement("div");
-    msg.className = `chat-message ${sender}`;
-    msg.innerHTML = `<p>${text}</p>`;
-    body.appendChild(msg);
-    body.scrollTop = body.scrollHeight;
-  }
-
-  function simulateAIResponse(userText) {
-    const templates = [
-      "Thanks for sharing that. First question: are the items you’re worried about accurate, or do you believe they’re errors?",
-      "Step one is always to get current reports from all three bureaus. Step two is to separate true errors from accurate but negative items.",
-      "For late payments, I can suggest a goodwill or correction strategy. For collections, it might be more about validation and negotiation.",
-      "I can help you map out what to dispute, what to negotiate, and what to rebuild over the next 3–6 months.",
-    ];
-
-    const reply =
-      templates[Math.floor(Math.random() * templates.length)] +
-      " I’m here to give you a high-level game plan, not legal or tax advice.";
-
-    setTimeout(() => appendMessage(reply, "bot"), 700);
-  }
-
-  toggleBtn.addEventListener("click", openChat);
-  if (closeBtn) closeBtn.addEventListener("click", closeChat);
+  if (!form || !input || !output) return;
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
 
-    appendMessage(text, "user");
-    input.value = "";
-    simulateAIResponse(text);
+    const question = input.value.trim();
+
+    if (!question) {
+      output.innerHTML =
+        "<p><strong>Tip:</strong> Ask something specific like “How do I deal with an old charge-off?”</p>";
+      return;
+    }
+
+    output.innerHTML = `
+      <div class="ai-message">
+        <p><strong>AI Credit Coach:</strong></p>
+        <p>Good question. Here’s how to think about it:</p>
+        <ul>
+          <li>1️⃣ Pull all 3 reports (Experian, Equifax, TransUnion) so you see the same item everywhere.</li>
+          <li>2️⃣ Look for <strong>inaccuracies</strong>: wrong dates, balance, status, or creditor name related to "<em>${escapeHtml(
+            question
+          )}</em>".</li>
+          <li>3️⃣ If anything is inaccurate, incomplete, or cannot be proven, it is a candidate for a <strong>dispute under the FCRA</strong>.</li>
+          <li>4️⃣ Never ignore mail related to the account. Track responses and deadlines in writing.</li>
+        </ul>
+        <p>The best move is: upload your reports, tell us your goal, and we’ll apply the right laws to your exact situation.</p>
+      </div>
+    `;
   });
+}
 
-  // Also hook hero buttons to open the floating chat
-  const openChatBtn = document.getElementById("open-chat-btn");
-  const openChatBtn2 = document.getElementById("open-chat-btn-2");
+// =============== CREDIT LAW DECODER ===============
+function wireCreditLawDecoder() {
+  const input = document.getElementById("creditLawInput");
+  const btn = document.getElementById("creditLawBtn");
+  const result = document.getElementById("creditLawResult");
 
-  if (openChatBtn) openChatBtn.addEventListener("click", openChat);
-  if (openChatBtn2) openChatBtn2.addEventListener("click", openChat);
-})();
+  if (!input || !btn || !result) return;
 
-// =========================
-// SMART ANALYSIS FORM
-// =========================
+  btn.addEventListener("click", () => {
+    const text = input.value.trim();
+    if (!text) {
+      result.innerHTML =
+        "<p>Type the law, section, or phrase you’re confused about and we’ll translate it.</p>";
+      return;
+    }
 
-(function setupAnalysisForm() {
-  const form = document.getElementById("analysis-form");
-  const msg = document.getElementById("form-message");
+    const lower = text.toLowerCase();
+    let explanation = "";
 
-  if (!form || !msg) return;
+    if (lower.includes("1681i") || lower.includes("reinvestigation")) {
+      explanation = `
+        <p><strong>15 U.S.C. 1681i – Reinvestigation:</strong></p>
+        <p>When you dispute an item with a credit bureau, this rule says they have to <strong>investigate</strong> your dispute, usually within about 30 days.</p>
+        <p>If they can’t properly verify the information with real documentation, they’re supposed to <strong>correct or delete</strong> it.</p>
+      `;
+    } else if (lower.includes("fdcpa")) {
+      explanation = `
+        <p><strong>FDCPA – Fair Debt Collection Practices Act:</strong></p>
+        <p>This law controls what <strong>debt collectors</strong> are allowed to do. They can’t harass you, lie to you, or threaten illegal actions.</p>
+        <p>You also have the right to request <strong>validation</strong> of the debt so they must prove you actually owe it.</p>
+      `;
+    } else if (lower.includes("fcra")) {
+      explanation = `
+        <p><strong>FCRA – Fair Credit Reporting Act:</strong></p>
+        <p>This law governs how credit bureaus collect and report information. It gives you rights to dispute inaccurate info, limit how long negative items report, and demand accuracy.</p>
+      `;
+    } else if (lower.includes("statute") || lower.includes("limitations")) {
+      explanation = `
+        <p><strong>Statute of Limitations:</strong></p>
+        <p>This is the time limit a creditor or collector has to legally <strong>sue</strong> you on a debt. It is about lawsuits, not about how long the account can report on your credit.</p>
+        <p>Different states have different time limits, and the clock usually starts from your last activity or payment.</p>
+      `;
+    } else if (lower.includes("method of verification")) {
+      explanation = `
+        <p><strong>Method of Verification:</strong></p>
+        <p>After a dispute, you can ask the bureau how they verified the info. In reality, many times they just rely on automated systems, not detailed proof.</p>
+        <p>Requesting the method of verification is a way to pressure them to show they actually checked your dispute properly.</p>
+      `;
+    } else {
+      explanation = `
+        <p><strong>Plain-English Translation:</strong></p>
+        <p>I don’t recognize that exact phrase, but here’s the rule of thumb: if something on your report is <strong>inaccurate, incomplete, outdated, or can’t be proven</strong>, you have the right to dispute it.</p>
+      `;
+    }
 
-  form.addEventListener("submit", async (e) => {
+    result.innerHTML = explanation;
+  });
+}
+
+// =============== SCORE BOOST TIP OF THE DAY ===============
+function wireScoreBoostTips() {
+  const btn = document.getElementById("scoreTipBtn");
+  const text = document.getElementById("scoreTipText");
+
+  if (!btn || !text) return;
+
+  const tips = [
+    "Keep your total credit card usage under about 30% of your limits. Under 10% is ideal for score growth.",
+    "Set up autopay for at least the minimum payment so you never miss a due date by accident.",
+    "Don’t close your oldest credit card unless you absolutely have to. Age of credit history helps your score.",
+    "If you’re rebuilding, a small secured credit card, used lightly and paid in full, can slowly build positive history.",
+    "Avoid applying for a ton of new accounts at once. Too many hard inquiries in a short time can drop your score.",
+    "Paying down revolving debt (credit cards/lines) usually moves your score more than paying off many installment loans.",
+    "Make sure your personal info (name, address, SSN digits) is correct on all 3 bureaus. Bad data can cause problems.",
+    "Don’t let unpaid small collections linger. Get a plan—pay for delete where possible or dispute if inaccurate."
+  ];
+
+  btn.addEventListener("click", () => {
+    const randomIndex = Math.floor(Math.random() * tips.length);
+    text.textContent = tips[randomIndex];
+  });
+}
+
+// =============== SNAPSHOT CONTACT FORM ===============
+function wireSnapshotForm() {
+  const form = document.getElementById("snapshotForm");
+  const message = document.getElementById("snapshotMessage");
+
+  if (!form || !message) return;
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    msg.textContent = "";
-    msg.className = "form-message";
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    const termsChecked = document.getElementById("terms")?.checked;
+    const name = form.fullName.value.trim() || "there";
 
-    if (!termsChecked) {
-      msg.textContent = "Please confirm you agree to the Terms and Privacy Policy before continuing.";
-      msg.classList.add("error-text");
-      return;
-    }
+    message.textContent =
+      `Thanks, ${name}. Your Snapshot request is saved on our side (front-end). ` +
+      `Be sure your credit reports are ready to upload with the secure link.`;
 
-    // Basic front-end validation (you can expand this)
-    if (!data.name || !data.email || !data.scoreRange || !data.mainGoal) {
-      msg.textContent = "Please fill in all required fields so AI can give you a better plan.";
-      msg.classList.add("error-text");
-      return;
-    }
-
-    // 🔒 IMPORTANT:
-    // In production, this is where you'd send the data to YOUR backend.
-    // Example (Node / Python server you control):
-    //
-    // const response = await fetch("https://your-secure-backend.com/api/analysis", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(data),
-    // });
-    //
-    // The backend would:
-    //  1. Store the lead (CRM, email, etc.)
-    //  2. Call OpenAI or another model to generate a detailed plan
-    //  3. Return a summary and/or send email to the user
-    //
-    // You NEVER put your OpenAI API key directly in this JS file.
-
-    console.log("Form submitted (demo mode only):", data);
-
-    msg.textContent =
-      "Got it! In a live setup, your AI snapshot plan would generate here and be sent to your email. For now, your info stayed in your browser.";
-    msg.classList.add("success-text");
-
+    // Simple UX: clear most fields so they know it went through
     form.reset();
   });
-})();
-// =========================
-// PRICING PAGE MINI-CHAT
-// =========================
+}
 
-(function setupPricingChat() {
-  const chatWindow = document.getElementById("pricing-chat-window");
-  const chatForm = document.getElementById("pricing-chat-form");
-  const chatInput = document.getElementById("pricing-chat-input");
-
-  if (!chatWindow || !chatForm || !chatInput) return;
-
-  function appendMessage(text, sender = "bot") {
-    const msg = document.createElement("div");
-    msg.className = `chat-message ${sender}`;
-    msg.innerHTML = `<p>${text}</p>`;
-    chatWindow.appendChild(msg);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-
-  function simulatePlanResponse(userText) {
-    const reply =
-      "Based on what you shared, here’s a simple rule of thumb:\n\n" +
-      "• If you love DIY and just want direction → AI Starter.\n" +
-      "• If you’re busy and want more structure → AI Core.\n" +
-      "• If you have a big deadline (mortgage, major move, etc.) → AI Elite.\n\n" +
-      "This is not legal or financial advice — just a starting point.";
-
-    setTimeout(() => appendMessage(reply.replace(/\n/g, "<br>"), "bot"), 600);
-  }
-
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = chatInput.value.trim();
-    if (!text) return;
-
-    appendMessage(text, "user");
-    chatInput.value = "";
-    simulatePlanResponse(text);
-  });
-})();
-
+// =============== HELPER ===============
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
