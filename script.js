@@ -1,10 +1,62 @@
+// =============== SITE CONFIG (from your JSON) ===============
+const SITE_CONFIG = {
+  brandName: "AI Credit Repair",
+  tagline: "Smart Disputes. Real Results.",
+
+  creditLaws: [
+    {
+      title: "FCRA §609",
+      summary: "You can request all information a bureau has on you, including the source of each account.",
+      power: "Use this to force bureaus to prove an account is valid or delete it."
+    },
+    {
+      title: "FCRA §611",
+      summary: "You have the right to dispute any inaccurate, incomplete, or unverifiable information.",
+      power: "If they can’t verify it in 30 days, it must be corrected or deleted."
+    },
+    {
+      title: "FDCPA",
+      summary: "Debt collectors must follow strict rules when trying to collect.",
+      power: "Great for attacking collections that use illegal tactics or bad notices."
+    }
+  ],
+
+  aiResponses: [
+    "Your credit is fixable. What matters is the moves you make from today forward.",
+    "If it’s not verified, it doesn’t belong on your report. Let’s challenge it.",
+    "AI Credit Repair uses the law + strategy. We don’t guess—we attack.",
+    "Small, smart moves stack up. Your future score will not look like your past."
+  ],
+
+  scoreBoostTips: [
+    "Keep credit card utilization under 10% for the best score impact.",
+    "Pay before the statement date, not just the due date.",
+    "Dispute any account that is inaccurate, incomplete, or unverifiable.",
+    "Avoid closing old positive accounts—they help your age of credit."
+  ]
+};
+
 // Ensure everything wires up after the DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
+  applyBranding();
   wireAskAi();
   wireCreditLawDecoder();
   wireScoreBoostTips();
   wireSnapshotForm();
 });
+
+// =============== BRAND NAME + TAGLINE ===============
+function applyBranding() {
+  const brandNameEl = document.getElementById("brandName");
+  const taglineEl = document.getElementById("brandTagline");
+
+  if (brandNameEl) {
+    brandNameEl.textContent = SITE_CONFIG.brandName;
+  }
+  if (taglineEl) {
+    taglineEl.textContent = SITE_CONFIG.tagline;
+  }
+}
 
 // =============== ASK AI ABOUT CREDIT ===============
 function wireAskAi() {
@@ -25,19 +77,23 @@ function wireAskAi() {
       return;
     }
 
+    // Grab a motivational AI line from config
+    const aiLine = randomFromArray(SITE_CONFIG.aiResponses);
+
     output.innerHTML = `
       <div class="ai-message">
         <p><strong>AI Credit Coach:</strong></p>
-        <p>Good question. Here’s how to think about it:</p>
+        <p>${escapeHtml(aiLine)}</p>
+        <p>Here’s how to think about your question about "<em>${escapeHtml(
+          question
+        )}</em>":</p>
         <ul>
           <li>1️⃣ Pull all 3 reports (Experian, Equifax, TransUnion) so you see the same item everywhere.</li>
-          <li>2️⃣ Look for <strong>inaccuracies</strong>: wrong dates, balance, status, or creditor name related to "<em>${escapeHtml(
-            question
-          )}</em>".</li>
-          <li>3️⃣ If anything is inaccurate, incomplete, or cannot be proven, it is a candidate for a <strong>dispute under the FCRA</strong>.</li>
-          <li>4️⃣ Never ignore mail related to the account. Track responses and deadlines in writing.</li>
+          <li>2️⃣ Look for <strong>inaccuracies</strong>: wrong dates, balance, status, or creditor name.</li>
+          <li>3️⃣ If it’s inaccurate, incomplete, or can’t be verified with proof, it’s a candidate for attack under the FCRA/FDCPA.</li>
+          <li>4️⃣ Track every dispute in writing and watch the 30-day investigation window.</li>
         </ul>
-        <p>The best move is: upload your reports, tell us your goal, and we’ll apply the right laws to your exact situation.</p>
+        <p>Upload your reports, tell us your goal, and we’ll apply the right laws and strategy to your exact situation.</p>
       </div>
     `;
   });
@@ -59,47 +115,44 @@ function wireCreditLawDecoder() {
       return;
     }
 
-    const lower = text.toLowerCase();
-    let explanation = "";
-
-    if (lower.includes("1681i") || lower.includes("reinvestigation")) {
-      explanation = `
-        <p><strong>15 U.S.C. 1681i – Reinvestigation:</strong></p>
-        <p>When you dispute an item with a credit bureau, this rule says they have to <strong>investigate</strong> your dispute, usually within about 30 days.</p>
-        <p>If they can’t properly verify the information with real documentation, they’re supposed to <strong>correct or delete</strong> it.</p>
-      `;
-    } else if (lower.includes("fdcpa")) {
-      explanation = `
-        <p><strong>FDCPA – Fair Debt Collection Practices Act:</strong></p>
-        <p>This law controls what <strong>debt collectors</strong> are allowed to do. They can’t harass you, lie to you, or threaten illegal actions.</p>
-        <p>You also have the right to request <strong>validation</strong> of the debt so they must prove you actually owe it.</p>
-      `;
-    } else if (lower.includes("fcra")) {
-      explanation = `
-        <p><strong>FCRA – Fair Credit Reporting Act:</strong></p>
-        <p>This law governs how credit bureaus collect and report information. It gives you rights to dispute inaccurate info, limit how long negative items report, and demand accuracy.</p>
-      `;
-    } else if (lower.includes("statute") || lower.includes("limitations")) {
-      explanation = `
-        <p><strong>Statute of Limitations:</strong></p>
-        <p>This is the time limit a creditor or collector has to legally <strong>sue</strong> you on a debt. It is about lawsuits, not about how long the account can report on your credit.</p>
-        <p>Different states have different time limits, and the clock usually starts from your last activity or payment.</p>
-      `;
-    } else if (lower.includes("method of verification")) {
-      explanation = `
-        <p><strong>Method of Verification:</strong></p>
-        <p>After a dispute, you can ask the bureau how they verified the info. In reality, many times they just rely on automated systems, not detailed proof.</p>
-        <p>Requesting the method of verification is a way to pressure them to show they actually checked your dispute properly.</p>
+    const law = findMatchingLaw(text);
+    if (law) {
+      result.innerHTML = `
+        <p><strong>${escapeHtml(law.title)}</strong></p>
+        <p>${escapeHtml(law.summary)}</p>
+        <p><strong>How to use it:</strong> ${escapeHtml(law.power)}</p>
       `;
     } else {
-      explanation = `
+      result.innerHTML = `
         <p><strong>Plain-English Translation:</strong></p>
-        <p>I don’t recognize that exact phrase, but here’s the rule of thumb: if something on your report is <strong>inaccurate, incomplete, outdated, or can’t be proven</strong>, you have the right to dispute it.</p>
+        <p>If something on your report is <strong>inaccurate, incomplete, outdated, or can’t be proven</strong>, it’s not supposed to be there.</p>
+        <p>We use the FCRA, FDCPA, and related laws to force bureaus and collectors to either prove it or remove it.</p>
       `;
     }
-
-    result.innerHTML = explanation;
   });
+}
+
+// Try to match user text to one of your configured laws
+function findMatchingLaw(query) {
+  const lower = query.toLowerCase();
+
+  // Check for direct title matches or key pieces like "609", "611", "fdcpa"
+  for (const law of SITE_CONFIG.creditLaws) {
+    const titleLower = law.title.toLowerCase();
+
+    if (
+      lower.includes(titleLower) || // full title
+      lower.includes(titleLower.replace(/\s/g, "")) || // remove spaces
+      lower.includes("609") && law.title.includes("609") ||
+      lower.includes("611") && law.title.includes("611") ||
+      lower.includes("fdcpa") && law.title.toLowerCase().includes("fdcpa") ||
+      lower.includes("fcra") && law.title.toLowerCase().includes("fcra")
+    ) {
+      return law;
+    }
+  }
+
+  return null;
 }
 
 // =============== SCORE BOOST TIP OF THE DAY ===============
@@ -109,20 +162,9 @@ function wireScoreBoostTips() {
 
   if (!btn || !text) return;
 
-  const tips = [
-    "Keep your total credit card usage under about 30% of your limits. Under 10% is ideal for score growth.",
-    "Set up autopay for at least the minimum payment so you never miss a due date by accident.",
-    "Don’t close your oldest credit card unless you absolutely have to. Age of credit history helps your score.",
-    "If you’re rebuilding, a small secured credit card, used lightly and paid in full, can slowly build positive history.",
-    "Avoid applying for a ton of new accounts at once. Too many hard inquiries in a short time can drop your score.",
-    "Paying down revolving debt (credit cards/lines) usually moves your score more than paying off many installment loans.",
-    "Make sure your personal info (name, address, SSN digits) is correct on all 3 bureaus. Bad data can cause problems.",
-    "Don’t let unpaid small collections linger. Get a plan—pay for delete where possible or dispute if inaccurate."
-  ];
-
   btn.addEventListener("click", () => {
-    const randomIndex = Math.floor(Math.random() * tips.length);
-    text.textContent = tips[randomIndex];
+    const tip = randomFromArray(SITE_CONFIG.scoreBoostTips);
+    text.textContent = tip;
   });
 }
 
@@ -136,21 +178,26 @@ function wireSnapshotForm() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const name = form.fullName.value.trim() || "there";
+    const name = form.fullName?.value.trim() || "there";
 
     message.textContent =
       `Thanks, ${name}. Your Snapshot request is saved on our side (front-end). ` +
       `Be sure your credit reports are ready to upload with the secure link.`;
 
-    // Simple UX: clear most fields so they know it went through
     form.reset();
   });
 }
 
-// =============== HELPER ===============
+// =============== HELPERS ===============
 function escapeHtml(str) {
   return str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function randomFromArray(arr) {
+  if (!arr || !arr.length) return "";
+  const index = Math.floor(Math.random() * arr.length);
+  return arr[index];
 }
