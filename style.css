@@ -409,6 +409,164 @@ a {
   .main-nav {
     display: none; /* simple mobile: you can add a burger later */
   }
+  /* ======= GENERIC SECTIONS (upload/snapshot pages) ======= */
+.section {
+  padding: 2rem 0;
+}
+
+.alt-section {
+  padding: 2rem 0 2.5rem;
+  background: #050818;
+}
+
+.logo-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #19b1ff, #4aedc4);
+  color: #020515;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+/* Card used on upload page */
+.form-card {
+  background: #070b1b;
+  border-radius: 12px;
+  padding: 1.2rem 1.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  font-size: 0.95rem;
+}
+
+/* ======= SNAPSHOT PAGE ======= */
+.snapshot-section {
+  padding: 2rem 0 2.5rem;
+}
+
+.snapshot-intro {
+  color: #c9d2f0;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.snapshot-preview {
+  background: #070b1b;
+  border-radius: 12px;
+  padding: 1.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1.3rem;
+}
+
+.snapshot-preview ul {
+  margin: 0 0 0.6rem 1.2rem;
+  padding: 0;
+}
+
+.snapshot-note {
+  font-size: 0.85rem;
+  color: #9aa6dd;
+}
+
+/* Locked snapshot box */
+.snapshot-locked-wrapper {
+  margin-top: 1.5rem;
+}
+
+.snapshot-locked {
+  position: relative;
+  background: #050814;
+  border-radius: 12px;
+  padding: 1.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.blurred {
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* overlay that sits on top while locked */
+.locked-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 4, 14, 0.82);
+  backdrop-filter: blur(4px);
+  text-align: center;
+}
+
+.lock-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.locked-text {
+  font-size: 0.95rem;
+  color: #e1e8ff;
+}
+
+/* Snapshot CTA */
+.snapshot-cta {
+  margin-top: 1rem;
+}
+
+.price-line {
+  font-size: 0.98rem;
+  margin-bottom: 0.7rem;
+}
+
+.snapshot-guarantee {
+  font-size: 0.85rem;
+  color: #9aa6dd;
+  margin-top: 0.5rem;
+}
+
+/* Already paid / access form */
+.already-paid {
+  margin-top: 1rem;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #9bb4ff;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.access-form {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.access-form input {
+  flex: 1;
+}
+
+.error-message {
+  width: 100%;
+  font-size: 0.8rem;
+  color: #ff6b7a;
+  margin: 0.2rem 0 0;
+}
+
+.hidden {
+  display: none;
+}
 
   .site-header {
     position: static;
