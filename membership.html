@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Member Area | AI Credit Repair</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta
+    name="description"
+    content="Log in to your AI Credit Repair member area to access your tools, snapshot, and resources."
+  />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase (compat for simplicity) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <!-- Membership auth logic (this page only) -->
+  <script defer src="member-auth.js"></script>
+
+  <!-- Global site JS (branding, year, etc.) -->
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <div class="logo-circle">AI</div>
+          <div class="brand-text">
+            <span class="brand-name" id="brandName">AI Credit Repair</span>
+            <span class="brand-tagline" id="brandTagline">
+              Smart Laws · Real Strategy · AI on Your Side
+            </span>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <a href="index.html#hero">Home</a>
+          <a href="pricing.html">Membership</a>
+          <button id="logoutBtn" class="btn-secondary hidden" style="border:none; cursor:pointer;">
+            Log Out
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- LOGIN + SIGNUP (shown when LOGGED OUT) -->
+    <section id="authSection" class="section">
+      <div class="container">
+        <h1>Member Login</h1>
+        <p class="feature-subtitle">
+          Log in to your AI Credit Repair member area. If you don’t have an account yet, create one below.
+        </p>
+
+        <div class="feature-card" style="max-width: 420px; margin-top:1rem;">
+          <!-- LOGIN FORM -->
+          <form id="loginForm" class="snapshot-form">
+            <h3>Log In</h3>
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Your password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-primary">Log In</button>
+          </form>
+
+          <hr style="margin: 1.2rem 0; border-color: rgba(255,255,255,0.12);" />
+
+          <!-- SIGNUP FORM -->
+          <form id="signupForm" class="snapshot-form">
+            <h3>Create Account</h3>
+            <div class="form-group">
+              <label for="signupEmail">Email</label>
+              <input
+                type="email"
+                id="signupEmail"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Password</label>
+              <input
+                type="password"
+                id="signupPassword"
+                placeholder="At least 6 characters"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-secondary">Create Account</button>
+          </form>
+
+          <p id="authMessage" class="upload-note" style="margin-top:0.9rem;"></p>
+        </div>
+
+        <p class="disclaimer-small" style="margin-top:1rem;">
+          We use Firebase Authentication to keep your account secure. Never share your password with anyone.
+        </p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD (shown when LOGGED IN) -->
+    <section id="dashboardSection" class="section hidden">
+      <div class="container">
+        <h1>Welcome, <span id="memberEmail"></span></h1>
+        <p class="feature-subtitle">
+          Your private member tools are ready. Stay consistent and use the strategy.
+        </p>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3>Your Elite Snapshot</h3>
+            <p>Review your snapshot strategy, dispute targets, and roadmap.</p>
+            <a href="snapshot.html" class="btn-primary">View Snapshot</a>
+          </div>
+
+          <div class="feature-card">
+            <h3>Upload New Reports</h3>
+            <p>Send updated 3-bureau reports as your situation changes.</p>
+            <a href="upload.html" class="btn-primary">Upload Reports</a>
+          </div>
+
+          <div class="feature-card">
+            <h3>Ask AI About My Plan</h3>
+            <p>Use the AI coach to ask about next steps and strategy ideas.</p>
+            <a href="index.html#ask-ai" class="btn-secondary">Ask AI</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container footer-bottom">
+        <p>© <span id="year-span"></span> AI Credit Repair. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
