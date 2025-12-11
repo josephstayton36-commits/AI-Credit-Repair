@@ -36,13 +36,15 @@ const SITE_CONFIG = {
   ]
 };
 
-// Ensure everything wires up after the DOM is loaded
+// Run wiring once DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   applyBranding();
   wireAskAi();
   wireCreditLawDecoder();
   wireScoreBoostTips();
   wireSnapshotForm();
+  wireSnapshotAccess();
+  setYearSpan();
 });
 
 // =============== BRAND NAME + TAGLINE ===============
@@ -50,12 +52,8 @@ function applyBranding() {
   const brandNameEl = document.getElementById("brandName");
   const taglineEl = document.getElementById("brandTagline");
 
-  if (brandNameEl) {
-    brandNameEl.textContent = SITE_CONFIG.brandName;
-  }
-  if (taglineEl) {
-    taglineEl.textContent = SITE_CONFIG.tagline;
-  }
+  if (brandNameEl) brandNameEl.textContent = SITE_CONFIG.brandName;
+  if (taglineEl) taglineEl.textContent = SITE_CONFIG.tagline;
 }
 
 // =============== ASK AI ABOUT CREDIT ===============
@@ -70,14 +68,12 @@ function wireAskAi() {
     e.preventDefault();
 
     const question = input.value.trim();
-
     if (!question) {
       output.innerHTML =
         "<p><strong>Tip:</strong> Ask something specific like “How do I deal with an old charge-off?”</p>";
       return;
     }
 
-    // Grab a motivational AI line from config
     const aiLine = randomFromArray(SITE_CONFIG.aiResponses);
 
     output.innerHTML = `
@@ -132,26 +128,22 @@ function wireCreditLawDecoder() {
   });
 }
 
-// Try to match user text to one of your configured laws
 function findMatchingLaw(query) {
   const lower = query.toLowerCase();
 
-  // Check for direct title matches or key pieces like "609", "611", "fdcpa"
   for (const law of SITE_CONFIG.creditLaws) {
     const titleLower = law.title.toLowerCase();
-
     if (
-      lower.includes(titleLower) || // full title
-      lower.includes(titleLower.replace(/\s/g, "")) || // remove spaces
-      lower.includes("609") && law.title.includes("609") ||
-      lower.includes("611") && law.title.includes("611") ||
-      lower.includes("fdcpa") && law.title.toLowerCase().includes("fdcpa") ||
-      lower.includes("fcra") && law.title.toLowerCase().includes("fcra")
+      lower.includes(titleLower) ||
+      lower.includes(titleLower.replace(/\s/g, "")) ||
+      (lower.includes("609") && law.title.includes("609")) ||
+      (lower.includes("611") && law.title.includes("611")) ||
+      (lower.includes("fdcpa") && titleLower.includes("fdcpa")) ||
+      (lower.includes("fcra") && titleLower.includes("fcra"))
     ) {
       return law;
     }
   }
-
   return null;
 }
 
@@ -168,7 +160,7 @@ function wireScoreBoostTips() {
   });
 }
 
-// =============== SNAPSHOT CONTACT FORM ===============
+// =============== SNAPSHOT CONTACT FORM (on index page) ===============
 function wireSnapshotForm() {
   const form = document.getElementById("snapshotForm");
   const message = document.getElementById("snapshotMessage");
@@ -177,7 +169,6 @@ function wireSnapshotForm() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-
     const name = form.fullName?.value.trim() || "there";
 
     message.textContent =
@@ -186,6 +177,60 @@ function wireSnapshotForm() {
 
     form.reset();
   });
+}
+
+// =============== SNAPSHOT UNLOCK (snapshot.html) ===============
+function wireSnapshotAccess() {
+  const unlockBtn = document.getElementById("unlockSnapshotBtn");
+  const toggleBtn = document.getElementById("alreadyPaidToggle");
+  const form = document.getElementById("accessForm");
+  const codeInput = document.getElementById("accessCode");
+  const error = document.getElementById("accessError");
+  const box = document.getElementById("fullSnapshotBox");
+
+  // Already paid? Show/hide access code form
+  if (toggleBtn && form) {
+    toggleBtn.addEventListener("click", () => {
+      form.classList.toggle("hidden");
+      if (error) error.textContent = "";
+    });
+  }
+
+  // Fake access code unlock (front-end only)
+  if (form && codeInput && error && box) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const code = codeInput.value.trim();
+
+      // NOTE: Front-end demo only – in real life this should be validated on the server.
+      if (code === "ELITE100") {
+        box.classList.remove("blurred");
+        const overlay = box.querySelector(".locked-overlay");
+        if (overlay) overlay.remove();
+        error.textContent = "";
+      } else {
+        error.textContent =
+          "Invalid access code. Double-check your email or payment receipt.";
+      }
+    });
+  }
+
+  // Unlock button – placeholder for real checkout
+  if (unlockBtn) {
+    unlockBtn.addEventListener("click", () => {
+      alert(
+        "This is where you’ll link to your real checkout (Cash App, Stripe, etc.). For now, this is just a preview."
+      );
+    });
+  }
+}
+
+// =============== FOOTER YEAR ===============
+function setYearSpan() {
+  const span = document.getElementById("year-span");
+  if (!span) return;
+  const year = new Date().getFullYear();
+  span.textContent = year;
 }
 
 // =============== HELPERS ===============
