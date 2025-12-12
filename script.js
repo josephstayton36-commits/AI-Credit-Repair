@@ -25,6 +25,58 @@ const SITE_CONFIG = {
         "Great for attacking collections that use illegal tactics or bad notices.",
     },
   ],
+  async function loadContentConfig() {
+  try {
+    const res = await fetch("content.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("Could not load content.json");
+    const data = await res.json();
+
+    // Brand
+    const bn = document.getElementById("brandName");
+    const bt = document.getElementById("brandTagline");
+    if (bn) bn.textContent = data.brandName || "AI Credit Repair";
+    if (bt) bt.textContent = data.tagline || "Smart Disputes. Real Results.";
+
+    // Credit laws (optional render if container exists)
+    const lawsBox = document.getElementById("creditLawsList");
+    if (lawsBox && Array.isArray(data.creditLaws)) {
+      lawsBox.innerHTML = data.creditLaws.map(law => `
+        <div class="law-item">
+          <h3>${law.title}</h3>
+          <p class="muted">${law.summary}</p>
+          <p><strong>Power Move:</strong> ${law.power}</p>
+        </div>
+      `).join("");
+    }
+
+    // Score tip button
+    const tipBtn = document.getElementById("scoreTipBtn");
+    const tipText = document.getElementById("scoreTipText");
+    if (tipBtn && tipText && Array.isArray(data.scoreBoostTips)) {
+      tipBtn.addEventListener("click", () => {
+        const tip = data.scoreBoostTips[Math.floor(Math.random() * data.scoreBoostTips.length)];
+        tipText.textContent = tip;
+      });
+    }
+
+    // Ask AI fallback (if you don’t have real OpenAI yet)
+    const askForm = document.getElementById("askAiForm");
+    const askInput = document.getElementById("askAiInput");
+    const askOut = document.getElementById("askAiResponse");
+    if (askForm && askInput && askOut && Array.isArray(data.aiResponses)) {
+      askForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const reply = data.aiResponses[Math.floor(Math.random() * data.aiResponses.length)];
+        askOut.innerHTML = `<p>${reply}</p>`;
+      });
+    }
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadContentConfig);
 
   aiResponses: [
     "Your credit is fixable. What matters is the moves you make from today forward.",
