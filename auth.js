@@ -1,16 +1,10 @@
-// 🔥 Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyBK_07S1Bcp5u4hKA3i-V_xodrD6PxtNCQ",
-  authDomain: "ai-credit-repair-992c7.firebaseapp.com",
-  projectId: "ai-credit-repair-992c7",
-  storageBucket: "ai-credit-repair-992c7.firebasestorage.app",
-  messagingSenderId: "411411517046",
-  appId: "1:411411517046:web:fa2013a0f914aa06fc5957"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+return db.collection("users").doc(uid).set({
+  email: email,
+  role: "member",
+  tier: "free",              // free | elite
+  paid: false,               // later: true after payment
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
 
 // 🔐 LOGIN
 function loginUser() {
