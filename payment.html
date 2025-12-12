@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Credit Repair | Pay & Unlock Elite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Auth + Page JS -->
+  <script defer src="auth.js"></script>
+  <script defer src="payment.js"></script>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <div class="logo-circle">AI</div>
+          <div class="brand-text">
+            <span class="brand-name">AI Credit Repair</span>
+            <span class="brand-tagline">Pay & Unlock Elite</span>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <a href="home.html">Home</a>
+          <a href="upload.html">Upload Reports</a>
+          <button class="btn logout-btn" type="button" onclick="logoutUser()">Logout</button>
+        </nav>
+      </div>
+
+      <div class="container member-bar">
+        Logged in as: <strong id="userEmail">Loading…</strong>
+      </div>
+    </header>
+
+    <main class="container section">
+      <div class="card">
+        <h1 style="margin-top:0;">Unlock Elite Snapshot</h1>
+        <p class="muted">
+          Cash App payments can’t be auto-verified from GitHub Pages, so this page submits your payment details
+          for approval. Once approved, your account is upgraded to <strong>Elite</strong>.
+        </p>
+
+        <div class="card" style="margin-top:14px;">
+          <h2 style="margin-top:0;">Step 1 — Pay Cash App</h2>
+          <p>Send payment to:</p>
+          <div style="font-size:22px;font-weight:900;letter-spacing:.3px;">
+            $Cory12151983
+          </div>
+          <p class="muted" style="margin-bottom:0;">
+            Put this code in the Cash App <strong>Note</strong> (it helps match you fast):
+            <strong id="payCode">AICR-_____</strong>
+          </p>
+        </div>
+
+        <div class="card" style="margin-top:14px;">
+          <h2 style="margin-top:0;">Step 2 — Submit your payment details</h2>
+
+          <form id="paymentForm">
+            <div class="grid-3" style="grid-template-columns: 1fr 1fr 1fr;">
+              <div class="form-group">
+                <label>Cash App display name</label>
+                <input id="cashName" type="text" placeholder="Example: Cory S." required />
+              </div>
+
+              <div class="form-group">
+                <label>Amount sent (USD)</label>
+                <input id="amount" type="number" min="1" step="0.01" placeholder="Example: 79.00" required />
+              </div>
+
+              <div class="form-group">
+                <label>Date sent</label>
+                <input id="dateSent" type="date" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Cash App note / code</label>
+              <input id="noteCode" type="text" placeholder="Example: AICR-48291" required />
+            </div>
+
+            <div class="form-group">
+              <label>Anything else to help verify? (optional)</label>
+              <textarea id="extra" rows="3" placeholder="Example: last 4 of phone, exact time sent, etc."></textarea>
+            </div>
+
+            <button class="btn primary-btn" type="submit">Submit for Approval</button>
+            <p id="statusMsg" class="muted" style="margin-top:10px;"></p>
+          </form>
+        </div>
+
+        <div class="card elite-only" style="margin-top:14px;">
+          <h2 style="margin-top:0;">✅ You’re Elite</h2>
+          <p>You already have Elite access. Go upload your reports:</p>
+          <a class="btn primary-btn" href="upload.html">Upload Reports</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year-span"></span> AI Credit Repair</p>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
