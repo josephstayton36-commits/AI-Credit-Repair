@@ -1,3 +1,4 @@
+let currentUserProfile = null;
 return db.collection("users").doc(uid).set({
   email: email,
   role: "member",
