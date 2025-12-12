@@ -11,8 +11,6 @@
   <!-- Firebase (Compat for GitHub Pages) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
 
   <!-- Auth Logic -->
   <script defer src="auth.js"></script>
@@ -24,19 +22,10 @@
     <h1>AI Credit Repair</h1>
     <p class="auth-subtitle">Member Login</p>
 
-    <input
-      type="email"
-      id="email"
-      placeholder="Email address"
-      autocomplete="email"
-    />
+    <input type="email" id="email" placeholder="Email address" autocomplete="email" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
 
-    <input
-      type="password"
-      id="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    />
+    <div id="authMsg" style="margin:10px 0; font-size: 0.95rem;"></div>
 
     <div style="margin-bottom: 12px;">
       <button onclick="loginUser()">Login</button>
@@ -55,3 +44,4 @@
 
 </body>
 </html>
+
