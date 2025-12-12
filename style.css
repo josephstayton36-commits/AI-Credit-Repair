@@ -959,3 +959,22 @@ a {
   color: #38bdf8;
   cursor: pointer;
 }
+.auth-page{
+  min-height:100vh; padding:60px;
+  background:radial-gradient(circle at top,#0f172a,#020617);
+  color:#e5e7eb; font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+}
+.auth-container{max-width:520px}
+.auth-container h1{font-size:34px;margin:0 0 8px;color:#38bdf8}
+.auth-subtitle{margin:0 0 18px;color:#94a3b8}
+.auth-container input{
+  width:220px; margin:0 8px 12px 0; padding:10px 12px;
+  border-radius:8px; border:1px solid #334155; background:#020617; color:#e5e7eb;
+}
+.auth-container button{
+  padding:10px 14px; border-radius:8px; border:none; cursor:pointer;
+  background:#38bdf8; color:#020617; font-weight:700; margin-right:6px;
+}
+.secondary-btn{background:transparent!important;border:1px solid #334155!important;color:#e5e7eb!important}
+.auth-toggle{margin-top:12px;color:#94a3b8;font-size:14px}
+.auth-toggle span{color:#38bdf8;cursor:pointer;font-weight:700}
