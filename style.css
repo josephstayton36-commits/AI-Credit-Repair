@@ -1,159 +1,608 @@
-/* ===== Base ===== */
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #0b0f17;
-  color: #f1f5f9;
+/* ==========================================================
+   AI CREDIT REPAIR — MIDNIGHT FINTECH DESIGN SYSTEM
+   Goal: Credit-Karma-ish vibe (dark fintech, clean, modern)
+   - No white boxes
+   - Glass cards, soft shadows, crisp inputs
+   - Reusable components + page styles
+========================================================== */
+
+/* -----------------------------
+   0) Fonts
+------------------------------ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* -----------------------------
+   1) Design Tokens
+------------------------------ */
+:root{
+  /* Core */
+  --bg-0: #060a14;         /* deep midnight */
+  --bg-1: #070d1b;         /* midnight */
+  --bg-2: #0b1430;         /* panel base */
+  --card: rgba(14, 24, 56, 0.62);   /* glass card */
+  --card-2: rgba(10, 18, 45, 0.78); /* deeper card */
+  --border: rgba(150, 170, 220, 0.16);
+  --border-2: rgba(150, 170, 220, 0.22);
+
+  /* Text */
+  --text: rgba(245, 248, 255, 0.92);
+  --muted: rgba(210, 220, 245, 0.70);
+  --dim: rgba(210, 220, 245, 0.55);
+
+  /* Brand / Accent (fintech blue) */
+  --primary: #2f7cf6;
+  --primary-2: #59a6ff;
+  --primary-glow: rgba(47,124,246,0.35);
+
+  /* Status */
+  --good: #22c55e;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+
+  /* Radii */
+  --r-xs: 10px;
+  --r-sm: 14px;
+  --r-md: 18px;
+  --r-lg: 22px;
+
+  /* Shadows */
+  --shadow-soft: 0 12px 30px rgba(0,0,0,0.45);
+  --shadow-card: 0 20px 60px rgba(0,0,0,0.55);
+  --shadow-glow: 0 0 0 1px rgba(255,255,255,0.04), 0 14px 50px rgba(0,0,0,0.55);
+
+  /* Spacing */
+  --pad: 18px;
+
+  /* Motion */
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --t: 180ms var(--ease);
+
+  /* Focus */
+  --focus: 0 0 0 4px rgba(47,124,246,0.20);
+
+  /* Optional max widths */
+  --container: 1120px;
 }
 
-a { color: inherit; text-decoration: none; }
-
-.container {
-  width: min(1100px, 92%);
-  margin: auto;
+/* -----------------------------
+   2) Base Reset
+------------------------------ */
+*{ box-sizing: border-box; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 15% 15%, rgba(47,124,246,0.20), transparent 55%),
+    radial-gradient(900px 550px at 85% 10%, rgba(89,166,255,0.14), transparent 60%),
+    radial-gradient(900px 600px at 60% 90%, rgba(34,197,94,0.10), transparent 65%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, #040814 100%);
+  overflow-x:hidden;
 }
 
-.page { min-height: 100vh; }
+img{ max-width:100%; display:block; }
+a{ color: inherit; text-decoration:none; }
+button, input, textarea, select { font: inherit; }
+::selection{ background: rgba(47,124,246,0.35); }
 
-/* ===== Header ===== */
-.site-header {
-  background: #0f172a;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+/* Nice scrollbars (Chromium) */
+::-webkit-scrollbar{ width: 10px; }
+::-webkit-scrollbar-track{ background: rgba(255,255,255,0.04); }
+::-webkit-scrollbar-thumb{ background: rgba(150,170,220,0.18); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover{ background: rgba(150,170,220,0.26); }
+
+/* -----------------------------
+   3) Layout Helpers
+------------------------------ */
+.container{
+  width: min(var(--container), calc(100% - 32px));
+  margin: 0 auto;
 }
 
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
+.stack{ display:flex; flex-direction:column; gap:12px; }
+.row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.spread{ display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+
+/* -----------------------------
+   4) Glass Card + Panels
+------------------------------ */
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.panel{
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.logo-circle {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #38bdf8;
-  color: #0b0f17;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
+.card-pad{ padding: 22px; }
+.panel-pad{ padding: 18px; }
+
+.divider{
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(150,170,220,0.22), transparent);
+  margin: 14px 0;
 }
 
-.brand-name { font-weight: 700; }
-.brand-tagline { font-size: .8rem; opacity: .7; }
+/* -----------------------------
+   5) Typography
+------------------------------ */
+h1,h2,h3{ margin:0; letter-spacing: -0.02em; }
+h1{ font-size: clamp(28px, 2.4vw, 42px); font-weight: 800; }
+h2{ font-size: clamp(20px, 1.8vw, 28px); font-weight: 750; }
+h3{ font-size: 16px; font-weight: 700; color: rgba(245,248,255,0.86); }
+p{ margin:0; color: var(--muted); line-height: 1.55; }
 
-.main-nav {
-  display: flex;
-  gap: 14px;
-  align-items: center;
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size: 12px;
+  color: rgba(210,220,245,0.78);
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
-.member-bar {
-  padding: 8px 0;
-  font-size: .9rem;
-  opacity: .85;
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  color: rgba(245,248,255,0.86);
+  font-size: 12px;
 }
 
-/* ===== Buttons ===== */
-.btn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.primary-btn {
-  background: #38bdf8;
-  color: #0b0f17;
-}
-
-.ghost-btn {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,.2);
-}
-
-.logout-btn {
-  background: #ef4444;
-  color: white;
-}
-
-/* ===== Hero ===== */
-.hero {
-  padding: 64px 0;
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr .8fr;
-  gap: 30px;
-}
-
-.hero-card {
-  background: #020617;
-  padding: 20px;
+/* -----------------------------
+   6) Buttons (Credit-Karma-ish)
+------------------------------ */
+button, .btn{
+  appearance:none;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  padding: 12px 14px;
   border-radius: 14px;
+  cursor:pointer;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t), background var(--t);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
-/* ===== Sections ===== */
-.section {
-  padding: 60px 0;
+button:hover, .btn:hover{
+  transform: translateY(-1px);
+  border-color: rgba(150,170,220,0.24);
+  background: rgba(255,255,255,0.08);
 }
 
-.section.alt {
-  background: #020617;
+button:active, .btn:active{
+  transform: translateY(0px);
 }
 
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 16px;
+.btn-primary{
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-color: rgba(89,166,255,0.40);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.50),
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 10px 40px rgba(47,124,246,0.25);
 }
 
-.card {
-  background: #020617;
-  padding: 18px;
-  border-radius: 12px;
+.btn-primary:hover{
+  box-shadow:
+    0 18px 55px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 12px 46px rgba(47,124,246,0.30);
 }
 
-/* ===== Elite Gate ===== */
-.elite-only {
-  display: none; /* REQUIRED for gating */
+.btn-ghost{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(150,170,220,0.18);
 }
 
-/* ===== Snapshot ===== */
-.snapshot-list {
-  list-style: none;
-  padding-left: 0;
+.btn-danger{
+  background: rgba(239,68,68,0.14);
+  border-color: rgba(239,68,68,0.25);
 }
 
-.snapshot-list li {
-  padding: 6px 0;
+.secondary-btn{ /* keeps your existing class working */
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(150,170,220,0.18);
 }
 
-/* ===== Footer ===== */
-.site-footer {
-  border-top: 1px solid rgba(255,255,255,.08);
-  padding: 20px 0;
+button[disabled], .btn[disabled]{
+  opacity:0.55;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* -----------------------------
+   7) Inputs (no white fields)
+------------------------------ */
+input, textarea, select{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(150,170,220,0.18);
+  background: rgba(6, 10, 20, 0.40);
+  color: var(--text);
+  outline: none;
+  transition: box-shadow var(--t), border-color var(--t), background var(--t);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+input::placeholder, textarea::placeholder{
+  color: rgba(210,220,245,0.45);
+}
+
+input:focus, textarea:focus, select:focus{
+  border-color: rgba(47,124,246,0.55);
+  box-shadow: var(--focus);
+  background: rgba(6, 10, 20, 0.55);
+}
+
+label{
+  display:block;
+  font-size: 12px;
+  color: rgba(210,220,245,0.70);
+  margin: 10px 0 6px;
+}
+
+/* -----------------------------
+   8) Auth Page (Login / Signup)
+------------------------------ */
+.auth-page{
+  min-height: 100vh;
+  display:grid;
+  place-items:center;
+  padding: 28px 16px;
+}
+
+.auth-container{
+  width: min(470px, 100%);
+  padding: 26px 22px;
+  border-radius: var(--r-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle glow stripe */
+.auth-container::before{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  background:
+    radial-gradient(500px 260px at 20% 10%, rgba(47,124,246,0.22), transparent 55%),
+    radial-gradient(420px 260px at 80% 0%, rgba(89,166,255,0.14), transparent 60%),
+    radial-gradient(500px 340px at 50% 100%, rgba(34,197,94,0.10), transparent 62%);
+  pointer-events:none;
+  filter: blur(0px);
+  opacity: 0.95;
+}
+
+.auth-container > *{
+  position: relative;
+  z-index: 1;
+}
+
+.auth-container h1{
+  font-size: 30px;
+  font-weight: 850;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle{
+  color: rgba(210,220,245,0.72);
+  margin-bottom: 18px;
+}
+
+.auth-container input{
+  margin-bottom: 12px;
+}
+
+/* buttons row */
+.auth-container button{
+  width: 100%;
+}
+
+.auth-container .secondary-btn{
+  margin-top: 10px;
+}
+
+/* auth helper links */
+.auth-toggle{
+  font-size: 13px;
+  color: rgba(210,220,245,0.70);
+  margin-top: 10px;
   text-align: center;
-  opacity: .7;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .hero-grid,
-  .grid-3 {
-    grid-template-columns: 1fr;
-  }
+.auth-toggle span{
+  color: rgba(89,166,255,0.95);
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity var(--t);
+}
 
-  .main-nav {
-    flex-wrap: wrap;
+.auth-toggle span:hover{
+  opacity: 0.85;
+}
+
+/* status message area (your authMsg div) */
+#authMsg{
+  border-radius: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(150,170,220,0.16);
+  background: rgba(255,255,255,0.04);
+}
+
+/* -----------------------------
+   9) Header / Nav (Dashboard feel)
+------------------------------ */
+.site-header{
+  position: sticky;
+  top:0;
+  z-index: 50;
+  background: rgba(6,10,20,0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(150,170,220,0.14);
+}
+
+.site-header .nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 0;
+  gap: 14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+
+.logo{
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(150,170,220,0.14);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+.brand-text{
+  display:flex;
+  flex-direction:column;
+  line-height: 1.1;
+}
+.brand-name{
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  color: rgba(245,248,255,0.95);
+}
+.brand-tagline{
+  font-size: 12px;
+  color: rgba(210,220,245,0.62);
+}
+
+/* nav links */
+.main-nav{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  flex-wrap:wrap;
+}
+.main-nav a{
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(150,170,220,0.14);
+  background: rgba(255,255,255,0.04);
+  color: rgba(245,248,255,0.86);
+  transition: transform var(--t), border-color var(--t), background var(--t);
+}
+.main-nav a:hover{
+  transform: translateY(-1px);
+  border-color: rgba(150,170,220,0.24);
+  background: rgba(255,255,255,0.06);
+}
+
+/* -----------------------------
+   10) Dashboard Layout + Hero
+------------------------------ */
+.page{
+  padding: 26px 0 60px;
+}
+
+.hero{
+  padding: 22px;
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(700px 350px at 20% 20%, rgba(47,124,246,0.20), transparent 60%),
+    radial-gradient(700px 350px at 80% 0%, rgba(89,166,255,0.12), transparent 62%),
+    rgba(255,255,255,0.04);
+  border: 1px solid rgba(150,170,220,0.14);
+  box-shadow: var(--shadow-glow);
+}
+
+.hero-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 14px;
+  flex-wrap:wrap;
+}
+
+.hero p{
+  margin-top: 8px;
+}
+
+/* stats cards */
+.grid{
+  display:grid;
+  gap: 14px;
+}
+.grid-3{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-2{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 920px){
+  .grid-3{ grid-template-columns: 1fr; }
+  .grid-2{ grid-template-columns: 1fr; }
+}
+
+.stat{
+  padding: 16px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(150,170,220,0.14);
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+}
+.stat .label{
+  font-size: 12px;
+  color: rgba(210,220,245,0.70);
+}
+.stat .value{
+  font-size: 28px;
+  font-weight: 850;
+  margin-top: 6px;
+  letter-spacing: -0.02em;
+}
+.stat .trend{
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(210,220,245,0.62);
+}
+
+/* -----------------------------
+   11) Sections / Cards / Tables
+------------------------------ */
+.section{
+  margin-top: 16px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.card-list{
+  display:grid;
+  gap: 14px;
+}
+
+.table{
+  width:100%;
+  border-collapse: collapse;
+  overflow:hidden;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(150,170,220,0.14);
+  background: rgba(255,255,255,0.03);
+}
+.table th, .table td{
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(150,170,220,0.10);
+  text-align:left;
+  color: rgba(245,248,255,0.86);
+  font-size: 13px;
+}
+.table th{
+  font-size: 12px;
+  color: rgba(210,220,245,0.66);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  background: rgba(255,255,255,0.04);
+}
+.table tr:hover td{
+  background: rgba(255,255,255,0.04);
+}
+
+/* -----------------------------
+   12) Elite-only elements
+------------------------------ */
+.elite-only{
+  display:none; /* toggled by auth.js applyEliteGates */
+}
+
+/* -----------------------------
+   13) Upload / Dropzone
+------------------------------ */
+.dropzone{
+  padding: 18px;
+  border-radius: var(--r-lg);
+  border: 1.5px dashed rgba(89,166,255,0.35);
+  background: rgba(47,124,246,0.06);
+  box-shadow: 0 18px 55px rgba(0,0,0,0.55);
+}
+
+.dropzone:hover{
+  border-color: rgba(89,166,255,0.50);
+  background: rgba(47,124,246,0.085);
+}
+
+.small{
+  font-size: 12px;
+  color: rgba(210,220,245,0.62);
+}
+
+/* -----------------------------
+   14) Footer
+------------------------------ */
+.footer{
+  margin-top: 26px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(150,170,220,0.12);
+  color: rgba(210,220,245,0.55);
+  font-size: 13px;
+}
+
+/* -----------------------------
+   15) Mobile polish
+------------------------------ */
+@media (max-width: 520px){
+  .auth-container{
+    padding: 20px 16px;
   }
+  .logo{
+    width: 40px; height: 40px;
+  }
+  button, .btn{ padding: 12px 12px; }
+}
+
+/* -----------------------------
+   16) Remove "white boxes" aggressively
+   (If any legacy elements had white bg, force dark)
+------------------------------ */
+.white-box,
+.card-white,
+.box,
+.panel-white{
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(150,170,220,0.14) !important;
+  color: var(--text) !important;
 }
