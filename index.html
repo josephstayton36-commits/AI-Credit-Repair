@@ -25,11 +25,13 @@
     <input type="email" id="email" placeholder="Email address" autocomplete="email" />
     <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
 
-    <div id="authMsg" style="margin:10px 0; font-size: 0.95rem;"></div>
+    <!-- message area (styled by CSS) -->
+    <div id="authMsg"></div>
 
     <div style="margin-bottom: 12px;">
-      <button onclick="loginUser()">Login</button>
-      <button class="secondary-btn" onclick="signupUser()">Create Account</button>
+      <!-- NEW BUTTON THING -->
+      <button class="btn-primary" onclick="loginUser()">Login</button>
+      <button class="secondary-btn btn btn-ghost" onclick="signupUser()">Create Account</button>
     </div>
 
     <p class="auth-toggle">
@@ -44,4 +46,3 @@
 
 </body>
 </html>
-
