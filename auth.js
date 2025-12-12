@@ -6,19 +6,23 @@
  **************************************************************/
 
 /* ========= 1) FIREBASE CONFIG (PASTE YOUR WEB APP CONFIG) ========= */
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY_HERE",
-  authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
-  projectId: "PASTE_YOUR_PROJECT_ID_HERE",
-  storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID_HERE",
-  appId: "PASTE_YOUR_APP_ID_HERE"
+  apiKey: "AIzaSyBK_o7S1Bcp5u4hKA3j-V_xodrD6PxtNCQ",
+  authDomain: "ai-credit-repair-992c7.firebaseapp.com",
+  projectId: "ai-credit-repair-992c7",
+  storageBucket: "ai-credit-repair-992c7.firebasestorage.app",
+  messagingSenderId: "411411517046",
+  appId: "1:411411517046:web:fa2013a0f914aa06fc5957"
 };
 
-/* ========= 2) INIT (safe init to avoid duplicate init errors) ========= */
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 const db = firebase.firestore();
