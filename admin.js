@@ -1,66 +1,70 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>AI Credit Repair | Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Admin dashboard for AI Credit Repair." />
+// admin.js
+// NOTE: auth.js already blocks non-admins from viewing admin.html.
 
-  <link rel="stylesheet" href="style.css" />
+const db = firebase.firestore();
 
-  <!-- Firebase (Compat for GitHub Pages) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+function cardRow(title, value) {
+  return `
+    <div style="display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; margin-bottom:10px;">
+      <div style="opacity:.85">${title}</div>
+      <div style="font-weight:700; text-align:right; word-break:break-word;">${value}</div>
+    </div>
+  `;
+}
 
-  <!-- Auth (must load before admin.js) -->
-  <script defer src="auth.js"></script>
+function renderUser(doc) {
+  const u = doc.data();
+  return `
+    <div style="padding:14px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; margin-bottom:12px;">
+      <div style="font-weight:800; margin-bottom:6px;">${u.email || "(no email)"}</div>
+      ${cardRow("UID", doc.id)}
+      ${cardRow("Role", u.role || "member")}
+      ${cardRow("Tier", u.tier || "free")}
+      ${cardRow("Paid", String(!!u.paid))}
+    </div>
+  `;
+}
 
-  <!-- Admin logic -->
-  <script defer src="admin.js"></script>
-</head>
+function renderUpload(doc) {
+  const up = doc.data();
+  const link = up.downloadURL
+    ? `<a href="${up.downloadURL}" target="_blank" rel="noopener noreferrer">Open file</a>`
+    : "(no link)";
 
-<body>
-  <div class="page">
+  return `
+    <div style="padding:14px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; margin-bottom:12px;">
+      <div style="font-weight:800; margin-bottom:6px;">${up.fileName || "(no filename)"}</div>
+      ${cardRow("Owner Email", up.email || "(unknown)")}
+      ${cardRow("Owner UID", up.uid || "(unknown)")}
+      ${cardRow("Path", up.storagePath || "(none)")}
+      ${cardRow("Link", link)}
+    </div>
+  `;
+}
 
-    <!-- Header -->
-    <header class="site-header">
-      <div class="container nav" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-        <div class="brand" style="display:flex; align-items:center; gap:12px;">
-          <div class="logo-circle">AI</div>
-          <div class="brand-text">
-            <span class="brand-name">Admin Dashboard</span>
-            <span class="brand-tagline">AI Credit Repair</span>
-          </div>
-        </div>
+// Live updates
+db.collection("users").orderBy("createdAt", "desc").limit(50).onSnapshot(snap => {
+  const box = document.getElementById("usersList");
+  if (!box) return;
 
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span style="opacity:.85;">Logged in as: <strong id="userEmail">Loading…</strong></span>
-          <button class="btn logout-btn" onclick="logoutUser()">Logout</button>
-        </div>
-      </div>
-    </header>
+  if (snap.empty) {
+    box.innerHTML = "No users yet.";
+    return;
+  }
 
-    <!-- Main -->
-    <main class="container" style="padding:24px 0;">
-      <section class="card" style="margin-bottom:18px;">
-        <h2 style="margin:0 0 8px;">Quick Actions</h2>
-        <p style="margin:0; opacity:.85;">
-          This page is admin-only. If you’re not an admin, you’ll be redirected automatically.
-        </p>
-      </section>
+  box.innerHTML = "";
+  snap.forEach(doc => (box.innerHTML += renderUser(doc)));
+});
 
-      <section class="card" style="margin-bottom:18px;">
-        <h2 style="margin:0 0 10px;">Users (latest)</h2>
-        <div id="usersList">Loading users…</div>
-      </section>
+db.collection("uploads").orderBy("createdAt", "desc").limit(50).onSnapshot(snap => {
+  const box = document.getElementById("uploadsList");
+  if (!box) return;
 
-      <section class="card">
-        <h2 style="margin:0 0 10px;">Uploads (latest)</h2>
-        <div id="uploadsList">Loading uploads…</div>
-      </section>
-    </main>
+  if (snap.empty) {
+    box.innerHTML = "No uploads yet.";
+    return;
+  }
 
-  </div>
-</body>
-</html>
+  box.innerHTML = "";
+  snap.forEach(doc => (box.innerHTML += renderUpload(doc)));
+});
