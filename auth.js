@@ -1,229 +1,94 @@
-/**************************************************************
- * auth.js (GitHub Pages + Firebase Compat)
- * - Auth: email/password login + signup + reset + logout
- * - Firestore: user profile create/load/update
- * - Gating: protected pages, elite-only UI + actions, admin page
- **************************************************************/
-
-/* ========= 1) FIREBASE CONFIG (PASTE YOUR WEB APP CONFIG) ========= */
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBK_o7S1Bcp5u4hKA3j-V_xodrD6PxtNCQ",
-  authDomain: "ai-credit-repair-992c7.firebaseapp.com",
-  projectId: "ai-credit-repair-992c7",
-  storageBucket: "ai-credit-repair-992c7.firebasestorage.app",
-  messagingSenderId: "411411517046",
-  appId: "1:411411517046:web:fa2013a0f914aa06fc5957"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
+// auth.js
 const auth = firebase.auth();
-const db = firebase.firestore();
 
-/* ========= 3) GLOBAL PROFILE ========= */
-let currentUserProfile = null;
+// UI helper
+function showMsg(text, type = "info") {
+  const el = document.getElementById("authMsg");
+  if (!el) return;
+  el.style.display = "block";
+  el.textContent = text;
 
-/* ========= 4) PAGE PROTECTION SETTINGS ========= */
-const PROTECTED_PAGES = ["home.html", "upload.html", "admin.html", "payment.html"];
-
-/* ========= 5) HELPERS ========= */
-function getPath() {
-  return (window.location.pathname || "").toLowerCase();
-}
-
-function onProtectedPage(path) {
-  return PROTECTED_PAGES.some(p => path.includes(p));
-}
-
-function setText(id, text) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = text;
-}
-
-/* ========= 6) ELITE GATING ========= */
-function isElite() {
-  return currentUserProfile?.tier === "elite";
-}
-
-function requireElite(featureName = "This feature") {
-  if (!isElite()) {
-    alert(`${featureName} is for Elite members only. Upgrade to access.`);
-    return false;
+  // lightweight styling without depending on your CSS
+  if (type === "error") {
+    el.style.background = "rgba(255, 80, 80, .15)";
+    el.style.border = "1px solid rgba(255, 80, 80, .35)";
+  } else if (type === "success") {
+    el.style.background = "rgba(80, 255, 170, .12)";
+    el.style.border = "1px solid rgba(80, 255, 170, .30)";
+  } else {
+    el.style.background = "rgba(150, 170, 220, .10)";
+    el.style.border = "1px solid rgba(150, 170, 220, .18)";
   }
-  return true;
 }
 
-function applyEliteGates(profile) {
-  const show = profile?.tier === "elite";
-  document.querySelectorAll(".elite-only").forEach(el => {
-    el.style.display = show ? "block" : "none";
+// SIGNUP
+const signupForm = document.getElementById("signupForm");
+if (signupForm) {
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+      showMsg("✅ Account created! Sending you to the dashboard…", "success");
+      setTimeout(() => (window.location.href = "member-dashboard.html"), 700);
+    } catch (err) {
+      console.error(err);
+      showMsg(`❌ ${err.message}`, "error");
+    }
   });
 }
 
-/* ========= 7) ADMIN GATING ========= */
-function isAdmin() {
-  return currentUserProfile?.role === "admin";
+// LOGIN
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      showMsg("✅ Logged in! Sending you to the dashboard…", "success");
+      setTimeout(() => (window.location.href = "member-dashboard.html"), 700);
+    } catch (err) {
+      console.error(err);
+      showMsg(`❌ ${err.message}`, "error");
+    }
+  });
 }
 
-function requireAdmin() {
-  if (!isAdmin()) {
-    alert("Not authorized.");
-    window.location.href = "home.html";
-    return false;
-  }
-  return true;
+// RESET PASSWORD
+const resetBtn = document.getElementById("resetBtn");
+if (resetBtn) {
+  resetBtn.addEventListener("click", async () => {
+    const email = (document.getElementById("loginEmail")?.value || "").trim();
+    if (!email) return showMsg("Enter your email in the login box first, then click Forgot Password.", "error");
+
+    try {
+      await auth.sendPasswordResetEmail(email);
+      showMsg("✅ Password reset email sent. Check your inbox/spam.", "success");
+    } catch (err) {
+      console.error(err);
+      showMsg(`❌ ${err.message}`, "error");
+    }
+  });
 }
 
-/* ========= 8) AUTH ACTIONS (called from HTML buttons) ========= */
-function loginUser() {
-  const email = (document.getElementById("email")?.value || "").trim();
-  const password = document.getElementById("password")?.value || "";
-
-  if (!email || !password) return alert("Enter email + password.");
-
-  auth.signInWithEmailAndPassword(email, password)
-    .then(() => window.location.href = "home.html")
-    .catch(err => alert(err.message));
+// LOGOUT
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await auth.signOut();
+    showMsg("You’re logged out.", "info");
+    logoutBtn.style.display = "none";
+  });
 }
 
-function signupUser() {
-  const email = (document.getElementById("email")?.value || "").trim();
-  const password = document.getElementById("password")?.value || "";
-
-  if (!email || !password) return alert("Enter email + password.");
-  if (password.length < 6) return alert("Password must be at least 6 characters.");
-
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(cred => createOrUpdateProfileOnSignup(cred.user))
-    .then(() => window.location.href = "home.html")
-    .catch(err => alert(err.message));
-}
-
-function resetPassword() {
-  const email = (document.getElementById("email")?.value || "").trim();
-  if (!email) return alert("Enter your email first, then click Reset.");
-
-  auth.sendPasswordResetEmail(email)
-    .then(() => alert("Password reset email sent. Check your inbox/spam."))
-    .catch(err => alert(err.message));
-}
-
-function logoutUser() {
-  auth.signOut()
-    .then(() => window.location.href = "index.html")
-    .catch(err => alert(err.message));
-}
-
-/* ========= 9) PROFILE CREATE/LOAD ========= */
-function createOrUpdateProfileOnSignup(user) {
-  const uid = user.uid;
-  const email = user.email || "";
-
-  return db.collection("users").doc(uid).set({
-    email,
-    role: "member",   // member | admin
-    tier: "free",     // free | elite
-    paid: false,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true });
-}
-
-function loadProfile(uid, fallbackEmail) {
-  return db.collection("users").doc(uid).get()
-    .then(doc => {
-      if (doc.exists) return doc.data();
-
-      return db.collection("users").doc(uid).set({
-        email: fallbackEmail || "",
-        role: "member",
-        tier: "free",
-        paid: false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true })
-      .then(() => db.collection("users").doc(uid).get())
-      .then(d => d.data());
-    });
-}
-
-/* ========= 10) OPTIONAL PROFILE EDITOR ========= */
-function loadProfileToForm(profile) {
-  const nameEl = document.getElementById("profileName");
-  const phoneEl = document.getElementById("profilePhone");
-  const tierEl = document.getElementById("profileTier");
-
-  if (nameEl) nameEl.value = profile.name || "";
-  if (phoneEl) phoneEl.value = profile.phone || "";
-  if (tierEl) tierEl.textContent = profile.tier || "free";
-}
-
-function saveProfile() {
-  const user = auth.currentUser;
-  if (!user) return (window.location.href = "index.html");
-
-  const name = (document.getElementById("profileName")?.value || "").trim();
-  const phone = (document.getElementById("profilePhone")?.value || "").trim();
-
-  db.collection("users").doc(user.uid).set({
-    name,
-    phone,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true })
-  .then(() => alert("✅ Profile saved"))
-  .catch(err => alert(err.message));
-}
-
-/* ========= 11) MAIN AUTH LISTENER ========= */
-auth.onAuthStateChanged(user => {
-  const path = getPath();
-  const protectedNow = onProtectedPage(path);
-
-  // Logged OUT
-  if (!user) {
-    currentUserProfile = null;
-    document.querySelectorAll(".elite-only").forEach(el => (el.style.display = "none"));
-    if (protectedNow) window.location.href = "index.html";
-    return;
-  }
-
-  // Logged IN
-  setText("userEmail", user.email || "");
-
-  loadProfile(user.uid, user.email || "")
-    .then(profile => {
-      currentUserProfile = profile;
-
-      // UI gates
-      applyEliteGates(profile);
-
-      // Profile editor fill (only if fields exist)
-      loadProfileToForm(profile);
-
-      // Admin page lock
-      if (path.includes("admin.html")) {
-        requireAdmin();
-      }
-    })
-    .catch(err => {
-      console.error("Profile load error:", err);
-      alert("Profile error: " + err.message);
-    });
+// Show logout button if logged in
+auth.onAuthStateChanged((user) => {
+  if (logoutBtn) logoutBtn.style.display = user ? "inline-block" : "none";
 });
-
-/* ========= 12) EXPOSE FUNCTIONS ========= */
-window.loginUser = loginUser;
-window.signupUser = signupUser;
-window.resetPassword = resetPassword;
-window.logoutUser = logoutUser;
-window.saveProfile = saveProfile;
-
-window.isElite = isElite;
-window.isAdmin = isAdmin;
-window.requireElite = requireElite;
-window.requireAdmin = requireAdmin;
