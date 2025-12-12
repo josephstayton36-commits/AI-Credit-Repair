@@ -1,70 +1,133 @@
 // admin.js
-// NOTE: auth.js already blocks non-admins from viewing admin.html.
-
 const db = firebase.firestore();
 
-function cardRow(title, value) {
+function btn(label, onclick, danger = false) {
   return `
-    <div style="display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; margin-bottom:10px;">
-      <div style="opacity:.85">${title}</div>
-      <div style="font-weight:700; text-align:right; word-break:break-word;">${value}</div>
+    <button
+      style="
+        padding:6px 10px;
+        border-radius:6px;
+        border:none;
+        cursor:pointer;
+        font-weight:700;
+        margin-right:6px;
+        background:${danger ? "#ef4444" : "#22c55e"};
+        color:#020617;"
+      onclick="${onclick}">
+      ${label}
+    </button>
+  `;
+}
+
+function card(title, rows) {
+  return `
+    <div style="
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:12px;
+      padding:14px;
+      margin-bottom:14px;">
+      <h3 style="margin-top:0">${title}</h3>
+      ${rows}
     </div>
   `;
 }
 
-function renderUser(doc) {
-  const u = doc.data();
-  return `
-    <div style="padding:14px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; margin-bottom:12px;">
-      <div style="font-weight:800; margin-bottom:6px;">${u.email || "(no email)"}</div>
-      ${cardRow("UID", doc.id)}
-      ${cardRow("Role", u.role || "member")}
-      ${cardRow("Tier", u.tier || "free")}
-      ${cardRow("Paid", String(!!u.paid))}
-    </div>
-  `;
+/* =========================
+   PAYMENT REQUESTS
+   ========================= */
+
+function renderPayment(doc) {
+  const p = doc.data();
+
+  const actions =
+    p.status === "pending"
+      ? btn(
+          "Approve",
+          `approvePayment('${doc.id}','${p.uid}')`
+        ) +
+        btn(
+          "Reject",
+          `rejectPayment('${doc.id}')`,
+          true
+        )
+      : `<strong>Status:</strong> ${p.status}`;
+
+  return card(
+    `Payment — ${p.email || "(no email)"}`,
+    `
+    <p><strong>Cash App:</strong> ${p.cashDisplayName}</p>
+    <p><strong>Amount:</strong> $${p.amount}</p>
+    <p><strong>Date Sent:</strong> ${p.dateSent}</p>
+    <p><strong>Code:</strong> ${p.noteCode}</p>
+    <p>${actions}</p>
+    `
+  );
 }
 
-function renderUpload(doc) {
-  const up = doc.data();
-  const link = up.downloadURL
-    ? `<a href="${up.downloadURL}" target="_blank" rel="noopener noreferrer">Open file</a>`
-    : "(no link)";
+db.collection("paymentRequests")
+  .orderBy("createdAt", "desc")
+  .onSnapshot(snapshot => {
+    const box = document.getElementById("paymentsList");
+    if (!box) return;
 
-  return `
-    <div style="padding:14px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; margin-bottom:12px;">
-      <div style="font-weight:800; margin-bottom:6px;">${up.fileName || "(no filename)"}</div>
-      ${cardRow("Owner Email", up.email || "(unknown)")}
-      ${cardRow("Owner UID", up.uid || "(unknown)")}
-      ${cardRow("Path", up.storagePath || "(none)")}
-      ${cardRow("Link", link)}
-    </div>
-  `;
-}
+    if (snapshot.empty) {
+      box.innerHTML = "No payment requests.";
+      return;
+    }
 
-// Live updates
-db.collection("users").orderBy("createdAt", "desc").limit(50).onSnapshot(snap => {
-  const box = document.getElementById("usersList");
-  if (!box) return;
+    box.innerHTML = "";
+    snapshot.forEach(doc => {
+      box.innerHTML += renderPayment(doc);
+    });
+  });
 
-  if (snap.empty) {
-    box.innerHTML = "No users yet.";
-    return;
+/* =========================
+   ACTIONS
+   ========================= */
+
+async function approvePayment(paymentId, userId) {
+  if (!confirm("Approve this payment and upgrade to Elite?")) return;
+
+  try {
+    // 1) Upgrade user
+    await db.collection("users").doc(userId).set(
+      {
+        tier: "elite",
+        paid: true,
+        upgradedAt: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    // 2) Mark payment approved
+    await db.collection("paymentRequests").doc(paymentId).set(
+      {
+        status: "approved",
+        reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    alert("✅ User upgraded to Elite.");
+  } catch (err) {
+    alert("❌ Error: " + err.message);
   }
+}
 
-  box.innerHTML = "";
-  snap.forEach(doc => (box.innerHTML += renderUser(doc)));
-});
+async function rejectPayment(paymentId) {
+  if (!confirm("Reject this payment request?")) return;
 
-db.collection("uploads").orderBy("createdAt", "desc").limit(50).onSnapshot(snap => {
-  const box = document.getElementById("uploadsList");
-  if (!box) return;
+  try {
+    await db.collection("paymentRequests").doc(paymentId).set(
+      {
+        status: "rejected",
+        reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
 
-  if (snap.empty) {
-    box.innerHTML = "No uploads yet.";
-    return;
+    alert("❌ Payment rejected.");
+  } catch (err) {
+    alert("❌ Error: " + err.message);
   }
-
-  box.innerHTML = "";
-  snap.forEach(doc => (box.innerHTML += renderUpload(doc)));
-});
+}
