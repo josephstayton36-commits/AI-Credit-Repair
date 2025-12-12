@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Credit Repair | Member Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Member login and signup for AI Credit Repair." />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase (Compat for GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <!-- Your Firebase config + auth logic -->
+  <script defer src="firebase-config.js"></script>
+  <script defer src="auth.js"></script>
+</head>
+
+<body>
+  <div class="page" style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
+    <div class="card" style="width:min(960px, 100%); padding:24px; border-radius:18px;">
+      <h1 style="margin:0 0 8px;">Member Access</h1>
+      <p style="margin:0 0 18px; opacity:.85;">Create your account or log in to your AI Credit Repair dashboard.</p>
+
+      <div id="authMsg" style="display:none; padding:12px 14px; border-radius:12px; margin:0 0 16px;"></div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <!-- SIGN UP -->
+        <form id="signupForm" class="glass" style="padding:16px; border-radius:16px;">
+          <h2 style="margin:0 0 10px; font-size:18px;">Create Account</h2>
+
+          <label style="display:block; margin:10px 0 6px;">Email</label>
+          <input id="signupEmail" type="email" autocomplete="email" required style="width:100%; padding:12px; border-radius:12px;" />
+
+          <label style="display:block; margin:10px 0 6px;">Password</label>
+          <input id="signupPassword" type="password" minlength="6" required style="width:100%; padding:12px; border-radius:12px;" />
+
+          <button type="submit" style="width:100%; margin-top:12px; padding:12px; border-radius:12px; cursor:pointer;">
+            Create Account
+          </button>
+
+          <p style="margin:10px 0 0; font-size:12px; opacity:.75;">
+            Password must be at least 6 characters.
+          </p>
+        </form>
+
+        <!-- LOG IN -->
+        <form id="loginForm" class="glass" style="padding:16px; border-radius:16px;">
+          <h2 style="margin:0 0 10px; font-size:18px;">Log In</h2>
+
+          <label style="display:block; margin:10px 0 6px;">Email</label>
+          <input id="loginEmail" type="email" autocomplete="email" required style="width:100%; padding:12px; border-radius:12px;" />
+
+          <label style="display:block; margin:10px 0 6px;">Password</label>
+          <input id="loginPassword" type="password" required style="width:100%; padding:12px; border-radius:12px;" />
+
+          <button type="submit" style="width:100%; margin-top:12px; padding:12px; border-radius:12px; cursor:pointer;">
+            Log In
+          </button>
+
+          <button id="resetBtn" type="button" style="width:100%; margin-top:10px; padding:12px; border-radius:12px; cursor:pointer; opacity:.9;">
+            Forgot Password
+          </button>
+        </form>
+      </div>
+
+      <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+        <button id="logoutBtn" type="button" style="padding:10px 12px; border-radius:12px; cursor:pointer; display:none;">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple mobile stacking if your CSS doesn't handle it yet
+    if (window.innerWidth < 900) {
+      const grid = document.querySelector('[style*="grid-template-columns"]');
+      if (grid) grid.style.gridTemplateColumns = "1fr";
+    }
+  </script>
+</body>
+</html>
