@@ -21,50 +21,149 @@
 </head>
 
 <body>
-  <div class="page">
 
-    <!-- Header -->
-    <header class="site-header">
-      <div class="container nav" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-        <div class="brand" style="display:flex; align-items:center; gap:12px;">
-          <div class="logo-circle">AI</div>
-          <div class="brand-text">
-            <span class="brand-name">Admin Dashboard</span>
-            <span class="brand-tagline">AI Credit Repair</span>
+  <!-- ======================= HEADER / NAV ======================= -->
+  <header class="site-header">
+    <div class="container nav">
+
+      <div class="brand">
+        <!-- Replace with your mascot/logo if you want -->
+        <img src="assets/mad_scientist.png" alt="AI Credit Repair" class="logo" />
+
+        <div class="brand-text">
+          <span class="brand-name">Admin Dashboard</span>
+          <span class="brand-tagline"><strong>AI Credit Repair</strong> • Private Admin Area</span>
+        </div>
+      </div>
+
+      <nav class="main-nav">
+        <a href="home.html">Dashboard</a>
+        <a href="upload.html">Uploads</a>
+        <a href="payment.html">Payments</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ======================= MAIN ======================= -->
+  <main class="container page">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-title">
+        <div>
+          <div class="kicker">Admin Only</div>
+          <h1>Control Center</h1>
+          <p>
+            This page is admin-only. If you’re not authorized, you’ll be redirected automatically.
+          </p>
+        </div>
+
+        <div class="stack" style="min-width: 260px;">
+          <div class="badge">
+            <span>Logged in as:</span>
+            <strong id="userEmail">Loading…</strong>
+          </div>
+
+          <div class="row">
+            <button class="btn btn-ghost" onclick="location.href='home.html'">Back to Dashboard</button>
+            <button class="btn-danger" onclick="logoutUser()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="section">
+      <div class="section-title">
+        <h2>Quick Actions</h2>
+        <span class="small">Fast admin tools (you can wire these to admin.js later).</span>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="panel panel-pad">
+          <h3>Member Management</h3>
+          <p>View users, toggle tiers, and track membership status.</p>
+          <div class="row" style="margin-top:12px;">
+            <button class="btn-primary" onclick="document.getElementById('usersList')?.scrollIntoView({behavior:'smooth'})">
+              View Users
+            </button>
+            <button class="btn btn-ghost" onclick="alert('Next: Add tier toggle + role toggle buttons in admin.js')">
+              Add Tier Toggle
+            </button>
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span style="opacity:.85;">Logged in as: <strong id="userEmail">Loading…</strong></span>
-          <button class="btn logout-btn" onclick="logoutUser()">Logout</button>
+        <div class="panel panel-pad">
+          <h3>Review New Activity</h3>
+          <p>Quickly jump to payments or uploads and verify requests.</p>
+          <div class="row" style="margin-top:12px;">
+            <button class="btn-primary" onclick="document.getElementById('paymentsList')?.scrollIntoView({behavior:'smooth'})">
+              Payment Requests
+            </button>
+            <button class="btn btn-ghost" onclick="document.getElementById('uploadsList')?.scrollIntoView({behavior:'smooth'})">
+              Recent Uploads
+            </button>
+          </div>
         </div>
       </div>
-    </header>
+    </section>
 
-    <!-- Main -->
-    <main class="container" style="padding:24px 0;">
-      <section class="card" style="margin-bottom:18px;">
-        <h2 style="margin:0 0 8px;">Quick Actions</h2>
-        <p style="margin:0; opacity:.85;">
-          This page is admin-only. If you’re not an admin, you’ll be redirected automatically.
-        </p>
-      </section>
+    <!-- USERS + PAYMENTS -->
+    <section class="section">
+      <div class="section-title">
+        <h2>Latest Activity</h2>
+        <span class="small">Users, payment requests, and uploads.</span>
+      </div>
 
-      <section class="card" style="margin-bottom:18px;">
-        <h2 style="margin:0 0 10px;">Users (latest)</h2>
-        <div id="usersList">Loading users…</div>
-<section class="card" style="margin-bottom:18px;">
-  <h2 style="margin:0 0 10px;">Payment Requests</h2>
-  <div id="paymentsList">Loading payments…</div>
-</section>
-      </section>
+      <div class="grid grid-2">
+        <!-- USERS -->
+        <section class="card card-pad">
+          <div class="spread">
+            <h2>Users (latest)</h2>
+            <span class="badge">Live</span>
+          </div>
+          <div class="divider"></div>
+          <div id="usersList">Loading users…</div>
+        </section>
 
-      <section class="card">
-        <h2 style="margin:0 0 10px;">Uploads (latest)</h2>
+        <!-- PAYMENTS -->
+        <section class="card card-pad">
+          <div class="spread">
+            <h2>Payment Requests</h2>
+            <span class="badge">Review</span>
+          </div>
+          <div class="divider"></div>
+          <div id="paymentsList">Loading payments…</div>
+        </section>
+      </div>
+    </section>
+
+    <!-- UPLOADS -->
+    <section class="section">
+      <div class="section-title">
+        <h2>Uploads (latest)</h2>
+        <span class="small">Credit report submissions and files.</span>
+      </div>
+
+      <section class="card card-pad">
         <div id="uploadsList">Loading uploads…</div>
       </section>
-    </main>
+    </section>
 
-  </div>
+    <footer class="footer">
+      <div class="spread">
+        <span>© <span id="year"></span> AI Credit Repair</span>
+        <span class="small">Admin Console • Secure • Logged activity</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
