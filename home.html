@@ -4,37 +4,111 @@
   <meta charset="UTF-8" />
   <title>AI Credit Repair | Member Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Your AI Credit Repair member dashboard: profile, tools, resources, and elite features." />
+  <meta name="description" content="AI Credit Repair member dashboard: tools, laws, tips, and elite features." />
 
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase Compat (matches your auth.js compat version) -->
+  <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Auth / gating logic -->
+  <!-- Auth / gating -->
   <script defer src="auth.js"></script>
+
+  <!-- Your content -->
+  <script defer src="content.js"></script>
+
+  <!-- Page renderer -->
+  <script defer>
+    function pickRandom(arr) {
+      if (!Array.isArray(arr) || !arr.length) return "";
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function safeText(id, txt) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt ?? "";
+    }
+
+    function renderCards() {
+      const data = window.AICR_CONTENT;
+      if (!data) return;
+
+      // Brand
+      safeText("brandName", data.brandName);
+      safeText("tagline", data.tagline);
+
+      // AI Quote of the day
+      safeText("aiQuote", pickRandom(data.aiResponses));
+
+      // Credit Laws
+      const lawsWrap = document.getElementById("lawsWrap");
+      if (lawsWrap) {
+        lawsWrap.innerHTML = "";
+        (data.creditLaws || []).forEach(law => {
+          const div = document.createElement("div");
+          div.className = "panel panel-pad";
+          div.innerHTML = `
+            <div class="spread">
+              <h3 style="margin:0;">${law.title}</h3>
+              <span class="badge">Law</span>
+            </div>
+            <div class="divider"></div>
+            <p>${law.summary}</p>
+            <p class="small" style="margin-top:10px;"><strong>Power Move:</strong> ${law.power}</p>
+          `;
+          lawsWrap.appendChild(div);
+        });
+      }
+
+      // Score Boost Tips
+      const tipsWrap = document.getElementById("tipsWrap");
+      if (tipsWrap) {
+        tipsWrap.innerHTML = "";
+        (data.scoreBoostTips || []).forEach((tip, idx) => {
+          const div = document.createElement("div");
+          div.className = "panel panel-pad";
+          div.innerHTML = `
+            <div class="spread">
+              <h3 style="margin:0;">Tip #${idx + 1}</h3>
+              <span class="badge">Boost</span>
+            </div>
+            <div class="divider"></div>
+            <p>${tip}</p>
+          `;
+          tipsWrap.appendChild(div);
+        });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Footer year
+      const y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
+
+      // Render content once scripts load
+      // (Small delay avoids race conditions on GitHub Pages)
+      setTimeout(renderCards, 50);
+    });
+  </script>
 </head>
 
 <body>
 
-  <!-- ======================= HEADER / NAV ======================= -->
+  <!-- HEADER -->
   <header class="site-header">
     <div class="container nav">
 
       <div class="brand">
-        <!-- Replace with your logo/mascot path if you have it -->
-        <img src="assets/mad_scientist.png" alt="AI Credit Repair Mascot" class="logo" />
-
+        <img src="assets/mad_scientist.png" alt="AI Credit Repair" class="logo" />
         <div class="brand-text">
-          <span class="brand-name">AI <strong>Credit</strong> Repair</span>
-          <span class="brand-tagline"><strong>Smart Strategy • Real Progress • Member Tools</strong></span>
+          <span class="brand-name" id="brandName">AI Credit Repair</span>
+          <span class="brand-tagline"><strong id="tagline">Smart Disputes. Real Results.</strong></span>
         </div>
       </div>
 
       <nav class="main-nav">
-        <!-- Keep whatever pages you already have -->
         <a href="home.html">Dashboard</a>
         <a href="free-resources.html">Free Resources</a>
         <a href="payment.html" class="elite-only">Elite Upgrade</a>
@@ -45,140 +119,129 @@
     </div>
   </header>
 
-  <!-- ======================= MAIN ======================= -->
+  <!-- MAIN -->
   <main class="container page">
 
-    <!-- ======================= HERO ======================= -->
+    <!-- HERO -->
     <section class="hero">
       <div class="hero-title">
         <div>
           <div class="kicker">Member Dashboard</div>
           <h1>Welcome back 👋</h1>
-          <p>
-            Your secure member area for credit tools, progress tracking, and support resources.
+          <p class="small" style="margin-top:10px;">
+            Signed in as: <strong id="userEmail">loading…</strong>
+            <span style="margin-left:10px;" class="badge">Plan: <strong id="profileTier">free</strong></span>
           </p>
+          <div class="divider"></div>
+          <div class="panel panel-pad">
+            <h3 style="margin:0;">AI Coach says:</h3>
+            <p style="margin-top:10px;" id="aiQuote">Loading…</p>
+          </div>
         </div>
 
-        <div class="row">
+        <div class="stack" style="min-width: 280px;">
           <!-- NEW BUTTON THING -->
-          <button class="btn btn-ghost" onclick="logoutUser()">Logout</button>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="spread">
-        <div class="badge">
-          <span>Signed in as:</span>
-          <strong id="userEmail">loading...</strong>
-        </div>
-
-        <div class="badge">
-          <span>Plan:</span>
-          <strong id="profileTier">free</strong>
+          <button class="btn-primary" onclick="alert('Next: open your AI chat widget')">Open AI Credit Coach</button>
+          <button class="btn btn-ghost" onclick="location.href='free-resources.html'">Download Free Letters</button>
+          <button class="btn btn-ghost elite-only" onclick="location.href='upload.html'">Upload Reports (Elite)</button>
+          <button class="btn-danger" onclick="logoutUser()">Logout</button>
         </div>
       </div>
     </section>
 
-    <!-- ======================= QUICK STATS ======================= -->
+    <!-- QUICK ACTIONS -->
     <section class="section">
       <div class="section-title">
-        <h2>Your Snapshot</h2>
-        <span class="small">This can be automated later with real data.</span>
-      </div>
-
-      <div class="grid grid-3">
-        <div class="stat">
-          <div class="label">Next Best Action</div>
-          <div class="value">Dispute</div>
-          <div class="trend">Target inaccurate negatives & verify reporting.</div>
-        </div>
-
-        <div class="stat">
-          <div class="label">Utilization Goal</div>
-          <div class="value">&lt; 9%</div>
-          <div class="trend">Keep balances low for score stability.</div>
-        </div>
-
-        <div class="stat">
-          <div class="label">Payment Streak</div>
-          <div class="value">On Track</div>
-          <div class="trend">Perfect history is your #1 long-term lever.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================= MEMBER TOOLS ======================= -->
-    <section class="section">
-      <div class="section-title">
-        <h2>Member Tools</h2>
-        <span class="small">Fast actions that move your score.</span>
+        <h2>Quick Actions</h2>
+        <span class="small">Fast moves that build results.</span>
       </div>
 
       <div class="grid grid-2">
         <div class="panel panel-pad">
-          <h3>Ask AI Credit Coach</h3>
-          <p>Get guidance on disputes, strategy, utilization, and rebuilding timelines.</p>
+          <h3>Dispute Builder</h3>
+          <p>Use laws + strategy to challenge inaccurate, incomplete, or unverifiable reporting.</p>
           <div class="row" style="margin-top:12px;">
-            <!-- NEW BUTTON THING -->
-            <button class="btn-primary" onclick="alert('Hook this to your AI chat widget next.')">Open Coach</button>
-            <button class="btn btn-ghost" onclick="location.href='free-resources.html'">Free Letters</button>
+            <button class="btn-primary" onclick="alert('Next: connect to dispute wizard page')">Start Dispute</button>
+            <button class="btn btn-ghost" onclick="location.href='free-resources.html'">Templates</button>
           </div>
         </div>
 
         <div class="panel panel-pad">
-          <h3>Progress Checklist</h3>
-          <p>Follow your step-by-step plan. Consistency beats intensity.</p>
+          <h3>Score Boost Checklist</h3>
+          <p>Consistency beats intensity. Follow your weekly plan and track progress.</p>
           <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="alert('Next step: build checklist UI + save in Firestore.')">View Checklist</button>
-            <button class="btn btn-ghost" onclick="alert('Next: add reminders + timeline.')">Set Reminders</button>
+            <button class="btn-primary" onclick="document.getElementById('tips').scrollIntoView({behavior:'smooth'})">View Tips</button>
+            <button class="btn btn-ghost" onclick="alert('Next: add reminder system')">Set Reminders</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ======================= ELITE ONLY AREA ======================= -->
+    <!-- CREDIT LAWS -->
+    <section class="section" id="laws">
+      <div class="section-title">
+        <h2>Credit Laws We Use</h2>
+        <span class="small">Law-based strategy, not guessing.</span>
+      </div>
+
+      <div class="grid grid-2" id="lawsWrap">
+        <!-- injected by JS -->
+      </div>
+    </section>
+
+    <!-- TIPS -->
+    <section class="section" id="tips">
+      <div class="section-title">
+        <h2>Score Boost Tips</h2>
+        <span class="small">These are the “Credit Karma style” fundamentals.</span>
+      </div>
+
+      <div class="grid grid-2" id="tipsWrap">
+        <!-- injected by JS -->
+      </div>
+    </section>
+
+    <!-- ELITE ONLY -->
     <section class="section elite-only">
       <div class="section-title">
         <h2>Elite Tools 🔒</h2>
-        <span class="small">Visible only to Elite members.</span>
+        <span class="small">Elite members get uploads + advanced features.</span>
       </div>
 
       <div class="grid grid-2">
         <div class="panel panel-pad">
-          <h3>Upload Credit Reports</h3>
-          <p>Securely submit your reports for review and strategy building.</p>
+          <h3>Secure Upload</h3>
+          <p>Submit credit reports for review and strategy building.</p>
           <div class="row" style="margin-top:12px;">
             <button class="btn-primary" onclick="location.href='upload.html'">Go to Upload</button>
-            <button class="btn btn-ghost" onclick="alert('Next: add upload status tracking.')">Check Status</button>
+            <button class="btn btn-ghost" onclick="location.href='payment.html'">Manage Plan</button>
           </div>
         </div>
 
         <div class="panel panel-pad">
-          <h3>Elite Snapshot Plan</h3>
-          <p>Your structured 30–90 day action plan. Designed for real results.</p>
+          <h3>Elite Snapshot</h3>
+          <p>Your structured action plan designed for measurable results.</p>
           <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="alert('Next: connect to your Elite Snapshot page/PDF.')">Open Snapshot</button>
-            <button class="btn btn-ghost" onclick="location.href='payment.html'">Manage Plan</button>
+            <button class="btn-primary" onclick="alert('Next: connect to your Snapshot PDF/page')">Open Snapshot</button>
+            <button class="btn btn-ghost" onclick="alert('Next: add progress tracking')">Track Progress</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ======================= PROFILE EDITOR (HOOKED TO auth.js) ======================= -->
+    <!-- PROFILE (HOOKED TO auth.js) -->
     <section class="section">
       <div class="section-title">
         <h2>Your Profile</h2>
-        <span class="small">This saves to Firestore (users collection).</span>
+        <span class="small">Saved securely in Firestore.</span>
       </div>
 
-      <div class="card card-pad">
+      <section class="card card-pad">
         <div class="grid grid-2">
           <div>
             <label for="profileName">Full Name</label>
             <input id="profileName" type="text" placeholder="Your name" />
           </div>
-
           <div>
             <label for="profilePhone">Phone</label>
             <input id="profilePhone" type="tel" placeholder="(555) 555-5555" />
@@ -186,35 +249,10 @@
         </div>
 
         <div class="row" style="margin-top:14px;">
-          <!-- NEW BUTTON THING -->
           <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
-          <button class="btn btn-ghost" onclick="alert('Next: add address + goals fields.')">Add More Info</button>
+          <button class="btn btn-ghost" onclick="alert('Next: add goals + credit score input fields')">Add Goals</button>
         </div>
-
-        <div class="divider"></div>
-
-        <p class="small">
-          Plan tier shown above updates automatically based on your Firestore user document
-          (<code>users/{uid}</code> → <code>tier</code>).
-        </p>
-      </div>
-    </section>
-
-    <!-- ======================= ADMIN (ONLY SHOWS IF YOU LINK IT / ROLE CHECK IS IN auth.js) ======================= -->
-    <section class="section elite-only">
-      <div class="section-title">
-        <h2>Admin</h2>
-        <span class="small">If your role is admin, you can access admin tools.</span>
-      </div>
-
-      <div class="panel panel-pad">
-        <h3>Admin Console</h3>
-        <p>Manage members, tiers, and view uploads (coming next).</p>
-        <div class="row" style="margin-top:12px;">
-          <button class="btn-primary" onclick="location.href='admin.html'">Open Admin</button>
-          <button class="btn btn-ghost" onclick="alert('Next: build member list + tier toggle.')">Member Manager</button>
-        </div>
-      </div>
+      </section>
     </section>
 
     <footer class="footer">
@@ -225,11 +263,5 @@
     </footer>
 
   </main>
-
-  <script>
-    // tiny helper for footer year (no dependency)
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-
 </body>
 </html>
