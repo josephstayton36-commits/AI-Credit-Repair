@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Credit Repair | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script defer src="firebase-config.js"></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const auth = firebase.auth();
+      auth.onAuthStateChanged((user) => {
+        if (!user) window.location.href = "member-login.html";
+        else document.getElementById("userEmail").textContent = user.email;
+      });
+
+      document.getElementById("logout").addEventListener("click", async () => {
+        await auth.signOut();
+        window.location.href = "member-login.html";
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="page" style="min-height:100vh; padding:24px;">
+    <h1>Member Dashboard</h1>
+    <p>Logged in as: <strong id="userEmail">...</strong></p>
+
+    <button id="logout" style="padding:12px 14px; border-radius:12px; cursor:pointer;">
+      Log Out
+    </button>
+  </div>
+</body>
+</html>
