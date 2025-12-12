@@ -854,3 +854,40 @@ a {
     margin-top: 1rem;
   }
 }
+/* ===============================
+   AUTH PAGE
+   =============================== */
+
+.auth-page {
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+}
+
+.auth-container h1 {
+  color: #38bdf8;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.auth-container button {
+  margin-top: 18px;
+  width: 100%;
+}
