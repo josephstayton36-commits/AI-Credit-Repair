@@ -2,255 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Credit Repair | Member Dashboard</title>
+  <title>Member Dashboard | AI Credit Repair</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="AI Credit Repair member dashboard: tools, laws, tips, and elite features." />
+  <meta name="description" content="Your AI Credit Repair member dashboard." />
 
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase Compat -->
+  <!-- Firebase (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Auth / gating -->
+  <!-- Auth + gating -->
   <script defer src="auth.js"></script>
-
-  <!-- Your content -->
-  <script defer src="content.js"></script>
-
-  <!-- Page renderer -->
-  <script defer>
-    function pickRandom(arr) {
-      if (!Array.isArray(arr) || !arr.length) return "";
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    function safeText(id, txt) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = txt ?? "";
-    }
-
-    function renderCards() {
-      const data = window.AICR_CONTENT;
-      if (!data) return;
-
-      // Brand
-      safeText("brandName", data.brandName);
-      safeText("tagline", data.tagline);
-
-      // AI Quote of the day
-      safeText("aiQuote", pickRandom(data.aiResponses));
-
-      // Credit Laws
-      const lawsWrap = document.getElementById("lawsWrap");
-      if (lawsWrap) {
-        lawsWrap.innerHTML = "";
-        (data.creditLaws || []).forEach(law => {
-          const div = document.createElement("div");
-          div.className = "panel panel-pad";
-          div.innerHTML = `
-            <div class="spread">
-              <h3 style="margin:0;">${law.title}</h3>
-              <span class="badge">Law</span>
-            </div>
-            <div class="divider"></div>
-            <p>${law.summary}</p>
-            <p class="small" style="margin-top:10px;"><strong>Power Move:</strong> ${law.power}</p>
-          `;
-          lawsWrap.appendChild(div);
-        });
-      }
-
-      // Score Boost Tips
-      const tipsWrap = document.getElementById("tipsWrap");
-      if (tipsWrap) {
-        tipsWrap.innerHTML = "";
-        (data.scoreBoostTips || []).forEach((tip, idx) => {
-          const div = document.createElement("div");
-          div.className = "panel panel-pad";
-          div.innerHTML = `
-            <div class="spread">
-              <h3 style="margin:0;">Tip #${idx + 1}</h3>
-              <span class="badge">Boost</span>
-            </div>
-            <div class="divider"></div>
-            <p>${tip}</p>
-          `;
-          tipsWrap.appendChild(div);
-        });
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      // Footer year
-      const y = document.getElementById("year");
-      if (y) y.textContent = new Date().getFullYear();
-
-      // Render content once scripts load
-      // (Small delay avoids race conditions on GitHub Pages)
-      setTimeout(renderCards, 50);
-    });
-  </script>
 </head>
 
 <body>
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header class="site-header">
     <div class="container nav">
 
       <div class="brand">
         <img src="assets/mad_scientist.png" alt="AI Credit Repair" class="logo" />
         <div class="brand-text">
-          <span class="brand-name" id="brandName">AI Credit Repair</span>
-          <span class="brand-tagline"><strong id="tagline">Smart Disputes. Real Results.</strong></span>
+          <span class="brand-name">AI Credit Repair</span>
+          <span class="brand-tagline">Smart Disputes · Real Results</span>
         </div>
       </div>
 
       <nav class="main-nav">
         <a href="home.html">Dashboard</a>
-        <a href="free-resources.html">Free Resources</a>
-        <a href="payment.html" class="elite-only">Elite Upgrade</a>
-        <a href="upload.html" class="elite-only">Upload Reports</a>
+        <a href="free-resources.html">Resources</a>
+        <a href="upload.html" class="elite-only">Uploads</a>
         <a href="admin.html" class="elite-only">Admin</a>
+        <button class="btn btn-ghost" onclick="logoutUser()">Logout</button>
       </nav>
 
     </div>
   </header>
 
-  <!-- MAIN -->
+  <!-- ================= MAIN ================= -->
   <main class="container page">
 
     <!-- HERO -->
     <section class="hero">
       <div class="hero-title">
         <div>
-          <div class="kicker">Member Dashboard</div>
+          <div class="kicker">Member Area</div>
           <h1>Welcome back 👋</h1>
-          <p class="small" style="margin-top:10px;">
-            Signed in as: <strong id="userEmail">loading…</strong>
-            <span style="margin-left:10px;" class="badge">Plan: <strong id="profileTier">free</strong></span>
+          <p class="small">
+            Signed in as <strong id="userEmail">loading…</strong>
+            <span class="badge">Plan: <strong id="profileTier">free</strong></span>
           </p>
-          <div class="divider"></div>
-          <div class="panel panel-pad">
-            <h3 style="margin:0;">AI Coach says:</h3>
-            <p style="margin-top:10px;" id="aiQuote">Loading…</p>
-          </div>
         </div>
 
-        <div class="stack" style="min-width: 280px;">
-          <!-- NEW BUTTON THING -->
-          <button class="btn-primary" onclick="alert('Next: open your AI chat widget')">Open AI Credit Coach</button>
-          <button class="btn btn-ghost" onclick="location.href='free-resources.html'">Download Free Letters</button>
-          <button class="btn btn-ghost elite-only" onclick="location.href='upload.html'">Upload Reports (Elite)</button>
-          <button class="btn-danger" onclick="logoutUser()">Logout</button>
+        <div class="stack">
+          <button class="btn-primary" onclick="alert('Hook to AI chat next')">
+            Open AI Credit Coach
+          </button>
+          <button class="btn btn-ghost" onclick="location.href='free-resources.html'">
+            Free Letters
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- QUICK ACTIONS -->
+    <!-- TOOLS -->
     <section class="section">
       <div class="section-title">
-        <h2>Quick Actions</h2>
-        <span class="small">Fast moves that build results.</span>
+        <h2>Your Tools</h2>
+        <span class="small">Everything you need to move your score.</span>
       </div>
 
-      <div class="grid grid-2">
-        <div class="panel panel-pad">
-          <h3>Dispute Builder</h3>
-          <p>Use laws + strategy to challenge inaccurate, incomplete, or unverifiable reporting.</p>
-          <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="alert('Next: connect to dispute wizard page')">Start Dispute</button>
-            <button class="btn btn-ghost" onclick="location.href='free-resources.html'">Templates</button>
-          </div>
-        </div>
-
-        <div class="panel panel-pad">
-          <h3>Score Boost Checklist</h3>
-          <p>Consistency beats intensity. Follow your weekly plan and track progress.</p>
-          <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="document.getElementById('tips').scrollIntoView({behavior:'smooth'})">View Tips</button>
-            <button class="btn btn-ghost" onclick="alert('Next: add reminder system')">Set Reminders</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CREDIT LAWS -->
-    <section class="section" id="laws">
-      <div class="section-title">
-        <h2>Credit Laws We Use</h2>
-        <span class="small">Law-based strategy, not guessing.</span>
-      </div>
-
-      <div class="grid grid-2" id="lawsWrap">
-        <!-- injected by JS -->
-      </div>
-    </section>
-
-    <!-- TIPS -->
-    <section class="section" id="tips">
-      <div class="section-title">
-        <h2>Score Boost Tips</h2>
-        <span class="small">These are the “Credit Karma style” fundamentals.</span>
-      </div>
-
-      <div class="grid grid-2" id="tipsWrap">
-        <!-- injected by JS -->
-      </div>
-    </section>
-
-    <!-- ELITE ONLY -->
-    <section class="section elite-only">
-      <div class="section-title">
-        <h2>Elite Tools 🔒</h2>
-        <span class="small">Elite members get uploads + advanced features.</span>
-      </div>
-
-      <div class="grid grid-2">
-        <div class="panel panel-pad">
-          <h3>Secure Upload</h3>
-          <p>Submit credit reports for review and strategy building.</p>
-          <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="location.href='upload.html'">Go to Upload</button>
-            <button class="btn btn-ghost" onclick="location.href='payment.html'">Manage Plan</button>
-          </div>
-        </div>
-
+      <div class="grid grid-3">
         <div class="panel panel-pad">
           <h3>Elite Snapshot</h3>
-          <p>Your structured action plan designed for measurable results.</p>
-          <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="alert('Next: connect to your Snapshot PDF/page')">Open Snapshot</button>
-            <button class="btn btn-ghost" onclick="alert('Next: add progress tracking')">Track Progress</button>
-          </div>
+          <p>Your personalized roadmap and dispute strategy.</p>
+          <button class="btn-primary" style="margin-top:12px;">
+            View Snapshot
+          </button>
+        </div>
+
+        <div class="panel panel-pad elite-only">
+          <h3>Upload Credit Reports</h3>
+          <p>Submit reports securely for review.</p>
+          <button class="btn-primary" onclick="location.href='upload.html'" style="margin-top:12px;">
+            Upload Reports
+          </button>
+        </div>
+
+        <div class="panel panel-pad">
+          <h3>Ask AI</h3>
+          <p>Get guidance on disputes, utilization, and next steps.</p>
+          <button class="btn btn-ghost" style="margin-top:12px;">
+            Ask a Question
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- PROFILE (HOOKED TO auth.js) -->
+    <!-- PROFILE -->
     <section class="section">
       <div class="section-title">
         <h2>Your Profile</h2>
-        <span class="small">Saved securely in Firestore.</span>
+        <span class="small">Saved securely.</span>
       </div>
 
       <section class="card card-pad">
         <div class="grid grid-2">
           <div>
-            <label for="profileName">Full Name</label>
+            <label>Full Name</label>
             <input id="profileName" type="text" placeholder="Your name" />
           </div>
           <div>
-            <label for="profilePhone">Phone</label>
+            <label>Phone</label>
             <input id="profilePhone" type="tel" placeholder="(555) 555-5555" />
           </div>
         </div>
 
         <div class="row" style="margin-top:14px;">
           <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
-          <button class="btn btn-ghost" onclick="alert('Next: add goals + credit score input fields')">Add Goals</button>
         </div>
       </section>
     </section>
@@ -258,10 +130,15 @@
     <footer class="footer">
       <div class="spread">
         <span>© <span id="year"></span> AI Credit Repair</span>
-        <span class="small">Secure member portal • Built for results</span>
+        <span class="small">Secure • Private • Law-Based</span>
       </div>
     </footer>
 
   </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
