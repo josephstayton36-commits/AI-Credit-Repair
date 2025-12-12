@@ -1,12 +1,6 @@
-// 🔥 Your Firebase config (from Firebase Console)
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// 🔥 Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyBK_o7S1Bcp5u4hKA3j-V_xodrD6PxtNCQ",
+  apiKey: "AIzaSyBK_07S1Bcp5u4hKA3i-V_xodrD6PxtNCQ",
   authDomain: "ai-credit-repair-992c7.firebaseapp.com",
   projectId: "ai-credit-repair-992c7",
   storageBucket: "ai-credit-repair-992c7.firebasestorage.app",
@@ -15,22 +9,34 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// LOGIN FUNCTION
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// 🔐 LOGIN
 function loginUser() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-      window.location.href = "index.html"; // redirect after login
+      window.location.href = "index.html";
     })
-    .catch(error => {
-      alert(error.message);
-    });
+    .catch(error => alert(error.message));
 }
 
-// PROTECT HOME PAGE
+// ➕ CREATE ACCOUNT
+function signupUser() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      window.location.href = "index.html";
+    })
+    .catch(error => alert(error.message));
+}
+
+// 🔒 PROTECT HOME PAGE
 auth.onAuthStateChanged(user => {
   if (!user && window.location.pathname.includes("index.html")) {
     window.location.href = "login.html";
