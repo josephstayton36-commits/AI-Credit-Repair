@@ -1,17 +1,55 @@
-<div class="auth-container">
-  <h1>AI Credit Repair</h1>
-  <p class="auth-subtitle" id="authTitle">Member Login</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Credit Repair | Member Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <input type="email" id="email" placeholder="Email address" />
-  <input type="password" id="password" placeholder="Password" />
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="style.css" />
 
-  <button id="loginBtn" onclick="loginUser()">Login</button>
-  <button id="signupBtn" onclick="signupUser()" class="secondary-btn">
-    Create Account
-  </button>
+  <!-- Firebase (Compat for GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-  <p class="auth-toggle">
-    No account yet?
-    <span onclick="toggleMode()">Create one</span>
-  </p>
-</div>
+  <!-- Auth Logic -->
+  <script defer src="auth.js"></script>
+</head>
+
+<body class="auth-page">
+
+  <div class="auth-container">
+    <h1>AI Credit Repair</h1>
+    <p class="auth-subtitle">Member Login</p>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Email address"
+      autocomplete="email"
+    />
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    />
+
+    <div style="margin-bottom: 12px;">
+      <button onclick="loginUser()">Login</button>
+      <button class="secondary-btn" onclick="signupUser()">Create Account</button>
+    </div>
+
+    <p class="auth-toggle">
+      Forgot your password?
+      <span onclick="resetPassword()">Reset it</span>
+    </p>
+
+    <p class="auth-toggle" style="margin-top:6px;">
+      Secure, private, and encrypted. Nothing is shared.
+    </p>
+  </div>
+
+</body>
+</html>
