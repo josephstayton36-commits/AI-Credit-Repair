@@ -1,3 +1,9 @@
+// ==============================
+// AI CREDIT REPAIR — script.js
+// Fixed: loadContentConfig placement + single DOMContentLoaded
+// ==============================
+
+
 // =============== SITE CONFIG ===============
 const SITE_CONFIG = {
   brandName: "AI Credit Repair",
@@ -8,7 +14,8 @@ const SITE_CONFIG = {
       title: "FCRA §609",
       summary:
         "You can request all information a bureau has on you, including the source of each account.",
-      power: "Use this to force bureaus to prove an account is valid or delete it.",
+      power:
+        "Use this to force bureaus to prove an account is valid or delete it.",
     },
     {
       title: "FCRA §611",
@@ -25,58 +32,6 @@ const SITE_CONFIG = {
         "Great for attacking collections that use illegal tactics or bad notices.",
     },
   ],
-  async function loadContentConfig() {
-  try {
-    const res = await fetch("content.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("Could not load content.json");
-    const data = await res.json();
-
-    // Brand
-    const bn = document.getElementById("brandName");
-    const bt = document.getElementById("brandTagline");
-    if (bn) bn.textContent = data.brandName || "AI Credit Repair";
-    if (bt) bt.textContent = data.tagline || "Smart Disputes. Real Results.";
-
-    // Credit laws (optional render if container exists)
-    const lawsBox = document.getElementById("creditLawsList");
-    if (lawsBox && Array.isArray(data.creditLaws)) {
-      lawsBox.innerHTML = data.creditLaws.map(law => `
-        <div class="law-item">
-          <h3>${law.title}</h3>
-          <p class="muted">${law.summary}</p>
-          <p><strong>Power Move:</strong> ${law.power}</p>
-        </div>
-      `).join("");
-    }
-
-    // Score tip button
-    const tipBtn = document.getElementById("scoreTipBtn");
-    const tipText = document.getElementById("scoreTipText");
-    if (tipBtn && tipText && Array.isArray(data.scoreBoostTips)) {
-      tipBtn.addEventListener("click", () => {
-        const tip = data.scoreBoostTips[Math.floor(Math.random() * data.scoreBoostTips.length)];
-        tipText.textContent = tip;
-      });
-    }
-
-    // Ask AI fallback (if you don’t have real OpenAI yet)
-    const askForm = document.getElementById("askAiForm");
-    const askInput = document.getElementById("askAiInput");
-    const askOut = document.getElementById("askAiResponse");
-    if (askForm && askInput && askOut && Array.isArray(data.aiResponses)) {
-      askForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const reply = data.aiResponses[Math.floor(Math.random() * data.aiResponses.length)];
-        askOut.innerHTML = `<p>${reply}</p>`;
-      });
-    }
-
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", loadContentConfig);
 
   aiResponses: [
     "Your credit is fixable. What matters is the moves you make from today forward.",
@@ -93,11 +48,74 @@ document.addEventListener("DOMContentLoaded", loadContentConfig);
   ],
 };
 
+
+// =============== OPTIONAL CONTENT.JSON LOADER ===============
+// This lets you override brandName/tagline/laws/tips/responses from content.json
+async function loadContentConfig() {
+  try {
+    const res = await fetch("content.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("Could not load content.json");
+    const data = await res.json();
+
+    // Brand
+    const bn = document.getElementById("brandName");
+    const bt = document.getElementById("brandTagline");
+    if (bn) bn.textContent = data.brandName || SITE_CONFIG.brandName;
+    if (bt) bt.textContent = data.tagline || SITE_CONFIG.tagline;
+
+    // Credit laws (optional render if container exists)
+    const lawsBox = document.getElementById("creditLawsList");
+    if (lawsBox && Array.isArray(data.creditLaws)) {
+      lawsBox.innerHTML = data.creditLaws.map(law => `
+        <div class="law-item">
+          <h3>${law.title}</h3>
+          <p class="muted">${law.summary}</p>
+          <p><strong>Power Move:</strong> ${law.power}</p>
+        </div>
+      `).join("");
+    }
+
+    // Score tip button (override tips)
+    const tipBtn = document.getElementById("scoreTipBtn");
+    const tipText = document.getElementById("scoreTipText");
+    if (tipBtn && tipText && Array.isArray(data.scoreBoostTips)) {
+      tipBtn.addEventListener("click", () => {
+        const tip = data.scoreBoostTips[Math.floor(Math.random() * data.scoreBoostTips.length)];
+        tipText.textContent = tip;
+      });
+    }
+
+    // Ask AI fallback (override responses)
+    const askForm = document.getElementById("askAiForm");
+    const askInput = document.getElementById("askAiInput");
+    const askOut = document.getElementById("askAiResponse");
+    if (askForm && askInput && askOut && Array.isArray(data.aiResponses)) {
+      askForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const reply = data.aiResponses[Math.floor(Math.random() * data.aiResponses.length)];
+        askOut.innerHTML = `<p>${reply}</p>`;
+      });
+    }
+
+  } catch (err) {
+    // If DevTools is blocked, this still won't show — but it prevents a hard crash.
+    // You can temporarily uncomment next line to see errors as an alert:
+    // alert("Content load error: " + err.message);
+    console.error(err);
+  }
+}
+
+
 // =============== GLOBAL ACCESS CODE (OPTION A) ===============
-const ACCESS_CODE = "ELITE100"; // <- this is the universal code you give after Cash App payment
+const ACCESS_CODE = "ELITE100"; // universal code you give after Cash App payment
 const ACCESS_KEY = "aiCreditPaidAccess"; // stored in localStorage
 
+
+// ✅ ONE AND ONLY ONE STARTUP BLOCK
 document.addEventListener("DOMContentLoaded", () => {
+  // optional: load content.json overrides (won't crash if missing)
+  loadContentConfig();
+
   applyBranding();
   wireAskAi();
   wireCreditLawDecoder();
@@ -108,8 +126,9 @@ document.addEventListener("DOMContentLoaded", () => {
   wirePricingChat();
   wireFloatingChat();
   setYearSpan();
-  applyAccessLockState(); // apply lock/unlock on every page after DOM is ready
+  applyAccessLockState(); // apply lock/unlock after DOM is ready
 });
+
 
 // =============== BRAND NAME + TAGLINE ===============
 function applyBranding() {
@@ -119,6 +138,7 @@ function applyBranding() {
   if (brandNameEl) brandNameEl.textContent = SITE_CONFIG.brandName;
   if (taglineEl) taglineEl.textContent = SITE_CONFIG.tagline;
 }
+
 
 // =============== ACCESS HELPERS ===============
 function isAccessUnlocked() {
@@ -158,6 +178,7 @@ function applyAccessLockState() {
   }
 }
 
+
 // =============== ASK AI ABOUT CREDIT (index) ===============
 function wireAskAi() {
   const form = document.getElementById("askAiForm");
@@ -182,9 +203,7 @@ function wireAskAi() {
       <div class="ai-message">
         <p><strong>AI Credit Coach:</strong></p>
         <p>${escapeHtml(aiLine)}</p>
-        <p>Here’s how to think about your question about "<em>${escapeHtml(
-          question
-        )}</em>":</p>
+        <p>Here’s how to think about your question about "<em>${escapeHtml(question)}</em>":</p>
         <ul>
           <li>1️⃣ Pull all 3 reports (Experian, Equifax, TransUnion) so you see the same item everywhere.</li>
           <li>2️⃣ Look for <strong>inaccuracies</strong>: wrong dates, balance, status, or creditor name.</li>
@@ -196,6 +215,7 @@ function wireAskAi() {
     `;
   });
 }
+
 
 // =============== CREDIT LAW DECODER (index) ===============
 function wireCreditLawDecoder() {
@@ -249,6 +269,7 @@ function findMatchingLaw(query) {
   return null;
 }
 
+
 // =============== SCORE BOOST TIP (index) ===============
 function wireScoreBoostTips() {
   const btn = document.getElementById("scoreTipBtn");
@@ -261,6 +282,7 @@ function wireScoreBoostTips() {
     text.textContent = tip;
   });
 }
+
 
 // =============== SNAPSHOT REQUEST FORM (index) ===============
 function wireSnapshotForm() {
@@ -280,6 +302,7 @@ function wireSnapshotForm() {
     form.reset();
   });
 }
+
 
 // =============== SNAPSHOT UNLOCK (snapshot.html) ===============
 function wireSnapshotAccess() {
@@ -311,6 +334,7 @@ function wireSnapshotAccess() {
   }
 }
 
+
 // =============== UPLOAD UNLOCK (upload.html) ===============
 function wireUploadAccess() {
   const form = document.getElementById("uploadAccessForm");
@@ -333,6 +357,7 @@ function wireUploadAccess() {
   });
 }
 
+
 // =============== PRICING CHAT (optional, pricing.html) ===============
 function wirePricingChat() {
   const form = document.getElementById("pricing-chat-form");
@@ -354,6 +379,7 @@ function wirePricingChat() {
     windowEl.scrollTop = windowEl.scrollHeight;
   });
 }
+
 
 // =============== FLOATING CHAT (optional, pricing.html) ===============
 function wireFloatingChat() {
@@ -400,18 +426,10 @@ function getPlanSuggestion(text) {
   } else if (lower.includes("car") || lower.includes("auto")) {
     suggestion =
       "If you’re mainly trying to get approved for a car, AI Starter or AI Core is usually enough. Focus on cleaning up a few key negatives and lowering utilization.";
-  } else if (
-    lower.includes("apartment") ||
-    lower.includes("rent") ||
-    lower.includes("lease")
-  ) {
+  } else if (lower.includes("apartment") || lower.includes("rent") || lower.includes("lease")) {
     suggestion =
       "For apartment or rental approvals, AI Starter is a good entry point if you’re a DIY type. If you want more structure and letter help, AI Core is safer.";
-  } else if (
-    lower.includes("budget") ||
-    lower.includes("money") ||
-    lower.includes("broke")
-  ) {
+  } else if (lower.includes("budget") || lower.includes("money") || lower.includes("broke")) {
     suggestion =
       "If money is tight, start with AI Starter and treat it like a gym membership for your credit. You can always upgrade to AI Core later once you see movement.";
   } else {
@@ -425,6 +443,7 @@ function getPlanSuggestion(text) {
   return suggestion;
 }
 
+
 // =============== FOOTER YEAR ===============
 function setYearSpan() {
   const span = document.getElementById("year-span");
@@ -433,9 +452,10 @@ function setYearSpan() {
   span.textContent = year;
 }
 
+
 // =============== HELPERS ===============
 function escapeHtml(str) {
-  return str
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
