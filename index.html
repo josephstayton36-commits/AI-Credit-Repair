@@ -5,44 +5,36 @@
   <title>AI Credit Repair | Member Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Main Styles -->
   <link rel="stylesheet" href="style.css" />
+</head>
 
-  <!-- Firebase (Compat for GitHub Pages) -->
+<body>
+
+  <div class="login-card">
+    <h1>AI Credit Repair</h1>
+    <p>Member Login</p>
+
+    <input id="email" type="email" placeholder="Email address" />
+    <input id="password" type="password" placeholder="Password" />
+
+    <div id="errorBox" class="error" style="display:none;"></div>
+
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Create Account</button>
+
+    <p class="reset">
+      Forgot your password?
+      <a href="#" id="resetBtn">Reset it</a>
+    </p>
+  </div>
+
+  <!-- ✅ FIREBASE SDKs (COMPAT) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-  <!-- Auth Logic -->
-  <script defer src="auth.js"></script>
-</head>
-
-<body class="auth-page">
-
-  <div class="auth-container">
-    <h1>AI Credit Repair</h1>
-    <p class="auth-subtitle">Member Login</p>
-
-    <input type="email" id="email" placeholder="Email address" autocomplete="email" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-
-    <!-- message area (styled by CSS) -->
-    <div id="authMsg"></div>
-
-    <div style="margin-bottom: 12px;">
-      <!-- NEW BUTTON THING -->
-      <button class="btn-primary" onclick="loginUser()">Login</button>
-      <button class="secondary-btn btn btn-ghost" onclick="signupUser()">Create Account</button>
-    </div>
-
-    <p class="auth-toggle">
-      Forgot your password?
-      <span onclick="resetPassword()">Reset it</span>
-    </p>
-
-    <p class="auth-toggle" style="margin-top:6px;">
-      Secure, private, and encrypted. Nothing is shared.
-    </p>
-  </div>
+  <!-- ✅ YOUR FILES (ABSOLUTE PATHS FOR GITHUB PAGES) -->
+  <script src="/AI-Credit-Repair/firebase-config.js"></script>
+  <script src="/AI-Credit-Repair/auth.js"></script>
 
 </body>
 </html>
