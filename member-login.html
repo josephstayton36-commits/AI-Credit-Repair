@@ -46,3 +46,23 @@
   </div>
 </body>
 </html>
+// firebase-config.js
+// Visible proof this file loaded (remove later)
+alert("firebase-config.js loaded");
+
+// ✅ Paste your real Firebase config here
+const firebaseConfig = {
+  apiKey: "PASTE_REAL_API_KEY",
+  authDomain: "PASTE_REAL_AUTH_DOMAIN",
+  projectId: "PASTE_REAL_PROJECT_ID",
+  appId: "PASTE_REAL_APP_ID",
+};
+
+// ✅ Initialize Firebase ONCE
+try {
+  if (!window.firebase) throw new Error("Firebase SDK missing (firebase-app-compat not loaded).");
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+} catch (e) {
+  alert("firebase-config.js init error: " + e.message);
+}
+
