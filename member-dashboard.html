@@ -6,25 +6,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-  <script defer src="firebase-config.js"></script>
-  <script defer>
-    document.addEventListener("DOMContentLoaded", () => {
-      const auth = firebase.auth();
-      auth.onAuthStateChanged((user) => {
-        if (!user) window.location.href = "member-login.html";
-        else document.getElementById("userEmail").textContent = user.email;
-      });
+  <!-- Config must load BEFORE dashboard logic -->
+  <script src="./firebase-config.js"></script>
 
-      document.getElementById("logout").addEventListener("click", async () => {
-        await auth.signOut();
-        window.location.href = "member-login.html";
+  <script>
+    function waitForFirebaseReady(timeoutMs = 8000) {
+      return new Promise((resolve, reject) => {
+        const start = Date.now();
+        (function tick() {
+          if (window.firebase && firebase.apps && firebase.apps.length) return resolve(true);
+          if (Date.now() - start > timeoutMs) return reject(new Error("Firebase not initialized"));
+          setTimeout(tick, 100);
+        })();
       });
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        await waitForFirebaseReady();
+
+        const auth = firebase.auth();
+
+        auth.onAuthStateChanged((user) => {
+          if (!user) {
+            window.location.href = "member-login.html";
+            return;
+          }
+          document.getElementById("userEmail").textContent = user.email || "(no email)";
+        });
+
+        document.getElementById("logout").addEventListener("click", async () => {
+          await auth.signOut();
+          window.location.href = "member-login.html";
+        });
+      } catch (e) {
+        // If something goes wrong, kick back to login
+        window.location.href = "member-login.html";
+      }
     });
   </script>
 </head>
+
 <body>
   <div class="page" style="min-height:100vh; padding:24px;">
     <h1>Member Dashboard</h1>
