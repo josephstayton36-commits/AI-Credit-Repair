@@ -52,6 +52,236 @@
 </head>
 
 <body>
+  <body>
+  <!-- ===== AUTH LOADING ===== -->
+  <div id="authLoading" class="auth-loading">
+    <div class="loader"></div>
+    <div class="auth-text">Verifying secure member session…</div>
+  </div>
+
+  <!-- ===== DASHBOARD APP ===== -->
+  <div id="dashboard" class="app" style="display:none;">
+    
+    <!-- ===== TOP BAR ===== -->
+    <header class="topbar">
+      <div class="brand">
+        <strong>AI Credit Repair</strong>
+        <span class="badge">Member</span>
+      </div>
+
+      <div class="user">
+        <span id="userEmail"></span>
+        <button id="logoutBtn">Log out</button>
+      </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main">
+
+      <!-- ===== KPI ROW ===== -->
+      <section class="kpis">
+        <div class="kpi">
+          <label>Estimated Score</label>
+          <strong>—</strong>
+          <span>Connected soon</span>
+        </div>
+        <div class="kpi">
+          <label>Active Disputes</label>
+          <strong>0</strong>
+          <span>Ready to start</span>
+        </div>
+        <div class="kpi">
+          <label>Negative Accounts</label>
+          <strong>—</strong>
+          <span>Upload reports</span>
+        </div>
+        <div class="kpi">
+          <label>Progress</label>
+          <strong>0%</strong>
+          <span>Elite Snapshot</span>
+        </div>
+      </section>
+
+      <!-- ===== ACTION GRID ===== -->
+      <section class="actions">
+        <a class="module" href="ask-ai.html">
+          <h3>Ask AI Credit Coach</h3>
+          <p>Get instant, law-based guidance on your credit file.</p>
+        </a>
+
+        <a class="module" href="free-resources.html">
+          <h3>Letter Library</h3>
+          <p>Dispute, goodwill, validation & compliance templates.</p>
+        </a>
+
+        <a class="module premium" href="snapshot.html">
+          <h3>Elite Snapshot</h3>
+          <p>90-day personalized action plan.</p>
+          <span class="lock">Premium</span>
+        </a>
+
+        <a class="module" href="upload.html">
+          <h3>Upload Credit Reports</h3>
+          <p>Securely submit your reports for analysis.</p>
+        </a>
+      </section>
+
+      <!-- ===== STRATEGY PANEL ===== -->
+      <section class="strategy">
+        <h2>Your Strategy Overview</h2>
+        <p>
+          Once your credit reports are uploaded, your dashboard will automatically
+          generate a dispute roadmap, priority order, and compliance strategy.
+        </p>
+        <p class="muted">
+          This platform does not guess. Every recommendation is grounded in
+          FCRA, CFPB, and Metro 2 compliance logic.
+        </p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    :root{
+      --bg:#050b1a;
+      --panel:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:#fff;
+      --muted:rgba(255,255,255,.7);
+      --accent:#4da3ff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #0a1738, var(--bg));
+      color:var(--text);
+    }
+
+    /* Loading */
+    .auth-loading{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+    }
+    .loader{
+      width:38px;height:38px;
+      border-radius:50%;
+      border:3px solid var(--border);
+      border-top-color:var(--text);
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Layout */
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 28px;
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .brand{display:flex;gap:10px;align-items:center}
+    .badge{
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:rgba(77,163,255,.15);
+      border:1px solid rgba(77,163,255,.4);
+    }
+    .user{display:flex;gap:14px;align-items:center}
+    .user button{
+      background:none;border:1px solid var(--border);
+      color:var(--text);
+      padding:8px 12px;border-radius:10px;cursor:pointer;
+    }
+
+    .main{max-width:1200px;margin:0 auto;padding:28px}
+
+    /* KPIs */
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
+    .kpi{
+      padding:16px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;
+    }
+    .kpi label{font-size:13px;color:var(--muted)}
+    .kpi strong{display:block;font-size:28px;margin:6px 0}
+    .kpi span{font-size:13px;color:var(--muted)}
+
+    /* Modules */
+    .actions{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+    }
+    .module{
+      position:relative;
+      padding:18px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:18px;
+      text-decoration:none;
+      color:var(--text);
+    }
+    .module:hover{transform:translateY(-2px)}
+    .module h3{margin:0 0 6px}
+    .module p{margin:0;color:var(--muted);line-height:1.4}
+    .premium .lock{
+      position:absolute;
+      top:14px;right:14px;
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:rgba(255,215,0,.15);
+      border:1px solid rgba(255,215,0,.4);
+    }
+
+    /* Strategy */
+    .strategy{
+      margin-top:26px;
+      padding:20px;
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(77,163,255,.08),rgba(255,255,255,.03));
+      border:1px solid var(--border);
+    }
+    .strategy h2{margin:0 0 10px}
+    .muted{color:var(--muted)}
+  </style>
+
+  <!-- ===== AUTH LOGIC ===== -->
+  <script>
+    firebase.auth().onAuthStateChanged((user)=>{
+      if(!user){
+        window.location.replace("member-login.html");
+        return;
+      }
+      document.getElementById("userEmail").textContent = user.email;
+      document.getElementById("authLoading").style.display="none";
+      document.getElementById("dashboard").style.display="block";
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click",()=>{
+      firebase.auth().signOut().then(()=>{
+        window.location.replace("member-login.html");
+      });
+    });
+  </script>
+</body>
   <div class="page" style="min-height:100vh; padding:24px;">
     <h1>Member Dashboard</h1>
     <p>Logged in as: <strong id="userEmail">...</strong></p>
