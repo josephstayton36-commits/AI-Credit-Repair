@@ -1,130 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Your Elite Credit Snapshot | AI Credit Repair</title>
+  <title>Elite Snapshot | AI Credit Repair</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="See a preview of your Elite Credit Snapshot and unlock the full membership details, dispute strategy, and roadmap."
-  />
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+
+  <!-- 🔐 Paid Gate -->
+  <style>html{visibility:hidden}</style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    firebase.auth().onAuthStateChanged(async (user)=>{
+      if(!user) return window.location.replace("member-login.html");
+      const snap = await firebase.firestore().collection("members").doc(user.uid).get();
+      if(!snap.exists || snap.data().tier !== "elite") {
+        return window.location.replace("paywall.html");
+      }
+      document.documentElement.style.visibility="visible";
+    });
+  </script>
+
+  <style>
+    body{margin:0;background:#050b1a;color:#fff;font-family:Inter,system-ui;padding:24px}
+    .card{max-width:900px;margin:auto;padding:24px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+  </style>
 </head>
 
 <body>
-  <div class="page">
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">
-          <div class="logo-circle">AI</div>
-          <div class="brand-text">
-            <span class="brand-name" id="brandName">AI Credit Repair</span>
-            <span class="brand-tagline" id="brandTagline">
-              Smart Disputes. Real Results.
-            </span>
-          </div>
-        </div>
-
-        <nav class="main-nav">
-          <a href="index.html#how-it-works">How It Works</a>
-          <a href="index.html#smart-form">Free Analysis</a>
-          <a href="pricing.html">Membership</a>
-          <a href="upload.html">Upload Reports</a>
-          <a href="snapshot.html" class="nav-cta">Elite Snapshot</a>
-        </nav>
-      </div>
-    </header>
-
-    <section class="section" id="snapshot-hero">
-      <div class="container">
-        <h1>Your Elite Credit Snapshot</h1>
-        <p>
-          This is the paid deep-dive we build from your 3-bureau reports. Below is a preview;
-          the full Snapshot unlocks after payment and code access.
-        </p>
-      </div>
-    </section>
-
-    <section id="snapshot" class="section">
-      <div class="container">
-        <h2>Your Credit Snapshot (Preview)</h2>
-        <p class="snapshot-intro">
-          Based on what you shared, here’s a high-level preview. Your actual Snapshot is
-          built from your real reports and goals.
-        </p>
-
-        <div class="snapshot-preview">
-          <ul>
-            <li><strong>Overall Status:</strong> Rebuildable with focused work in the next 6–12 months.</li>
-            <li><strong>Payment History:</strong> A few key negatives are doing most of the damage.</li>
-            <li><strong>Utilization:</strong> We identify where paydowns give you the biggest score lift.</li>
-            <li><strong>Account Mix:</strong> We look at missing positive tradelines and age.</li>
-            <li><strong>Big Opportunity:</strong> Removing or fixing just 1–3 items can create major movement.</li>
-          </ul>
-          <p class="snapshot-note">
-            This preview doesn’t show specific accounts, creditors, or dispute language. That
-            lives in your full Elite Snapshot.
-          </p>
-        </div>
-
-        <div class="snapshot-locked-wrapper">
-          <h3>Your Full Elite Snapshot (Locked)</h3>
-          <div class="snapshot-locked blurred" id="fullSnapshotBox">
-            <ul>
-              <li><strong>Targeted Accounts:</strong> Exact negative accounts to attack first and why.</li>
-              <li><strong>Dispute Strategy:</strong> Laws, angles, and round-by-round dispute plan.</li>
-              <li><strong>Timeline:</strong> 30, 60, 90-day roadmap customized to your situation.</li>
-              <li><strong>Score Strategy:</strong> When to add trade lines, when to pay down, and what to leave alone.</li>
-              <li><strong>Template Pack:</strong> The letter set we’d use for you (goodwill, validation, factual disputes, etc.).</li>
-            </ul>
-
-            <div class="locked-overlay">
-              <span class="lock-icon">🔒</span>
-              <span class="locked-text">Full Snapshot & Strategy – Locked</span>
-            </div>
-          </div>
-
-          <div class="snapshot-cta">
-            <p class="price-line">
-              Unlock your <strong>full Elite Snapshot + upload access</strong> for a
-              <strong>$100 one-time payment.</strong>
-            </p>
-            <p class="snapshot-guarantee">
-              You’re paying for strategy, not fairy-tale promises. No long-term contract, no fake guarantees.
-            </p>
-          </div>
-
-          <div class="already-paid" style="margin-top:1rem;">
-            <button id="alreadyPaidToggle" class="link-btn">
-              I already paid – enter my access code
-            </button>
-            <form id="accessForm" class="access-form hidden">
-              <input
-                type="password"
-                id="accessCode"
-                placeholder="Enter your access code"
-                autocomplete="off"
-                required
-              />
-              <button type="submit" class="btn-secondary">Unlock</button>
-              <p id="accessError" class="error-message"></p>
-            </form>
-          </div>
-        </div>
-
-        <p style="margin-top: 1.5rem;">
-          After you’re unlocked, go to the
-          <a href="upload.html">Upload Reports page</a> to send your 3-bureau files securely.
-        </p>
-      </div>
-    </section>
-
-    <footer class="site-footer">
-      <div class="container footer-bottom">
-        <p>© <span id="year-span"></span> AI Credit Repair. All rights reserved.</p>
-      </div>
-    </footer>
+  <div class="card">
+    <h1>Elite Snapshot</h1>
+    <p>Your 90-day credit action plan will appear here.</p>
+    <p>This page is only visible to paid members.</p>
   </div>
 </body>
 </html>
