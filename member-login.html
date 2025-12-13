@@ -1,45 +1,5 @@
-// firebase-config.js
+<script defer src="./firebase-config.js"></script>
+<script defer src="./auth.js"></script>
 
-// 🔴 PASTE YOUR REAL CONFIG BELOW (from Firebase Console → Project settings → Your apps → Web app)
-const firebaseConfig = {
-  apiKey: "PASTE_YOURS",
-  authDomain: "PASTE_YOURS",
-  projectId: "PASTE_YOURS",
-  appId: "PASTE_YOURS",
-  // include any other fields Firebase gave you (optional):
-  // storageBucket: "PASTE_YOURS",
-  // messagingSenderId: "PASTE_YOURS",
-};
 
-(function initFirebase() {
-  try {
-    if (!window.firebase) {
-      throw new Error("Firebase SDK not found. Check your <script> tags for firebase-app-compat/auth-compat.");
-    }
-
-    // Avoid double init
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    // Visible confirmation (no DevTools needed)
-    const msg = document.getElementById("authMsg");
-    if (msg) {
-      msg.style.display = "block";
-      msg.style.background = "rgba(80, 255, 170, .12)";
-      msg.style.border = "1px solid rgba(80, 255, 170, .30)";
-      msg.textContent = "✅ Firebase initialized. Auth is ready.";
-    }
-  } catch (err) {
-    const msg = document.getElementById("authMsg");
-    if (msg) {
-      msg.style.display = "block";
-      msg.style.background = "rgba(255, 80, 80, .15)";
-      msg.style.border = "1px solid rgba(255, 80, 80, .35)";
-      msg.textContent = "❌ Firebase init error: " + err.message;
-    } else {
-      alert("Firebase init error: " + err.message);
-    }
-  }
-})();
 
