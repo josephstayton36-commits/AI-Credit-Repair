@@ -52,13 +52,15 @@ alert("firebase-config.js loaded");
 
 // ✅ Paste your real Firebase config here
 const firebaseConfig = {
-  apiKey: "PASTE_REAL_API_KEY",
-  authDomain: "PASTE_REAL_AUTH_DOMAIN",
-  projectId: "PASTE_REAL_PROJECT_ID",
-  appId: "PASTE_REAL_APP_ID",
+  apiKey: "AIzaSyBK_o7S1Bcp5u4hKA3j-V_xodrD6PxtNCQ",
+  authDomain: "ai-credit-repair-992c7.firebaseapp.com",
+  projectId: "ai-credit-repair-992c7",
+  storageBucket: "ai-credit-repair-992c7.firebasestorage.app",
+  messagingSenderId: "411411517046",
+  appId: "1:411411517046:web:fa2013a0f914aa06fc5957"
 };
-
 // ✅ Initialize Firebase ONCE
+
 try {
   if (!window.firebase) throw new Error("Firebase SDK missing (firebase-app-compat not loaded).");
   if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
