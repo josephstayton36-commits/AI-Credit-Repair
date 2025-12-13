@@ -4,145 +4,18 @@
   <meta charset="UTF-8" />
   <title>AI Credit Repair | Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Optional: your global CSS (keep if you want) -->
   <link rel="stylesheet" href="style.css" />
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Config must load BEFORE dashboard logic -->
+  <!-- Config -->
   <script src="./firebase-config.js"></script>
 
-  <script>
-    function waitForFirebaseReady(timeoutMs = 8000) {
-      return new Promise((resolve, reject) => {
-        const start = Date.now();
-        (function tick() {
-          if (window.firebase && firebase.apps && firebase.apps.length) return resolve(true);
-          if (Date.now() - start > timeoutMs) return reject(new Error("Firebase not initialized"));
-          setTimeout(tick, 100);
-        })();
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      try {
-        await waitForFirebaseReady();
-
-        const auth = firebase.auth();
-
-        auth.onAuthStateChanged((user) => {
-          if (!user) {
-            window.location.href = "member-login.html";
-            return;
-          }
-          document.getElementById("userEmail").textContent = user.email || "(no email)";
-        });
-
-        document.getElementById("logout").addEventListener("click", async () => {
-          await auth.signOut();
-          window.location.href = "member-login.html";
-        });
-      } catch (e) {
-        // If something goes wrong, kick back to login
-        window.location.href = "member-login.html";
-      }
-    });
-  </script>
-</head>
-
-<body>
-  <body>
-  <!-- ===== AUTH LOADING ===== -->
-  <div id="authLoading" class="auth-loading">
-    <div class="loader"></div>
-    <div class="auth-text">Verifying secure member session…</div>
-  </div>
-
-  <!-- ===== DASHBOARD APP ===== -->
-  <div id="dashboard" class="app" style="display:none;">
-    
-    <!-- ===== TOP BAR ===== -->
-    <header class="topbar">
-      <div class="brand">
-        <strong>AI Credit Repair</strong>
-        <span class="badge">Member</span>
-      </div>
-
-      <div class="user">
-        <span id="userEmail"></span>
-        <button id="logoutBtn">Log out</button>
-      </div>
-    </header>
-
-    <!-- ===== MAIN ===== -->
-    <main class="main">
-
-      <!-- ===== KPI ROW ===== -->
-      <section class="kpis">
-        <div class="kpi">
-          <label>Estimated Score</label>
-          <strong>—</strong>
-          <span>Connected soon</span>
-        </div>
-        <div class="kpi">
-          <label>Active Disputes</label>
-          <strong>0</strong>
-          <span>Ready to start</span>
-        </div>
-        <div class="kpi">
-          <label>Negative Accounts</label>
-          <strong>—</strong>
-          <span>Upload reports</span>
-        </div>
-        <div class="kpi">
-          <label>Progress</label>
-          <strong>0%</strong>
-          <span>Elite Snapshot</span>
-        </div>
-      </section>
-
-      <!-- ===== ACTION GRID ===== -->
-      <section class="actions">
-        <a class="module" href="ask-ai.html">
-          <h3>Ask AI Credit Coach</h3>
-          <p>Get instant, law-based guidance on your credit file.</p>
-        </a>
-
-        <a class="module" href="free-resources.html">
-          <h3>Letter Library</h3>
-          <p>Dispute, goodwill, validation & compliance templates.</p>
-        </a>
-
-        <a class="module premium" href="snapshot.html">
-          <h3>Elite Snapshot</h3>
-          <p>90-day personalized action plan.</p>
-          <span class="lock">Premium</span>
-        </a>
-
-        <a class="module" href="upload.html">
-          <h3>Upload Credit Reports</h3>
-          <p>Securely submit your reports for analysis.</p>
-        </a>
-      </section>
-
-      <!-- ===== STRATEGY PANEL ===== -->
-      <section class="strategy">
-        <h2>Your Strategy Overview</h2>
-        <p>
-          Once your credit reports are uploaded, your dashboard will automatically
-          generate a dispute roadmap, priority order, and compliance strategy.
-        </p>
-        <p class="muted">
-          This platform does not guess. Every recommendation is grounded in
-          FCRA, CFPB, and Metro 2 compliance logic.
-        </p>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- ===== STYLES ===== -->
   <style>
     :root{
       --bg:#050b1a;
@@ -151,6 +24,7 @@
       --text:#fff;
       --muted:rgba(255,255,255,.7);
       --accent:#4da3ff;
+      --warn:rgba(255,215,0,.18);
     }
 
     *{ box-sizing:border-box; }
@@ -180,16 +54,18 @@
     }
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Layout */
+    /* Top bar */
     .topbar{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:18px 28px;
+      padding:16px 20px;
       border-bottom:1px solid var(--border);
       backdrop-filter: blur(12px);
+      gap:12px;
     }
-    .brand{display:flex;gap:10px;align-items:center}
+    .brand{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .brand strong{letter-spacing:.2px}
     .badge{
       font-size:12px;
       padding:4px 8px;
@@ -197,21 +73,49 @@
       background:rgba(77,163,255,.15);
       border:1px solid rgba(77,163,255,.4);
     }
-    .user{display:flex;gap:14px;align-items:center}
-    .user button{
-      background:none;border:1px solid var(--border);
-      color:var(--text);
-      padding:8px 12px;border-radius:10px;cursor:pointer;
+    .badge.free{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      opacity:.9;
+    }
+    .badge.paid{
+      background: rgba(77,163,255,.16);
+      border:1px solid rgba(77,163,255,.45);
     }
 
-    .main{max-width:1200px;margin:0 auto;padding:28px}
+    .nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .ghost-btn, .solid-btn{
+      border-radius:12px;
+      padding:9px 12px;
+      cursor:pointer;
+      color:#fff;
+      font-weight:600;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+    }
+    .solid-btn{
+      background: rgba(77,163,255,.18);
+      border:1px solid rgba(77,163,255,.40);
+    }
+    .ghost-btn:hover, .solid-btn:hover{ transform:translateY(-1px); transition:.15s; }
+
+    .user{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      opacity:.95;
+    }
+    .userEmail{font-size:13px; color:var(--muted);}
+
+    .main{max-width:1200px;margin:0 auto;padding:22px}
 
     /* KPIs */
     .kpis{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
       gap:14px;
-      margin-bottom:24px;
+      margin-bottom:16px;
     }
     .kpi{
       padding:16px;
@@ -228,6 +132,7 @@
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
       gap:16px;
+      margin-bottom:16px;
     }
     .module{
       position:relative;
@@ -238,10 +143,11 @@
       text-decoration:none;
       color:var(--text);
     }
-    .module:hover{transform:translateY(-2px)}
+    .module:hover{transform:translateY(-2px); transition:.15s}
     .module h3{margin:0 0 6px}
     .module p{margin:0;color:var(--muted);line-height:1.4}
-    .premium .lock{
+
+    .lock{
       position:absolute;
       top:14px;right:14px;
       font-size:12px;
@@ -253,42 +159,233 @@
 
     /* Strategy */
     .strategy{
-      margin-top:26px;
-      padding:20px;
+      margin-top:8px;
+      padding:18px;
       border-radius:18px;
       background:linear-gradient(180deg,rgba(77,163,255,.08),rgba(255,255,255,.03));
       border:1px solid var(--border);
     }
     .strategy h2{margin:0 0 10px}
     .muted{color:var(--muted)}
-  </style>
 
-  <!-- ===== AUTH LOGIC ===== -->
+    /* ===== LOCKED MODE ===== */
+    .locked .kpis,
+    .locked .actions,
+    .locked .strategy{
+      filter: grayscale(1);
+      opacity: 0.40;
+    }
+    .locked .kpis *,
+    .locked .actions *,
+    .locked .strategy *{
+      pointer-events:none;   /* blocks clicks */
+      user-select:none;
+    }
+
+    /* Allow these even in locked mode */
+    .locked #upgradeCard{
+      filter:none;
+      opacity:1;
+      pointer-events:auto;
+    }
+    .locked #upgradeCard *{
+      pointer-events:auto;
+    }
+
+    /* Upgrade card styling */
+    .upgrade{
+      border:1px solid rgba(77,163,255,.45);
+      background: linear-gradient(180deg, rgba(77,163,255,.16), rgba(255,255,255,.04));
+    }
+    .upgrade .lock{
+      background: rgba(77,163,255,.18);
+      border:1px solid rgba(77,163,255,.45);
+    }
+
+    /* Small notice banner */
+    .notice{
+      margin: 14px 0 6px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .notice strong{font-size:14px}
+    .notice span{font-size:13px;color:var(--muted);line-height:1.4}
+  </style>
+</head>
+
+<body>
+  <!-- ===== AUTH LOADING ===== -->
+  <div id="authLoading" class="auth-loading">
+    <div class="loader"></div>
+    <div class="auth-text">Verifying secure member session…</div>
+  </div>
+
+  <!-- ===== DASHBOARD APP ===== -->
+  <div id="dashboard" class="app" style="display:none;">
+    <header class="topbar">
+      <div class="brand">
+        <button id="backHomeBtn" class="ghost-btn">← Back to Home</button>
+        <strong>AI Credit Repair</strong>
+        <span id="planBadge" class="badge free">Free</span>
+      </div>
+
+      <div class="nav-actions">
+        <div class="user">
+          <span class="userEmail" id="userEmail">—</span>
+        </div>
+        <button id="logoutBtn" class="ghost-btn">Log out</button>
+      </div>
+    </header>
+
+    <main class="main">
+
+      <!-- Notice (shows only for free users) -->
+      <div id="freeNotice" class="notice" style="display:none;">
+        <div>
+          <strong>Preview Mode (Locked)</strong><br/>
+          <span>Upgrade to unlock Elite Snapshot + tools inside your dashboard.</span>
+        </div>
+        <a href="paywall.html" class="solid-btn" style="text-decoration:none;">Upgrade / Pay</a>
+      </div>
+
+      <!-- KPIs -->
+      <section id="kpiRow" class="kpis">
+        <div class="kpi">
+          <label>Estimated Score</label>
+          <strong>—</strong>
+          <span>Connect reports after upgrade</span>
+        </div>
+        <div class="kpi">
+          <label>Active Disputes</label>
+          <strong>—</strong>
+          <span>Unlock to start</span>
+        </div>
+        <div class="kpi">
+          <label>Negative Accounts</label>
+          <strong>—</strong>
+          <span>Upload reports after upgrade</span>
+        </div>
+        <div class="kpi">
+          <label>Progress</label>
+          <strong>0%</strong>
+          <span>Elite Snapshot locked</span>
+        </div>
+      </section>
+
+      <!-- Action Grid -->
+      <section id="actionGrid" class="actions">
+        <a class="module" href="ask-ai.html">
+          <h3>Ask AI Credit Coach</h3>
+          <p>Get instant, law-based guidance on your credit file.</p>
+          <span class="lock">Locked</span>
+        </a>
+
+        <a class="module" href="free-resources.html">
+          <h3>Letter Library</h3>
+          <p>Dispute, goodwill, validation & compliance templates.</p>
+          <span class="lock">Locked</span>
+        </a>
+
+        <a class="module premium" href="snapshot.html">
+          <h3>Elite Snapshot</h3>
+          <p>90-day personalized action plan.</p>
+          <span class="lock">Locked</span>
+        </a>
+
+        <a class="module" href="upload.html">
+          <h3>Upload Credit Reports</h3>
+          <p>Securely submit your reports for analysis.</p>
+          <span class="lock">Locked</span>
+        </a>
+
+        <!-- Upgrade card (clickable even when locked) -->
+        <a id="upgradeCard" class="module upgrade" href="paywall.html">
+          <h3>Unlock Membership</h3>
+          <p>Activate Elite Snapshot + tools instantly.</p>
+          <span class="lock">Upgrade</span>
+        </a>
+      </section>
+
+      <section id="strategyPanel" class="strategy">
+        <h2>Your Strategy Overview</h2>
+        <p>
+          Once your membership is active, your dashboard can generate a dispute roadmap,
+          priority order, and compliance strategy.
+        </p>
+        <p class="muted">
+          Free accounts see a locked preview. Paid members unlock full functionality.
+        </p>
+      </section>
+
+    </main>
+  </div>
+
   <script>
-    firebase.auth().onAuthStateChanged((user)=>{
-      if(!user){
+    const db = firebase.firestore();
+
+    function goHome(){
+      // If your public homepage file is different, change it here:
+      window.location.href = "index.html";
+    }
+
+    document.getElementById("backHomeBtn").addEventListener("click", goHome);
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      firebase.auth().signOut().then(() => window.location.replace("member-login.html"));
+    });
+
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (!user) {
         window.location.replace("member-login.html");
         return;
       }
-      document.getElementById("userEmail").textContent = user.email;
-      document.getElementById("authLoading").style.display="none";
-      document.getElementById("dashboard").style.display="block";
-    });
 
-    document.getElementById("logoutBtn").addEventListener("click",()=>{
-      firebase.auth().signOut().then(()=>{
-        window.location.replace("member-login.html");
-      });
+      document.getElementById("userEmail").textContent = user.email || "(no email)";
+
+      // Determine paid status
+      let isPaid = false;
+      try{
+        const snap = await db.collection("members").doc(user.uid).get();
+        isPaid = snap.exists && !!snap.data().paid;
+      }catch(e){
+        // If Firestore not set up yet, treat as free/locked
+        isPaid = false;
+      }
+
+      const dash = document.getElementById("dashboard");
+      const planBadge = document.getElementById("planBadge");
+      const freeNotice = document.getElementById("freeNotice");
+
+      if (!isPaid) {
+        dash.classList.add("locked");
+        planBadge.textContent = "Free";
+        planBadge.classList.remove("paid");
+        planBadge.classList.add("free");
+        freeNotice.style.display = "flex";
+      } else {
+        dash.classList.remove("locked");
+        planBadge.textContent = "Paid";
+        planBadge.classList.remove("free");
+        planBadge.classList.add("paid");
+        freeNotice.style.display = "none";
+
+        // Remove "Locked" badges for paid users (optional polish)
+        document.querySelectorAll(".actions .lock").forEach(b => {
+          if (b.textContent === "Locked") b.textContent = "Unlocked";
+        });
+      }
+
+      // Show dashboard
+      document.getElementById("authLoading").style.display = "none";
+      dash.style.display = "block";
     });
   </script>
-</body>
-  <div class="page" style="min-height:100vh; padding:24px;">
-    <h1>Member Dashboard</h1>
-    <p>Logged in as: <strong id="userEmail">...</strong></p>
-
-    <button id="logout" style="padding:12px 14px; border-radius:12px; cursor:pointer;">
-      Log Out
-    </button>
-  </div>
 </body>
 </html>
