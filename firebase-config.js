@@ -3,10 +3,10 @@
 console.log("🔥 firebase-config.js loaded");
 
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
+  apiKey: "AIzaSybk_o7S1Bcp5u4hKA3j-V_xodrD6PxtNCQ",
   authDomain: "ai-credit-repair-992c7.firebaseapp.com",
   projectId: "ai-credit-repair-992c7",
-  appId: "PASTE_YOUR_APP_ID"
+  appId: "1:4114115117046:web:fa2013a0f914aa06fc5957"
 };
 
 try {
