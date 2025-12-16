@@ -1,151 +1,229 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Upload Your Credit Reports | AI Credit Repair</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="Securely upload your credit reports so AI Credit Repair can review your situation and build a better strategy."
-  />
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <title>Upload | AICreditRepair</title>
+  <meta name="description" content="Upload credit reports and files securely to AICreditRepair." />
+  <meta name="theme-color" content="#12214b" />
+
+  <!-- Firebase SDKs (Compat Version) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-<script defer src="auth.js"></script>
-<script defer src="upload.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <!-- Shared Auth Logic -->
+  <script defer src="auth.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      background: #f5f7fb;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #12214b;
+      color: #fff;
+      padding: 18px 32px;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+    main {
+      flex: 1;
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 8px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h2 {
+      color: #12214b;
+      margin-top: 0;
+    }
+    p {
+      color: #333;
+    }
+    form {
+      margin-top: 24px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    input[type="file"],
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .btn-upload {
+      background: #12214b;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 20px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-upload:hover {
+      background: #1a2a5f;
+    }
+    #statusMessage {
+      margin-top: 20px;
+      font-size: 15px;
+      min-height: 22px;
+    }
+    .success { color: #1b5e20; }
+    .error { color: #c62828; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #777;
+    }
+    .logout {
+      margin-top: 30px;
+      display: inline-block;
+      background: #c62828;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 18px;
+      cursor: pointer;
+    }
+    .logout:hover { background: #a91e1e; }
+  </style>
 </head>
 
 <body>
-  <h2>Secure Upload</h2>
-<p>Logged in as: <strong id="userEmail">Loading…</strong></p>
+  <header>
+    <h1>AICreditRepair File Upload</h1>
+  </header>
 
-<input type="file" id="reportFile" accept=".pdf,.jpg,.jpeg,.png" />
-<button class="btn" onclick="uploadReport()">Upload Credit Report</button>
+  <main>
+    <section>
+      <h2>Upload Your Documents</h2>
+      <p>Use this form to securely upload credit reports, identification forms, or other support files. Only AICreditRepair administrators can view your uploaded files.</p>
 
-<div id="uploadStatus" style="margin-top:12px;"></div>
-  <div class="page">
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">
-          <div class="logo-circle">AI</div>
-          <div class="brand-text">
-            <span class="brand-name" id="brandName">AI Credit Repair</span>
-            <span class="brand-tagline" id="brandTagline">
-              Smart Disputes. Real Results.
-            </span>
-          </div>
-        </div>
+      <form id="uploadForm">
+        <label for="fileTitle">File Title or Description</label>
+        <input type="text" id="fileTitle" placeholder="e.g., Equifax Credit Report - January 2024" required />
 
-        <nav class="main-nav">
-          <a href="index.html#how-it-works">How It Works</a>
-          <a href="index.html#smart-form">Free Analysis</a>
-          <a href="snapshot.html">Elite Snapshot</a>
-          <a href="pricing.html">Membership</a>
-          <a href="upload.html" class="nav-cta">Upload Reports</a>
-        </nav>
-      </div>
-    </header>
+        <label for="fileInput">Choose File</label>
+        <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required />
 
-    <section class="section" id="upload-hero">
-      <div class="container">
-        <h1>Upload Your Credit Reports</h1>
-        <p>
-          After your Elite Snapshot payment is confirmed, you’ll unlock this portal to send
-          us your full 3-bureau reports securely.
-        </p>
-      </div>
+        <button class="btn-upload" type="submit">Upload File</button>
+
+        <div id="statusMessage"></div>
+      </form>
+
+      <button class="logout" onclick="logoutUser()">Logout</button>
     </section>
+  </main>
 
-    <section class="section alt-section">
-      <div class="container">
-        <h2>Step 1: Pay for Your Elite Snapshot</h2>
-        <p>
-          The Elite Snapshot is a <strong>$100 one-time payment</strong>. It funds the deep dive
-          into your reports and strategy.
-        </p>
+  <footer>
+    <p>© <span id="year"></span> AICreditRepair • Secure Upload Portal</p>
+  </footer>
 
-        <!-- LOCKED -->
-        <div id="uploadLocked" class="form-card">
-          <h3>Send Payment via Cash App</h3>
-          <p>
-            Send <strong>$100</strong> to:<br />
-            <strong>$Cory12151983</strong>strong>
-            <!-- 👆 replace this with your real Cash App tag -->
-          </p>
+  <script>
+    // Initialize footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-          <h3 style="margin-top: 1rem;">Enter Your Access Code</h3>
-          <p class="disclaimer-small">
-            After payment, we’ll send you a one-time access code. Enter it below to unlock
-            the upload portal and your full Elite Snapshot content on this device.
-          </p>
+    // Firebase set-up
+    if (!firebase.apps.length) {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBfmvzulrzePw4KY2CkQ1-3ydo_O4ImP5I",
+        authDomain: "ai-credit-repair-3995f.firebaseapp.com",
+        projectId: "ai-credit-repair-3995f",
+        storageBucket: "ai-credit-repair-3995f.firebasestorage.app",
+        messagingSenderId: "332853628974",
+        appId: "1:332853628974:web:872612dab4ba965dc6cfbf"
+      };
+      firebase.initializeApp(firebaseConfig);
+    }
 
-          <form id="uploadAccessForm" class="access-form">
-            <input
-              type="password"
-              id="uploadAccessCode"
-              placeholder="Enter access code"
-              autocomplete="off"
-              required
-            />
-            <button type="submit" class="btn primary-btn">Unlock Uploads</button>
-            <p id="uploadAccessError" class="error-message"></p>
-          </form>
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-          <p class="disclaimer-small" style="margin-top: 0.6rem;">
-            Once unlocked, this device will remember your access unless you clear your
-            browser data.
-          </p>
-        </div>
+    // Track current user
+    let currentUser = null;
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        currentUser = user;
+      }
+    });
 
-        <!-- UNLOCKED -->
-        <div id="uploadUnlocked" class="form-card hidden">
-          <h3>You’re Unlocked – Upload Your Reports</h3>
-          <p>
-            Use the secure portal below to upload your full 3-bureau reports (Experian,
-            Equifax, TransUnion).
-          </p>
+    // Handle file upload
+    const uploadForm = document.getElementById("uploadForm");
+    const fileInput = document.getElementById("fileInput");
+    const fileTitle = document.getElementById("fileTitle");
+    const statusMessage = document.getElementById("statusMessage");
 
-          <ol class="upload-steps">
-            <li><strong>Pull</strong> your reports (3-in-1 or individual PDFs).</li>
-            <li><strong>Save</strong> them as PDFs or clear image files.</li>
-            <li><strong>Click</strong> the button below to upload them securely.</li>
-          </ol>
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-          <p style="margin-top: 0.75rem;">
-            <a
-              href="https://www.dropbox.com/request/4kOaQyM6uqhX5ZskJjeq"
-              target="_blank"
-              rel="noopener"
-              class="btn primary-btn upload-btn"
-            >
-              Open Secure Upload Portal
-            </a>
-          </p>
+      if (!fileInput.files.length) {
+        statusMessage.textContent = "Please select a file first.";
+        statusMessage.className = "error";
+        return;
+      }
 
-          <p class="upload-note">
-            🔒 Your files go into a secure folder on our side. We only use them to review
-            your credit and build your plan.
-          </p>
-        </div>
+      const file = fileInput.files[0];
+      const title = fileTitle.value.trim();
+      statusMessage.textContent = "Uploading, please wait...";
+      statusMessage.className = "";
 
-        <p style="margin-top: 1.5rem;">
-          Need to pull your reports? Visit
-          <a href="https://www.annualcreditreport.com" target="_blank" rel="noopener">
-            AnnualCreditReport.com
-          </a>
-          for official access.
-        </p>
-      </div>
-    </section>
+      try {
+        // Create unique path in Storage
+        const timestamp = Date.now();
+        const filePath = `uploads/${currentUser.uid}/${timestamp}_${file.name}`;
+        const storageRef = storage.ref().child(filePath);
 
-    <footer class="site-footer">
-      <div class="container footer-bottom">
-        <p>© <span id="year-span"></span> AI Credit Repair. All rights reserved.</p>
-      </div>
-    </footer>
-  </div>
+        // Upload file
+        await storageRef.put(file);
+
+        // Get download URL
+        const downloadURL = await storageRef.getDownloadURL();
+
+        // Save record to Firestore
+        await db.collection("uploads").add({
+          filename: file.name,
+          userEmail: currentUser.email,
+          fileTitle: title,
+          uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          storagePath: filePath,
+          downloadURL: downloadURL
+        });
+
+        statusMessage.textContent = "✅ File uploaded successfully!";
+        statusMessage.className = "success";
+
+        // Reset form
+        uploadForm.reset();
+      } catch (error) {
+        console.error("Upload Error:", error);
+        statusMessage.textContent = "⚠️ Upload failed: " + error.message;
+        statusMessage.className = "error";
+      }
+    });
+  </script>
 </body>
 </html>
