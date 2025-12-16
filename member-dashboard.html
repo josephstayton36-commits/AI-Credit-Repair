@@ -2,389 +2,266 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Credit Repair | Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Member Dashboard | AICreditRepair</title>
+  <meta name="description" content="Secure Member Dashboard for AICreditRepair clients." />
+  <meta name="theme-color" content="#12214b" />
 
-  <!-- Optional: your global CSS (keep if you want) -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDKs -->
+  <!-- Firebase Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Config -->
-  <script src="./firebase-config.js"></script>
+  <!-- Auth logic -->
+  <script defer src="auth.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
 
   <style>
-    :root{
-      --bg:#050b1a;
-      --panel:rgba(255,255,255,.06);
-      --border:rgba(255,255,255,.12);
-      --text:#fff;
-      --muted:rgba(255,255,255,.7);
-      --accent:#4da3ff;
-      --warn:rgba(255,215,0,.18);
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #0a1128 0%, #12214b 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .brand img {
+      width: 42px;
+      height: 42px;
+    }
+    nav a {
+      color: #d5d9ec;
+      text-decoration: none;
+      margin-left: 22px;
+      transition: color 0.2s;
+      font-weight: 500;
+    }
+    nav a:hover { color: #69b6ff; }
+
+    main {
+      flex: 1;
+      padding: 40px 24px 60px;
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
     }
 
-    *{ box-sizing:border-box; }
-
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at top, #0a1738, var(--bg));
-      color:var(--text);
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+    }
+    .sub {
+      color: #cfd8ec;
+      margin-bottom: 35px;
     }
 
-    /* Loading */
-    .auth-loading{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:14px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
     }
-    .loader{
-      width:38px;height:38px;
-      border-radius:50%;
-      border:3px solid var(--border);
-      border-top-color:var(--text);
-      animation:spin 1s linear infinite;
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(10px);
+      transition: transform 0.25s, box-shadow 0.25s;
     }
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    }
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #5cabff;
+    }
+    .card p {
+      color: #dbe3f3;
+      font-size: 0.95rem;
+    }
+    .card button {
+      background: #5cabff;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      margin-top: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .card button:hover {
+      background: #79c4ff;
+    }
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .profile-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 700;
+      color: #fff;
+    }
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.8rem;
+      color: #a8b2d6;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    footer a {
+      color: #5cabff;
+      text-decoration: none;
+    }
+    .logout-btn {
+      background: #cf2e2e;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .3s;
+    }
+    .logout-btn:hover { background: #b32222; }
 
-    /* Top bar */
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:16px 20px;
-      border-bottom:1px solid var(--border);
-      backdrop-filter: blur(12px);
-      gap:12px;
+    @media (max-width: 480px) {
+      header nav a {
+        margin-left: 12px;
+      }
     }
-    .brand{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .brand strong{letter-spacing:.2px}
-    .badge{
-      font-size:12px;
-      padding:4px 8px;
-      border-radius:999px;
-      background:rgba(77,163,255,.15);
-      border:1px solid rgba(77,163,255,.4);
-    }
-    .badge.free{
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-      opacity:.9;
-    }
-    .badge.paid{
-      background: rgba(77,163,255,.16);
-      border:1px solid rgba(77,163,255,.45);
-    }
-
-    .nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .ghost-btn, .solid-btn{
-      border-radius:12px;
-      padding:9px 12px;
-      cursor:pointer;
-      color:#fff;
-      font-weight:600;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-    }
-    .solid-btn{
-      background: rgba(77,163,255,.18);
-      border:1px solid rgba(77,163,255,.40);
-    }
-    .ghost-btn:hover, .solid-btn:hover{ transform:translateY(-1px); transition:.15s; }
-
-    .user{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-      opacity:.95;
-    }
-    .userEmail{font-size:13px; color:var(--muted);}
-
-    .main{max-width:1200px;margin:0 auto;padding:22px}
-
-    /* KPIs */
-    .kpis{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:14px;
-      margin-bottom:16px;
-    }
-    .kpi{
-      padding:16px;
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:16px;
-    }
-    .kpi label{font-size:13px;color:var(--muted)}
-    .kpi strong{display:block;font-size:28px;margin:6px 0}
-    .kpi span{font-size:13px;color:var(--muted)}
-
-    /* Modules */
-    .actions{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:16px;
-      margin-bottom:16px;
-    }
-    .module{
-      position:relative;
-      padding:18px;
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:18px;
-      text-decoration:none;
-      color:var(--text);
-    }
-    .module:hover{transform:translateY(-2px); transition:.15s}
-    .module h3{margin:0 0 6px}
-    .module p{margin:0;color:var(--muted);line-height:1.4}
-
-    .lock{
-      position:absolute;
-      top:14px;right:14px;
-      font-size:12px;
-      padding:4px 8px;
-      border-radius:999px;
-      background:rgba(255,215,0,.15);
-      border:1px solid rgba(255,215,0,.4);
-    }
-
-    /* Strategy */
-    .strategy{
-      margin-top:8px;
-      padding:18px;
-      border-radius:18px;
-      background:linear-gradient(180deg,rgba(77,163,255,.08),rgba(255,255,255,.03));
-      border:1px solid var(--border);
-    }
-    .strategy h2{margin:0 0 10px}
-    .muted{color:var(--muted)}
-
-    /* ===== LOCKED MODE ===== */
-    .locked .kpis,
-    .locked .actions,
-    .locked .strategy{
-      filter: grayscale(1);
-      opacity: 0.40;
-    }
-    .locked .kpis *,
-    .locked .actions *,
-    .locked .strategy *{
-      pointer-events:none;   /* blocks clicks */
-      user-select:none;
-    }
-
-    /* Allow these even in locked mode */
-    .locked #upgradeCard{
-      filter:none;
-      opacity:1;
-      pointer-events:auto;
-    }
-    .locked #upgradeCard *{
-      pointer-events:auto;
-    }
-
-    /* Upgrade card styling */
-    .upgrade{
-      border:1px solid rgba(77,163,255,.45);
-      background: linear-gradient(180deg, rgba(77,163,255,.16), rgba(255,255,255,.04));
-    }
-    .upgrade .lock{
-      background: rgba(77,163,255,.18);
-      border:1px solid rgba(77,163,255,.45);
-    }
-
-    /* Small notice banner */
-    .notice{
-      margin: 14px 0 6px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .notice strong{font-size:14px}
-    .notice span{font-size:13px;color:var(--muted);line-height:1.4}
   </style>
 </head>
 
 <body>
-  <!-- ===== AUTH LOADING ===== -->
-  <div id="authLoading" class="auth-loading">
-    <div class="loader"></div>
-    <div class="auth-text">Verifying secure member session…</div>
-  </div>
+  <header>
+    <div class="brand">
+      <img src="assets/mad_scientist.png" alt="AICreditRepair mascot logo" />
+      AICreditRepair
+    </div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="upload.html">Upload</a>
+      <a href="payment.html">Payments</a>
+      <button class="logout-btn" onclick="logoutUser()">Logout</button>
+    </nav>
+  </header>
 
-  <!-- ===== DASHBOARD APP ===== -->
-  <div id="dashboard" class="app" style="display:none;">
-    <header class="topbar">
-      <div class="brand">
-        <button id="backHomeBtn" class="ghost-btn">← Back to Home</button>
-        <strong>AI Credit Repair</strong>
-        <span id="planBadge" class="badge free">Free</span>
-      </div>
+  <main>
+    <h1 id="welcomeTitle">Welcome back!</h1>
+    <p class="sub">Here’s what’s happening with your AICreditRepair membership.</p>
 
-      <div class="nav-actions">
-        <div class="user">
-          <span class="userEmail" id="userEmail">—</span>
-        </div>
-        <button id="logoutBtn" class="ghost-btn">Log out</button>
-      </div>
-    </header>
-
-    <main class="main">
-
-      <!-- Notice (shows only for free users) -->
-      <div id="freeNotice" class="notice" style="display:none;">
+    <div class="grid">
+      <!-- Profile Card -->
+      <div class="card profile-card">
+        <div class="profile-avatar" id="avatarLetter">A</div>
         <div>
-          <strong>Preview Mode (Locked)</strong><br/>
-          <span>Upgrade to unlock Elite Snapshot + tools inside your dashboard.</span>
+          <h3 id="memberName">Member Name</h3>
+          <p id="memberEmail">user@example.com</p>
         </div>
-        <a href="paywall.html" class="solid-btn" style="text-decoration:none;">Upgrade / Pay</a>
       </div>
 
-      <!-- KPIs -->
-      <section id="kpiRow" class="kpis">
-        <div class="kpi">
-          <label>Estimated Score</label>
-          <strong>—</strong>
-          <span>Connect reports after upgrade</span>
-        </div>
-        <div class="kpi">
-          <label>Active Disputes</label>
-          <strong>—</strong>
-          <span>Unlock to start</span>
-        </div>
-        <div class="kpi">
-          <label>Negative Accounts</label>
-          <strong>—</strong>
-          <span>Upload reports after upgrade</span>
-        </div>
-        <div class="kpi">
-          <label>Progress</label>
-          <strong>0%</strong>
-          <span>Elite Snapshot locked</span>
-        </div>
-      </section>
+      <!-- Credit Progress -->
+      <div class="card">
+        <h3>📈 Credit Progress</h3>
+        <p>Your latest credit report improvements summary.</p>
+        <p style="font-size: 28px; font-weight: 700; color: #79c4ff;" id="progressScore">--</p>
+        <p style="font-size: 0.9rem;">Score Update</p>
+        <button onclick="alert('Score updates will be live soon!')">View Details</button>
+      </div>
 
-      <!-- Action Grid -->
-      <section id="actionGrid" class="actions">
-        <a class="module" href="ask-ai.html">
-          <h3>Ask AI Credit Coach</h3>
-          <p>Get instant, law-based guidance on your credit file.</p>
-          <span class="lock">Locked</span>
-        </a>
+      <!-- Uploads -->
+      <div class="card">
+        <h3>📤 File Uploads</h3>
+        <p>Submit new credit reports, proof documents, or scanned IDs securely.</p>
+        <button onclick="window.location.href='upload.html'">Upload a File</button>
+      </div>
 
-        <a class="module" href="free-resources.html">
-          <h3>Letter Library</h3>
-          <p>Dispute, goodwill, validation & compliance templates.</p>
-          <span class="lock">Locked</span>
-        </a>
+      <!-- Payments -->
+      <div class="card">
+        <h3>💳 Payments</h3>
+        <p>View past payments or confirm your latest billing cycle.</p>
+        <button onclick="window.location.href='payment.html'">View Payments</button>
+      </div>
+    </div>
+  </main>
 
-        <a class="module premium" href="snapshot.html">
-          <h3>Elite Snapshot</h3>
-          <p>90-day personalized action plan.</p>
-          <span class="lock">Locked</span>
-        </a>
-
-        <a class="module" href="upload.html">
-          <h3>Upload Credit Reports</h3>
-          <p>Securely submit your reports for analysis.</p>
-          <span class="lock">Locked</span>
-        </a>
-
-        <!-- Upgrade card (clickable even when locked) -->
-        <a id="upgradeCard" class="module upgrade" href="paywall.html">
-          <h3>Unlock Membership</h3>
-          <p>Activate Elite Snapshot + tools instantly.</p>
-          <span class="lock">Upgrade</span>
-        </a>
-      </section>
-
-      <section id="strategyPanel" class="strategy">
-        <h2>Your Strategy Overview</h2>
-        <p>
-          Once your membership is active, your dashboard can generate a dispute roadmap,
-          priority order, and compliance strategy.
-        </p>
-        <p class="muted">
-          Free accounts see a locked preview. Paid members unlock full functionality.
-        </p>
-      </section>
-
-    </main>
-  </div>
+  <footer>
+    © <span id="year"></span> <a href="#">AICreditRepair</a> • Secure Member Dashboard
+  </footer>
 
   <script>
-    const db = firebase.firestore();
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    function goHome(){
-      // If your public homepage file is different, change it here:
-      window.location.href = "index.html";
+    // Firebase config
+    if (!firebase.apps.length) {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBfmvzulrzePw4KY2CkQ1-3ydo_O4ImP5I",
+        authDomain: "ai-credit-repair-3995f.firebaseapp.com",
+        projectId: "ai-credit-repair-3995f",
+        storageBucket: "ai-credit-repair-3995f.firebasestorage.app",
+        messagingSenderId: "332853628974",
+        appId: "1:332853628974:web:872612dab4ba965dc6cfbf"
+      };
+      firebase.initializeApp(firebaseConfig);
     }
 
-    document.getElementById("backHomeBtn").addEventListener("click", goHome);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      firebase.auth().signOut().then(() => window.location.replace("member-login.html"));
-    });
+    // Watch auth state
+    auth.onAuthStateChanged(async (user) => {
+      const nameTag = document.getElementById("memberName");
+      const emailTag = document.getElementById("memberEmail");
+      const avatar = document.getElementById("avatarLetter");
+      const welcome = document.getElementById("welcomeTitle");
 
-    firebase.auth().onAuthStateChanged(async (user) => {
       if (!user) {
-        window.location.replace("member-login.html");
+        window.location.href = "member-login.html";
         return;
       }
 
-      document.getElementById("userEmail").textContent = user.email || "(no email)";
+      const email = user.email || "";
+      emailTag.textContent = email;
+      avatar.textContent = email.charAt(0).toUpperCase();
+      welcome.textContent = `Welcome back, ${email.split("@")[0]}!`;
+      nameTag.textContent = email.split("@")[0];
 
-      // Determine paid status
-      let isPaid = false;
-      try{
-        const snap = await db.collection("members").doc(user.uid).get();
-        isPaid = snap.exists && !!snap.data().paid;
-      }catch(e){
-        // If Firestore not set up yet, treat as free/locked
-        isPaid = false;
-      }
-
-      const dash = document.getElementById("dashboard");
-      const planBadge = document.getElementById("planBadge");
-      const freeNotice = document.getElementById("freeNotice");
-
-      if (!isPaid) {
-        dash.classList.add("locked");
-        planBadge.textContent = "Free";
-        planBadge.classList.remove("paid");
-        planBadge.classList.add("free");
-        freeNotice.style.display = "flex";
-      } else {
-        dash.classList.remove("locked");
-        planBadge.textContent = "Paid";
-        planBadge.classList.remove("free");
-        planBadge.classList.add("paid");
-        freeNotice.style.display = "none";
-
-        // Remove "Locked" badges for paid users (optional polish)
-        document.querySelectorAll(".actions .lock").forEach(b => {
-          if (b.textContent === "Locked") b.textContent = "Unlocked";
-        });
-      }
-
-      // Show dashboard
-      document.getElementById("authLoading").style.display = "none";
-      dash.style.display = "block";
+      // Example: Pull a fake progress score
+      const progress = Math.floor(650 + Math.random() * 100);
+      document.getElementById("progressScore").textContent = progress;
     });
   </script>
 </body>
