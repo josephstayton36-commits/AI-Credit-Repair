@@ -3,743 +3,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Credit Repair | Smart Disputes. Real Results.</title>
-  <meta name="description" content="AI Credit Repair helps you rebuild your credit with smart strategy, real laws, and AI-guided action plans. Get results with a premium member experience." />
+  <title>Home | AICreditRepair</title>
+  <meta name="description" content="Client Dashboard for AICreditRepair portal" />
+  <meta name="theme-color" content="#12214b" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="AI Credit Repair" />
-  <meta property="og:description" content="Smart Disputes. Real Results. AI-guided credit repair with premium member tools." />
-  <meta property="og:type" content="website" />
+  <!-- Firebase SDK (Compat Version) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Load Shared Auth Logic -->
+  <script defer src="auth.js"></script>
 
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Optional: preload nice font (safe if you already use Inter in CSS) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-    /* ========= Premium polish layer (won't fight your main CSS) ========= */
-    :root{
-      --bg0:#060a14;
-      --bg1:#070d1b;
-      --bg2:#0b1430;
-      --card: rgba(14, 24, 56, 0.62);
-      --card2: rgba(10, 18, 45, 0.78);
-      --border: rgba(150, 170, 220, 0.16);
-      --txt: rgba(245, 248, 255, 0.92);
-      --muted: rgba(190, 200, 225, 0.72);
-      --glow: rgba(118, 166, 255, 0.25);
-      --glow2: rgba(0, 255, 200, 0.16);
-      --accent: rgba(120, 170, 255, 1);
-      --accent2: rgba(0, 255, 200, 1);
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius: 18px;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      color: #222;
     }
-
-    body{
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 700px at 20% 10%, rgba(120,170,255,.18), transparent 60%),
-                  radial-gradient(900px 600px at 80% 15%, rgba(0,255,200,.12), transparent 62%),
-                  radial-gradient(900px 700px at 50% 85%, rgba(120,170,255,.10), transparent 60%),
-                  linear-gradient(180deg, var(--bg0), var(--bg1) 35%, #050814);
-      color: var(--txt);
-      overflow-x: hidden;
+    header {
+      background: #12214b;
+      color: #fff;
+      padding: 20px;
     }
-
-    /* Layout helpers (safe even if you have these already) */
-    .container{ width: min(1120px, 92%); margin: 0 auto; }
-    .section{ padding: 72px 0; }
-    .muted{ color: var(--muted); }
-    .pill{
-      display:inline-flex; align-items:center; gap:10px;
-      padding: 8px 12px; border-radius: 999px;
-      background: rgba(120,170,255,.10);
-      border: 1px solid rgba(120,170,255,.22);
-      color: rgba(235,245,255,.92);
-      font-weight: 600; font-size: 12px;
-      letter-spacing: .02em;
-    }
-    .pill-dot{
-      width: 8px; height: 8px; border-radius: 99px;
-      background: rgba(0,255,200,.9);
-      box-shadow: 0 0 18px rgba(0,255,200,.25);
-    }
-
-    /* Header */
-    .topbar{
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: blur(14px);
-      background: rgba(6,10,20,.55);
-      border-bottom: 1px solid rgba(150,170,220,.10);
-    }
-    .navwrap{
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 14px 0;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-    }
-    .logoMark{
-      width: 40px; height: 40px; border-radius: 14px;
-      background: linear-gradient(135deg, rgba(120,170,255,.95), rgba(0,255,200,.75));
-      box-shadow: 0 10px 40px rgba(120,170,255,.18);
-      display:flex; align-items:center; justify-content:center;
-      color:#071126; font-weight: 900; letter-spacing: .02em;
-    }
-    .brandName{ font-weight: 800; }
-    .brandTag{ display:block; font-size: 12px; color: var(--muted); margin-top: 1px; }
-
-    .navlinks{ display:flex; gap: 18px; align-items:center; }
-    .navlinks a{
-      color: rgba(235,245,255,.85);
-      text-decoration:none; font-weight: 600; font-size: 14px;
-      opacity: .9;
-    }
-    .navlinks a:hover{ opacity: 1; }
-
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:10px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(150,170,220,.18);
-      background: rgba(14,24,56,.55);
-      color: rgba(245,248,255,.92);
-      text-decoration:none;
-      font-weight: 700;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      cursor:pointer;
-      transition: transform .15s ease, border-color .15s ease;
-    }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(120,170,255,.32); }
-    .btn-primary{
-      border-color: rgba(120,170,255,.35);
-      background: linear-gradient(135deg, rgba(120,170,255,.92), rgba(0,255,200,.35));
-      color: #061025;
-    }
-    .btn-ghost{
-      background: rgba(14,24,56,.35);
-    }
-    .btn-sm{ padding: 10px 12px; border-radius: 12px; font-size: 13px; }
-
-    /* Hero */
-    .hero{
-      padding: 86px 0 44px;
-      position: relative;
-    }
-    .heroGrid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 28px;
+    header .brand {
+      display: flex;
       align-items: center;
+      gap: 12px;
     }
-    .h1{
-      font-size: clamp(34px, 4.4vw, 54px);
-      line-height: 1.03;
-      margin: 14px 0 12px;
-      letter-spacing: -0.03em;
+    header img {
+      width: 50px;
+      height: 50px;
     }
-    .lead{
-      font-size: 16px;
-      line-height: 1.6;
-      color: rgba(210,220,240,.84);
-      max-width: 58ch;
+    header h1 {
+      font-size: 20px;
+      margin: 0;
     }
-    .heroCtas{
-      display:flex; gap: 12px; flex-wrap: wrap;
-      margin-top: 18px;
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    .trustRow{
-      display:flex; gap: 14px; flex-wrap: wrap;
-      margin-top: 18px;
-      color: rgba(190,200,225,.78);
+    h2 {
+      color: #12214b;
+      font-size: 22px;
+      margin: 0 0 10px;
+    }
+    .welcome {
+      margin-top: 5px;
+      font-size: 17px;
+      color: #333;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
+    }
+    .card {
+      border: 1px solid #e0e4eb;
+      padding: 20px;
+      border-radius: 8px;
+      background: #fafbfe;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .card h3 {
+      color: #12214b;
+      margin-top: 0;
+    }
+    .btn-logout {
+      margin-top: 30px;
+      background: #c62828;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .btn-logout:hover {
+      background: #ac1f1f;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
       font-size: 13px;
+      color: #777;
     }
-    .trustItem{
-      display:flex; align-items:center; gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(150,170,220,.12);
-      background: rgba(10,18,45,.45);
+    footer a {
+      color: #12214b;
+      text-decoration: none;
     }
-    .tick{
-      width: 18px; height: 18px; border-radius: 99px;
-      background: rgba(0,255,200,.16);
-      border: 1px solid rgba(0,255,200,.25);
-      display:flex; align-items:center; justify-content:center;
-      color: rgba(0,255,200,.9);
-      font-weight: 900; font-size: 12px;
-    }
-
-    /* Right hero card */
-    .heroCard{
-      border-radius: var(--radius);
-      border: 1px solid rgba(150,170,220,.14);
-      background: linear-gradient(180deg, rgba(14,24,56,.66), rgba(10,18,45,.68));
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position: relative;
-    }
-    .heroCard::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(600px 240px at 20% 0%, rgba(120,170,255,.25), transparent 60%),
-                  radial-gradient(600px 240px at 80% 20%, rgba(0,255,200,.14), transparent 60%);
-      pointer-events:none;
-    }
-    .heroCardInner{ position:relative; padding: 18px; }
-    .miniTitle{ font-size: 12px; font-weight: 800; letter-spacing: .12em; color: rgba(220,232,255,.75); }
-    .scoreRow{
-      margin-top: 10px;
-      display:flex; gap: 12px; align-items:flex-start;
-    }
-    .scoreBox{
-      flex: 1;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(150,170,220,.14);
-      background: rgba(6,10,20,.32);
-    }
-    .scoreBig{
-      font-size: 34px; font-weight: 900; letter-spacing: -0.02em;
-      margin: 2px 0 4px;
-    }
-    .scoreSub{ font-size: 12px; color: rgba(190,200,225,.78); }
-
-    .aiBox{
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(120,170,255,.20);
-      background: rgba(120,170,255,.10);
-    }
-    .aiBox h3{ margin: 0 0 8px; font-size: 14px; }
-    .aiForm{ display:flex; gap: 10px; margin-top: 8px; }
-    .input{
-      flex:1;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(150,170,220,.16);
-      background: rgba(6,10,20,.35);
-      color: rgba(245,248,255,.92);
-      outline: none;
-    }
-    .input::placeholder{ color: rgba(190,200,225,.55); }
-    .aiOut{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(150,170,220,.12);
-      background: rgba(10,18,45,.40);
-      color: rgba(220,232,255,.88);
-      font-size: 13px;
-      min-height: 44px;
-    }
-
-    /* Logos row */
-    .logoRow{
-      display:flex; gap: 12px; flex-wrap: wrap;
-      align-items:center;
-      margin-top: 24px;
-      opacity: .9;
-    }
-    .logoChip{
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(150,170,220,.10);
-      background: rgba(10,18,45,.30);
-      font-weight: 700;
-      color: rgba(220,232,255,.80);
-      font-size: 12px;
-      letter-spacing: .02em;
-    }
-
-    /* Feature grid */
-    .grid3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 22px;
-    }
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid rgba(150,170,220,.14);
-      background: linear-gradient(180deg, rgba(14,24,56,.62), rgba(10,18,45,.62));
-      box-shadow: 0 14px 45px rgba(0,0,0,.35);
-      padding: 18px;
-    }
-    .card h3{ margin: 10px 0 8px; font-size: 16px; }
-    .card p{ margin: 0; color: rgba(200,210,235,.80); line-height: 1.6; font-size: 14px; }
-    .icon{
-      width: 42px; height: 42px; border-radius: 16px;
-      border: 1px solid rgba(120,170,255,.25);
-      background: rgba(120,170,255,.10);
-      display:flex; align-items:center; justify-content:center;
-      font-weight: 900;
-      color: rgba(120,170,255,.95);
-    }
-
-    /* Pricing preview */
-    .pricingGrid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 18px;
-    }
-    .price{
-      position: relative;
-      overflow:hidden;
-    }
-    .price::after{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(500px 220px at 20% 0%, rgba(120,170,255,.20), transparent 60%),
-                  radial-gradient(500px 220px at 80% 20%, rgba(0,255,200,.12), transparent 60%);
-      pointer-events:none;
-      opacity: .9;
-    }
-    .price > *{ position: relative; }
-    .priceTag{
-      font-size: 34px; font-weight: 900; letter-spacing: -0.02em;
-      margin: 8px 0 10px;
-    }
-    .ul{
-      margin: 10px 0 0; padding: 0; list-style:none;
-      display:grid; gap: 10px;
-    }
-    .ul li{
-      display:flex; gap:10px; align-items:flex-start;
-      color: rgba(210,220,240,.86);
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    /* Testimonials */
-    .testGrid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-      margin-top: 18px;
-    }
-    .quote{
-      font-size: 16px;
-      line-height: 1.6;
-      color: rgba(230,238,255,.90);
-    }
-    .who{ margin-top: 10px; color: rgba(190,200,225,.78); font-size: 13px; }
-
-    /* FAQ */
-    .faq{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 18px;
-    }
-    details{
-      border: 1px solid rgba(150,170,220,.12);
-      background: rgba(10,18,45,.40);
-      border-radius: 16px;
-      padding: 14px 14px;
-    }
-    summary{
-      cursor:pointer;
-      font-weight: 800;
-      color: rgba(235,245,255,.92);
-    }
-    details p{
-      margin: 10px 0 0;
-      color: rgba(200,210,235,.80);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    /* Footer */
-    .footer{
-      padding: 26px 0 40px;
-      border-top: 1px solid rgba(150,170,220,.10);
-      color: rgba(190,200,225,.70);
-      font-size: 13px;
-    }
-    .footRow{
-      display:flex; align-items:flex-start; justify-content:space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-    .footLinks{ display:flex; gap: 14px; flex-wrap: wrap; }
-    .footLinks a{ color: rgba(210,220,240,.78); text-decoration:none; font-weight: 700; }
-    .footLinks a:hover{ color: rgba(245,248,255,.92); }
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .heroGrid{ grid-template-columns: 1fr; }
-      .grid3{ grid-template-columns: 1fr; }
-      .pricingGrid{ grid-template-columns: 1fr; }
-      .testGrid{ grid-template-columns: 1fr; }
-      .faq{ grid-template-columns: 1fr; }
-      .navlinks{ display:none; }
+    .user-email {
+      font-weight: bold;
+      color: #000;
     }
   </style>
-  <nav class="main-nav">
-  <a href="page2.html" class="nav-home">🏠 Home</a>
-</nav>
-
 </head>
 
 <body>
-
-  <!-- ===================== TOP NAV ===================== -->
-  <div class="topbar">
-    <div class="container navwrap">
-      <div class="brand">
-        <div class="logoMark">AI</div>
-        <div>
-          <div class="brandName" id="brandName">AI Credit Repair</div>
-          <span class="brandTag" id="brandTagline">Smart Disputes. Real Results.</span>
-        </div>
-      </div>
-
-      <div class="navlinks">
-        <a href="#how">How it works</a>
-        <a href="#tools">Tools</a>
-        <a href="#proof">Results</a>
-        <a href="#pricing">Membership</a>
-        <a href="member-login.html" class="btn btn-sm btn-ghost">Member Login</a>
-        <a href="pricing.html" class="btn btn-sm btn-primary">Get Started</a>
-      </div>
-
-      <div style="display:flex; gap:10px; align-items:center;">
-        <a href="member-login.html" class="btn btn-sm btn-ghost">Login</a>
-        <a href="pricing.html" class="btn btn-sm btn-primary">Get Started</a>
-      </div>
+  <header>
+    <div class="brand">
+      <img src="assets/mad_scientist.png" alt="AICreditRepair logo scientist mascot" />
+      <h1>AICreditRepair Client Portal</h1>
     </div>
-  </div>
+  </header>
 
-  <!-- ===================== HERO ===================== -->
-  <section class="hero">
-    <div class="container heroGrid">
-      <div>
-        <span class="pill"><span class="pill-dot"></span> Premium AI-guided credit strategy + real laws</span>
-
-        <h1 class="h1">
-          Fix your credit with <span style="color: rgba(0,255,200,.9);">strategy</span> —
-          not guesswork.
-        </h1>
-
-        <p class="lead">
-          AI Credit Repair helps you identify the <strong>highest-impact negatives</strong>,
-          apply the right laws (FCRA/FDCPA), and follow a clean dispute system with a
-          member dashboard that feels like a real fintech product.
-        </p>
-
-        <div class="heroCtas">
-          <a class="btn btn-primary" href="pricing.html">Start Membership</a>
-          <a class="btn btn-ghost" href="#how">See How It Works</a>
-          <a class="btn btn-ghost" href="member-login.html">Member Login</a>
-        </div>
-
-        <div class="trustRow">
-          <div class="trustItem"><span class="tick">✓</span> AI guidance + law-based strategy</div>
-          <div class="trustItem"><span class="tick">✓</span> Clear steps + tracking</div>
-          <div class="trustItem"><span class="tick">✓</span> Private member area</div>
-        </div>
-
-        <div class="logoRow">
-          <span class="logoChip">FCRA §609 / §611</span>
-          <span class="logoChip">FDCPA Strategy</span>
-          <span class="logoChip">Dispute Tracker</span>
-          <span class="logoChip">Member Tools</span>
-        </div>
-      </div>
-
-      <!-- Right-side fintech card -->
-      <div class="heroCard">
-        <div class="heroCardInner">
-          <div class="miniTitle">LIVE MEMBER TOOL PREVIEW</div>
-
-          <div class="scoreRow">
-            <div class="scoreBox">
-              <div class="muted" style="font-size:12px;">AI Strategy Score</div>
-              <div class="scoreBig" id="aiScore">82</div>
-              <div class="scoreSub">Based on utilization, negatives, and dispute readiness</div>
-            </div>
-            <div class="scoreBox">
-              <div class="muted" style="font-size:12px;">Next Best Move</div>
-              <div style="font-weight:900; margin-top:6px;">Attack Unverified Items</div>
-              <div class="scoreSub">Start with inaccurate / incomplete / unverifiable negatives</div>
-            </div>
-          </div>
-
-          <div class="aiBox">
-            <h3>Ask the AI Credit Coach</h3>
-            <div class="muted" style="font-size:13px;">
-              Ask a question—get a clean next-step response (demo mode).
-            </div>
-
-            <form class="aiForm" id="askAiForm">
-              <input class="input" id="askAiInput" placeholder="Example: How do I handle a charge-off?" />
-              <button class="btn btn-primary" type="submit">Ask</button>
-            </form>
-
-            <div class="aiOut" id="askAiResponse">Your answer will appear here.</div>
-          </div>
-
-          <div style="display:flex; gap:10px; margin-top: 14px; flex-wrap: wrap;">
-            <a class="btn btn-ghost" href="snapshot.html">View Snapshot</a>
-            <a class="btn btn-ghost" href="upload.html">Upload Reports</a>
-            <a class="btn btn-primary" href="pricing.html">Upgrade</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===================== HOW IT WORKS ===================== -->
-  <section id="how" class="section">
-    <div class="container">
-      <div style="display:flex; justify-content:space-between; gap: 18px; flex-wrap: wrap; align-items:flex-end;">
-        <div style="max-width: 62ch;">
-          <span class="pill"><span class="pill-dot"></span> How it works</span>
-          <h2 style="margin:10px 0 10px; font-size: 30px; letter-spacing:-.02em;">A simple, legal, repeatable system</h2>
-          <p class="muted" style="margin:0; line-height:1.7;">
-            We don’t “spray and pray.” We run a tight process: identify, prioritize, dispute with purpose, track deadlines, and escalate when needed.
-          </p>
-        </div>
-        <a href="pricing.html" class="btn btn-primary">Start Now</a>
-      </div>
-
-      <div class="grid3">
-        <div class="card">
-          <div class="icon">1</div>
-          <h3>Diagnose the report</h3>
-          <p>Spot inaccuracies, incomplete reporting, wrong dates, balances, and unverifiable items across all bureaus.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">2</div>
-          <h3>Apply the right law</h3>
-          <p>Use FCRA/FDCPA strategy to force verification—if they can’t prove it, it doesn’t belong.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">3</div>
-          <h3>Track + escalate</h3>
-          <p>Stay consistent, watch the clock, keep proof, and escalate strategically when it’s justified.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== TOOLS ===================== -->
-  <section id="tools" class="section">
-    <div class="container">
-      <span class="pill"><span class="pill-dot"></span> Member tools</span>
-      <h2 style="margin:10px 0 10px; font-size: 30px; letter-spacing:-.02em;">Everything you need in one dashboard</h2>
-      <p class="muted" style="margin:0; line-height:1.7; max-width: 72ch;">
-        A real member experience: guided steps, AI prompts, dispute flow, and access control—all built for speed and clarity.
+  <main>
+    <section>
+      <h2>Welcome Back!</h2>
+      <p class="welcome">
+        Hello, <span class="user-email" id="userEmail">Loading…</span><br>
+        This is your personal dashboard. From here you can view your account, upload credit reports, and manage your membership.
       </p>
+    </section>
 
-      <div class="grid3" style="margin-top: 18px;">
-        <div class="card">
-          <div class="icon">⚡</div>
-          <h3>AI Credit Coach</h3>
-          <p>Ask questions and get next steps that align with your profile and goals (demo on this page).</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">🧾</div>
-          <h3>Elite Snapshot</h3>
-          <p>Your roadmap: what to dispute first, what to leave alone, and what will move the score fastest.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">🔒</div>
-          <h3>Secure Member Area</h3>
-          <p>Sign-in, access control, and a clean experience that feels like a premium fintech portal.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== PROOF ===================== -->
-  <section id="proof" class="section">
-    <div class="container">
-      <span class="pill"><span class="pill-dot"></span> Proof + credibility</span>
-      <h2 style="margin:10px 0 10px; font-size: 30px; letter-spacing:-.02em;">Built on real laws, real process</h2>
-      <p class="muted" style="margin:0; line-height:1.7; max-width: 72ch;">
-        This platform is designed to keep you consistent and strategic. You’re not buying hype—you’re buying structure.
-      </p>
-
-      <div class="testGrid">
-        <div class="card">
-          <div class="quote">
-            “Once I stopped doing random disputes and started following a system, things finally moved. The difference is strategy.”
-          </div>
-          <div class="who">— Member (results vary; depends on file accuracy and creditor responses)</div>
-        </div>
-
-        <div class="card">
-          <h3 style="margin:0 0 10px;">What you get</h3>
-          <ul class="ul">
-            <li><span class="tick">✓</span> A step-by-step plan you can actually follow</li>
-            <li><span class="tick">✓</span> Better targeting: remove what’s unverifiable first</li>
-            <li><span class="tick">✓</span> Less stress: you know exactly what to do next</li>
-            <li><span class="tick">✓</span> Member tools that keep you consistent</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== PRICING PREVIEW ===================== -->
-  <section id="pricing" class="section">
-    <div class="container">
-      <span class="pill"><span class="pill-dot"></span> Membership</span>
-      <h2 style="margin:10px 0 10px; font-size: 30px; letter-spacing:-.02em;">Pick the plan that fits your goals</h2>
-      <p class="muted" style="margin:0; line-height:1.7; max-width: 72ch;">
-        Start small or go all-in. The key is consistency. (You can link these buttons to your pricing page.)
-      </p>
-
-      <div class="pricingGrid">
-        <div class="card price">
-          <div class="pill" style="margin-bottom:10px;"><span class="pill-dot"></span> Starter</div>
-          <div class="priceTag">$79<span style="font-size:14px; font-weight:700; opacity:.75;">/mo</span></div>
-          <ul class="ul">
-            <li><span class="tick">✓</span> AI guidance + basic steps</li>
-            <li><span class="tick">✓</span> Core templates + tracking</li>
-            <li><span class="tick">✓</span> Member access</li>
-          </ul>
-          <div style="margin-top:14px;">
-            <a href="pricing.html" class="btn btn-ghost" style="width:100%;">Choose Starter</a>
-          </div>
-        </div>
-
-        <div class="card price">
-          <div class="pill" style="margin-bottom:10px;"><span class="pill-dot"></span> Core</div>
-          <div class="priceTag">$109<span style="font-size:14px; font-weight:700; opacity:.75;">/mo</span></div>
-          <ul class="ul">
-            <li><span class="tick">✓</span> Strong structure + letters</li>
-            <li><span class="tick">✓</span> Strategy-first dispute flow</li>
-            <li><span class="tick">✓</span> Better guidance for timelines</li>
-          </ul>
-          <div style="margin-top:14px;">
-            <a href="pricing.html" class="btn btn-primary" style="width:100%;">Choose Core</a>
-          </div>
-        </div>
-
-        <div class="card price">
-          <div class="pill" style="margin-bottom:10px;"><span class="pill-dot"></span> Elite</div>
-          <div class="priceTag">$149<span style="font-size:14px; font-weight:700; opacity:.75;">/mo</span></div>
-          <ul class="ul">
-            <li><span class="tick">✓</span> Tightest playbook + scripts</li>
-            <li><span class="tick">✓</span> Priority strategy approach</li>
-            <li><span class="tick">✓</span> Best for big goals</li>
-          </ul>
-          <div style="margin-top:14px;">
-            <a href="pricing.html" class="btn btn-ghost" style="width:100%;">Choose Elite</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== FAQ ===================== -->
-  <section class="section">
-    <div class="container">
-      <span class="pill"><span class="pill-dot"></span> FAQ</span>
-      <h2 style="margin:10px 0 10px; font-size: 30px; letter-spacing:-.02em;">Quick answers</h2>
-      <p class="muted" style="margin:0; line-height:1.7; max-width: 72ch;">
-        Transparency builds trust. Here’s what members ask most.
-      </p>
-
-      <div class="faq">
-        <details>
-          <summary>Is this legal?</summary>
-          <p>Yes—disputing inaccurate, incomplete, or unverifiable credit reporting is your right under the FCRA. We focus on structure and compliance-first strategy.</p>
-        </details>
-        <details>
-          <summary>How fast will I see results?</summary>
-          <p>It depends on your file, bureau responses, and creditors. The point of the platform is to keep you consistent and strategic—results vary.</p>
-        </details>
-        <details>
-          <summary>Do you guarantee deletions?</summary>
-          <p>No one can ethically guarantee deletions. We give you a system built around laws and verification requirements.</p>
-        </details>
-        <details>
-          <summary>How does the member area work?</summary>
-          <p>You create an account, log in, and access member tools (snapshot, uploads, and AI guidance). Your login gates your private pages.</p>
-        </details>
+    <div class="grid">
+      <div class="card" onclick="location.href='upload.html'">
+        <h3>📤 Upload Reports</h3>
+        <p>Upload credit reports or supporting documents securely for review.</p>
       </div>
 
-      <div style="margin-top:18px; display:flex; gap:12px; flex-wrap: wrap;">
-        <a href="member-login.html" class="btn btn-ghost">Member Login</a>
-        <a href="pricing.html" class="btn btn-primary">Start Membership</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== FOOTER ===================== -->
-  <footer class="footer">
-    <div class="container footRow">
-      <div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="logoMark" style="width:34px; height:34px; border-radius: 12px;">AI</div>
-          <div style="font-weight:900;">AI Credit Repair</div>
-        </div>
-        <div class="muted" style="margin-top:8px; max-width: 60ch; line-height:1.6;">
-          Educational + strategy platform. Not legal advice. Results vary by credit file and bureau/creditor responses.
-        </div>
+      <div class="card" onclick="location.href='payment.html'">
+        <h3>💳 Payments</h3>
+        <p>View or confirm your membership payments, billing history, or current tier.</p>
       </div>
 
-      <div class="footLinks">
-        <a href="#how">How it works</a>
-        <a href="#tools">Tools</a>
-        <a href="#pricing">Membership</a>
-        <a href="member-login.html">Login</a>
+      <div class="card" onclick="location.href='support.html'">
+        <h3>💬 Support</h3>
+        <p>Need help? Reach out to AICreditRepair support directly from your portal.</p>
       </div>
     </div>
 
-    <div class="container" style="margin-top:16px; opacity:.85;">
-      © <span id="year-span"></span> AI Credit Repair. All rights reserved.
-    </div>
+    <button class="btn-logout" onclick="logoutUser()">Logout</button>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> <a href="#">AICreditRepair</a> • All rights reserved</p>
   </footer>
 
   <script>
-    // Small, safe JS polish (no dependencies)
-    (function(){
-      // Year
-      const y = document.getElementById("year-span");
-      if (y) y.textContent = new Date().getFullYear();
+    // Auto footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-      // AI demo responses (fallback)
-      const replies = [
-        "If it’s inaccurate, incomplete, or unverifiable, it’s a candidate for dispute. Start with the highest-impact negative first.",
-        "Focus on utilization under 10%, then hit unverified negatives with a clean paper trail and deadline tracking.",
-        "Dispute strategically: correct facts, request method of verification, and escalate only when justified.",
-        "Stop random disputes—prioritize the items that move score fastest: high balances, charge-offs, and collections with errors."
-      ];
-
-      const form = document.getElementById("askAiForm");
-      const input = document.getElementById("askAiInput");
-      const out = document.getElementById("askAiResponse");
-      if (form && input && out){
-        form.addEventListener("submit", (e)=>{
-          e.preventDefault();
-          const q = (input.value || "").trim();
-          const reply = replies[Math.floor(Math.random()*replies.length)];
-          out.textContent = q ? reply : "Ask something specific like: “How do I handle a charge-off?”";
-        });
+    // Handle authentication state (show user email)
+    firebase.auth().onAuthStateChanged((user) => {
+      const emailElement = document.getElementById("userEmail");
+      if (user && emailElement) {
+        emailElement.textContent = user.email;
+      } else {
+        // If not signed in, return to login
+        window.location.href = "login.html";
       }
-
-      // Make the score feel alive (cosmetic)
-      const s = document.getElementById("aiScore");
-      if (s){
-        const base = 78 + Math.floor(Math.random()*12);
-        s.textContent = String(base);
-      }
-    })();
+    });
   </script>
-
 </body>
 </html>
