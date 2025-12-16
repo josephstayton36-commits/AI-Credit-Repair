@@ -21,39 +21,38 @@
 </head>
 
 <body>
-
   <!-- ======================= HEADER / NAV ======================= -->
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="container nav">
 
       <div class="brand">
-        <!-- Replace with your mascot/logo if you want -->
-        <img src="assets/mad_scientist.png" alt="AI Credit Repair" class="logo" />
+        <!-- Improved alt text for accessibility -->
+        <img src="assets/mad_scientist.png" alt="AI Credit Repair logo featuring a scientist mascot" class="logo" />
 
         <div class="brand-text">
-          <span class="brand-name">Admin Dashboard</span>
+          <span class="brand-name" aria-label="Admin Dashboard Title">Admin Dashboard</span>
           <span class="brand-tagline"><strong>AI Credit Repair</strong> • Private Admin Area</span>
         </div>
       </div>
 
-      <nav class="main-nav">
+      <nav class="main-nav" aria-label="Main navigation">
         <a href="home.html">Dashboard</a>
         <a href="upload.html">Uploads</a>
         <a href="payment.html">Payments</a>
-        <a href="admin.html">Admin</a>
+        <a href="admin.html" aria-current="page">Admin</a>
       </nav>
 
     </div>
   </header>
 
   <!-- ======================= MAIN ======================= -->
-  <main class="container page">
+  <main class="container page" role="main">
 
     <!-- HERO -->
     <section class="hero">
       <div class="hero-title">
         <div>
-          <div class="kicker">Admin Only</div>
+          <p class="kicker">Admin Only</p>
           <h1>Control Center</h1>
           <p>
             This page is admin-only. If you’re not authorized, you’ll be redirected automatically.
@@ -61,7 +60,7 @@
         </div>
 
         <div class="stack" style="min-width: 260px;">
-          <div class="badge">
+          <div class="badge" role="status" aria-live="polite">
             <span>Logged in as:</span>
             <strong id="userEmail">Loading…</strong>
           </div>
@@ -78,7 +77,7 @@
     <section class="section">
       <div class="section-title">
         <h2>Quick Actions</h2>
-        <span class="small">Fast admin tools (you can wire these to admin.js later).</span>
+        <p class="small">Fast admin tools (you can wire these to admin.js later).</p>
       </div>
 
       <div class="grid grid-2">
@@ -114,45 +113,45 @@
     <section class="section">
       <div class="section-title">
         <h2>Latest Activity</h2>
-        <span class="small">Users, payment requests, and uploads.</span>
+        <p class="small">Users, payment requests, and uploads.</p>
       </div>
 
       <div class="grid grid-2">
         <!-- USERS -->
-        <section class="card card-pad">
+        <section class="card card-pad" aria-labelledby="usersListHeading">
           <div class="spread">
-            <h2>Users (latest)</h2>
-            <span class="badge">Live</span>
+            <h2 id="usersListHeading">Users (latest)</h2>
+            <span class="badge" aria-label="Live data indicator">Live</span>
           </div>
           <div class="divider"></div>
-          <div id="usersList">Loading users…</div>
+          <div id="usersList" role="region" aria-live="polite">Loading users…</div>
         </section>
 
         <!-- PAYMENTS -->
-        <section class="card card-pad">
+        <section class="card card-pad" aria-labelledby="paymentsListHeading">
           <div class="spread">
-            <h2>Payment Requests</h2>
-            <span class="badge">Review</span>
+            <h2 id="paymentsListHeading">Payment Requests</h2>
+            <span class="badge" aria-label="Review section">Review</span>
           </div>
           <div class="divider"></div>
-          <div id="paymentsList">Loading payments…</div>
+          <div id="paymentsList" role="region" aria-live="polite">Loading payments…</div>
         </section>
       </div>
     </section>
 
     <!-- UPLOADS -->
-    <section class="section">
+    <section class="section" aria-labelledby="uploadsListHeading">
       <div class="section-title">
-        <h2>Uploads (latest)</h2>
-        <span class="small">Credit report submissions and files.</span>
+        <h2 id="uploadsListHeading">Uploads (latest)</h2>
+        <p class="small">Credit report submissions and uploaded files.</p>
       </div>
 
-      <section class="card card-pad">
+      <div class="card card-pad" role="region" aria-live="polite">
         <div id="uploadsList">Loading uploads…</div>
-      </section>
+      </div>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
       <div class="spread">
         <span>© <span id="year"></span> AI Credit Repair</span>
         <span class="small">Admin Console • Secure • Logged activity</span>
