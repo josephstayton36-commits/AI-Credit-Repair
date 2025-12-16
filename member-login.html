@@ -1,3 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Member Login | AICreditRepair</title>
+  <meta name="description" content="AICreditRepair Secure Member Login Portal" />
+  <meta name="theme-color" content="#12214b" />
+
+  <!-- Firebase SDKs (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <!-- Auth Logic -->
+  <script defer src="auth.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ---------- Global look ---------- */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top right, #12214b 0%, #0a1128 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 48px 36px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35);
+      text-align: center;
+      animation: fadeIn 0.7s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-container img {
+      width: 80px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+    }
+    .brand-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .brand-sub {
+      font-size: 0.9rem;
+      color: #ccd4e2;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #d1d9ef;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: #5cabff;
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 8px rgba(92,171,255,0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+    }
+    #loginBtn {
+      background: #5cabff;
+      color: #fff;
+    }
+    #loginBtn:hover { background: #69b6ff; }
+
+    #signupBtn {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+    #signupBtn:hover { background: rgba(255,255,255,0.25); }
+
+    #resetBtn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #ddd;
+    }
+    #resetBtn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ---------- Message Box ---------- */
+    #errorBox {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      border-radius: 6px;
+      line-height: 1.4em;
+      display: none;
+      transition: opacity 0.3s;
+    }
+    .msg.error {
+      display: block;
+      background: rgba(255, 60, 60, 0.15);
+      color: #ff8a8a;
+      border: 1px solid rgba(255, 60, 60, 0.4);
+    }
+    .msg.success {
+      display: block;
+      background: rgba(60, 255, 120, 0.15);
+      color: #64ffb9;
+      border: 1px solid rgba(60, 255, 120, 0.4);
+    }
+    .everything-footer {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    .everything-footer a {
+      color: #5cabff;
+      text-decoration: none;
+    }
+    .everything-footer a:hover {
+      text-decoration: underline;
+    }
+    @media screen and (max-width: 480px) {
+      .login-container {
+        border-radius: 0;
+        box-shadow: none;
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <img src="assets/mad_scientist.png" alt="AI Credit Repair mascot logo" />
+    <div class="brand-title">AICreditRepair</div>
+    <div class="brand-sub">Secure Member Login</div>
+
+    <div class="input-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com" required />
+    </div>
+
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" required />
+    </div>
+
+    <div id="errorBox" class="msg"></div>
+
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Create Account</button>
+    <button id="resetBtn">Reset Password</button>
+
+    <div class="everything-footer">
+      <p>© <span id="year"></span> AICreditRepair • All Rights Reserved</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password">
 
