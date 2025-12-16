@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | AICreditRepair</title>
+  <meta name="description" content="Login to the Secure AICreditRepair Portal" />
+  <meta name="theme-color" content="#12214b" />
+
+  <!-- Firebase SDK (Compat Version) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Auth logic -->
+  <script defer src="auth.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Inline additional styles specific to login page */
+    body {
+      background: #f5f7fb;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .login-wrapper {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .login-wrapper img {
+      max-width: 80px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 22px;
+      color: #12214b;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      text-align: left;
+      margin: 10px 0 4px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    input:focus {
+      border-color: #12214b;
+    }
+    .btn-primary {
+      margin-top: 16px;
+      width: 100%;
+      background: #12214b;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-primary:hover {
+      background: #1c2c6b;
+    }
+    .message {
+      margin-top: 18px;
+      font-size: 14px;
+      min-height: 20px;
+      color: #d33;
+    }
+    .footer-note {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-wrapper">
+    <img src="assets/mad_scientist.png" alt="AICreditRepair logo with scientist mascot" />
+    <h1>AICreditRepair Admin Login</h1>
+
+    <form id="loginForm">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="admin@aicreditrepair.com" required autofocus />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required />
+
+      <button type="submit" class="btn-primary">Login</button>
+      <div class="message" id="responseMessage"></div>
+    </form>
+
+    <p class="footer-note">
+      © <span id="year"></span> AICreditRepair • All rights reserved
+    </p>
+  </div>
+
+  <script>
+    // Auto year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Handle form submission
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("responseMessage");
+
+      message.style.color = "#555";
+      message.textContent = "Signing in...";
+
+      // Call loginUser() from auth.js
+      loginUser(email, password)
+        .catch(err => {
+          message.style.color = "#d33";
+          message.textContent = err.message;
+        });
+    });
+  </script>
+</body>
+</html>
