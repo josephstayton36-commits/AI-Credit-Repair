@@ -1,168 +1,158 @@
 <!doctype html>
 <html lang="en">
+>
 <head>
   <meta charset="UTF-8" />
-  <title>AI Credit Repair | Admin Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Admin dashboard for AI Credit Repair." />
-
+  <title>AICreditRepair | Admin Dashboard</title>
+  <meta name="description" content="Secure Admin Dashboard for AICreditRepair" />
+  <meta name="theme-color" content="#12214b" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase (Compat for GitHub Pages) -->
+  <!-- ================================
+       FIREBASE SDK (Compat Version)
+  ================================= -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- Auth (must load before admin.js) -->
-  <script defer src="auth.js"></script>
-
-  <!-- Admin logic -->
-  <script defer src="admin.js"></script>
 </head>
 
 <body>
-  <!-- ======================= HEADER / NAV ======================= -->
-  <header class="site-header" role="banner">
+  <!-- ===========================
+       HEADER / NAVIGATION
+  ============================== -->
+  <header class="site-header">
     <div class="container nav">
-
       <div class="brand">
-        <!-- Improved alt text for accessibility -->
-        <img src="assets/mad_scientist.png" alt="AI Credit Repair logo featuring a scientist mascot" class="logo" />
-
+        <img src="assets/mad_scientist.png" alt="AICreditRepair logo, scientist mascot" class="logo" />
         <div class="brand-text">
-          <span class="brand-name" aria-label="Admin Dashboard Title">Admin Dashboard</span>
-          <span class="brand-tagline"><strong>AI Credit Repair</strong> • Private Admin Area</span>
+          <h1 class="brand-name">Admin Dashboard</h1>
+          <p class="brand-tagline"><strong>AICreditRepair</strong> • Secure Admin Area</p>
         </div>
       </div>
 
-      <nav class="main-nav" aria-label="Main navigation">
+      <nav class="main-nav">
         <a href="home.html">Dashboard</a>
         <a href="upload.html">Uploads</a>
         <a href="payment.html">Payments</a>
         <a href="admin.html" aria-current="page">Admin</a>
       </nav>
-
     </div>
   </header>
 
-  <!-- ======================= MAIN ======================= -->
+  <!-- ===========================
+       MAIN CONTENT
+  ============================== -->
   <main class="container page" role="main">
-
     <!-- HERO -->
     <section class="hero">
       <div class="hero-title">
         <div>
           <p class="kicker">Admin Only</p>
-          <h1>Control Center</h1>
-          <p>
-            This page is admin-only. If you’re not authorized, you’ll be redirected automatically.
-          </p>
+          <h2>Control Center</h2>
+          <p>Welcome to the AICreditRepair administrative control area. Only authorized admins can view this data.</p>
         </div>
 
-        <div class="stack" style="min-width: 260px;">
+        <div class="stack" style="min-width:260px;">
           <div class="badge" role="status" aria-live="polite">
             <span>Logged in as:</span>
             <strong id="userEmail">Loading…</strong>
           </div>
-
           <div class="row">
             <button class="btn btn-ghost" onclick="location.href='home.html'">Back to Dashboard</button>
-            <button class="btn-danger" onclick="logoutUser()">Logout</button>
+            <button class="btn btn-danger" onclick="logoutUser()">Logout</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- QUICK ACTIONS -->
-    <section class="section">
+    <!-- QUICK ACTIONS (Admin Only) -->
+    <section class="section" data-admin-section>
       <div class="section-title">
         <h2>Quick Actions</h2>
-        <p class="small">Fast admin tools (you can wire these to admin.js later).</p>
+        <p class="small">Manage your users, payments, and uploads quickly.</p>
       </div>
 
       <div class="grid grid-2">
         <div class="panel panel-pad">
           <h3>Member Management</h3>
-          <p>View users, toggle tiers, and track membership status.</p>
+          <p>View, manage, and monitor user accounts.</p>
           <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="document.getElementById('usersList')?.scrollIntoView({behavior:'smooth'})">
-              View Users
-            </button>
-            <button class="btn btn-ghost" onclick="alert('Next: Add tier toggle + role toggle buttons in admin.js')">
-              Add Tier Toggle
-            </button>
+            <button class="btn-primary" onclick="document.getElementById('usersList').scrollIntoView({behavior:'smooth'})">View Users</button>
           </div>
         </div>
 
         <div class="panel panel-pad">
-          <h3>Review New Activity</h3>
-          <p>Quickly jump to payments or uploads and verify requests.</p>
+          <h3>Review Recent Activity</h3>
+          <p>Jump directly to payments and uploads.</p>
           <div class="row" style="margin-top:12px;">
-            <button class="btn-primary" onclick="document.getElementById('paymentsList')?.scrollIntoView({behavior:'smooth'})">
-              Payment Requests
-            </button>
-            <button class="btn btn-ghost" onclick="document.getElementById('uploadsList')?.scrollIntoView({behavior:'smooth'})">
-              Recent Uploads
-            </button>
+            <button class="btn-primary" onclick="document.getElementById('paymentsList').scrollIntoView({behavior:'smooth'})">View Payments</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('uploadsList').scrollIntoView({behavior:'smooth'})">View Uploads</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- USERS + PAYMENTS -->
-    <section class="section">
+    <!-- USER + PAYMENT SECTIONS -->
+    <section class="section" data-admin-section>
       <div class="section-title">
         <h2>Latest Activity</h2>
-        <p class="small">Users, payment requests, and uploads.</p>
+        <p class="small">Recent users, payments, and uploaded files.</p>
       </div>
 
       <div class="grid grid-2">
-        <!-- USERS -->
-        <section class="card card-pad" aria-labelledby="usersListHeading">
+        <section class="card card-pad">
           <div class="spread">
-            <h2 id="usersListHeading">Users (latest)</h2>
-            <span class="badge" aria-label="Live data indicator">Live</span>
+            <h3>Users</h3>
+            <span class="badge">Latest</span>
           </div>
           <div class="divider"></div>
-          <div id="usersList" role="region" aria-live="polite">Loading users…</div>
+          <div id="usersList" aria-live="polite">Loading users…</div>
         </section>
 
-        <!-- PAYMENTS -->
-        <section class="card card-pad" aria-labelledby="paymentsListHeading">
+        <section class="card card-pad">
           <div class="spread">
-            <h2 id="paymentsListHeading">Payment Requests</h2>
-            <span class="badge" aria-label="Review section">Review</span>
+            <h3>Payment Requests</h3>
+            <span class="badge">Review</span>
           </div>
           <div class="divider"></div>
-          <div id="paymentsList" role="region" aria-live="polite">Loading payments…</div>
+          <div id="paymentsList" aria-live="polite">Loading payments…</div>
         </section>
       </div>
     </section>
 
-    <!-- UPLOADS -->
-    <section class="section" aria-labelledby="uploadsListHeading">
+    <!-- UPLOAD SECTION -->
+    <section class="section" data-admin-section>
       <div class="section-title">
-        <h2 id="uploadsListHeading">Uploads (latest)</h2>
+        <h2>Uploads (Latest)</h2>
         <p class="small">Credit report submissions and uploaded files.</p>
       </div>
-
-      <div class="card card-pad" role="region" aria-live="polite">
-        <div id="uploadsList">Loading uploads…</div>
-      </div>
+      <section class="card card-pad">
+        <div id="uploadsList" aria-live="polite">Loading uploads…</div>
+      </section>
     </section>
-
-    <footer class="footer" role="contentinfo">
-      <div class="spread">
-        <span>© <span id="year"></span> AI Credit Repair</span>
-        <span class="small">Admin Console • Secure • Logged activity</span>
-      </div>
-    </footer>
-
   </main>
 
+  <!-- ===========================
+       FOOTER
+  ============================== -->
+  <footer class="footer">
+    <div class="spread">
+      <span>© <span id="year"></span> AICreditRepair</span>
+      <span class="small">Admin Console • Secure • Logged Activity</span>
+    </div>
+  </footer>
+
+  <!-- ===========================
+       SCRIPTS (ORDER MATTERS)
+  ============================== -->
+  <script defer src="auth.js"></script>
+  <script defer src="admin.js"></script>
+  <script defer src="functions.js"></script>
+
   <script>
+    // Auto update footer year
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
-
 </body>
 </html>
