@@ -2,115 +2,254 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Credit Repair | Pay & Unlock Elite</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <title>Payments | AICreditRepair</title>
+  <meta name="description" content="Secure payment history for AICreditRepair members." />
+  <meta name="theme-color" content="#12214b" />
 
-  <!-- Firebase -->
+  <!-- Firebase SDKs (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Auth + Page JS -->
+  <!-- Shared Auth -->
   <script defer src="auth.js"></script>
-  <script defer src="payment.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #0a1128 0%, #12214b 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 28px;
+      position: sticky;
+      top: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      gap: 8px;
+    }
+    .brand img {
+      width: 40px;
+      height: 40px;
+    }
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #d6def1;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #69b6ff; }
+    main {
+      flex: 1;
+      padding: 40px 24px 60px;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    p.sub {
+      color: #cfd8ec;
+      margin-bottom: 35px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    }
+    th, td {
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+    }
+    th {
+      background: rgba(255,255,255,0.12);
+      color: #92a4d6;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.05);
+    }
+    tr:hover {
+      background: rgba(92,171,255,0.15);
+    }
+    td.status {
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .status.paid { color: #5ef38c; }
+    .status.pending { color: #ffca28; }
+    .status.failed { color: #f44336; }
+    .center {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.95rem;
+      color: #d0d7ef;
+    }
+    .logout-btn {
+      background: #cf2e2e;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-left: 20px;
+    }
+    .logout-btn:hover { background: #b32222; }
+    footer {
+      text-align: center;
+      padding: 18px;
+      font-size: 0.8rem;
+      color: #a8b2d6;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    footer a {
+      color: #5cabff;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="page">
+  <header>
+    <div class="brand">
+      <img src="assets/mad_scientist.png" alt="AICreditRepair Logo" />
+      AICreditRepair
+    </div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="upload.html">Upload</a>
+      <a href="payment.html" aria-current="page">Payments</a>
+      <button class="logout-btn" onclick="logoutUser()">Logout</button>
+    </nav>
+  </header>
 
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">
-          <div class="logo-circle">AI</div>
-          <div class="brand-text">
-            <span class="brand-name">AI Credit Repair</span>
-            <span class="brand-tagline">Pay & Unlock Elite</span>
-          </div>
-        </div>
+  <main>
+    <h1>Payment History</h1>
+    <p class="sub">Your latest billing cycles and payments</p>
 
-        <nav class="main-nav">
-          <a href="home.html">Home</a>
-          <a href="upload.html">Upload Reports</a>
-          <button class="btn logout-btn" type="button" onclick="logoutUser()">Logout</button>
-        </nav>
-      </div>
+    <table id="paymentsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Reference</th>
+        </tr>
+      </thead>
+      <tbody id="paymentsBody">
+        <tr><td colspan="4" class="center">Loading payment history…</td></tr>
+      </tbody>
+    </table>
 
-      <div class="container member-bar">
-        Logged in as: <strong id="userEmail">Loading…</strong>
-      </div>
-    </header>
+    <div class="center" id="summaryFooter"></div>
+  </main>
 
-    <main class="container section">
-      <div class="card">
-        <h1 style="margin-top:0;">Unlock Elite Snapshot</h1>
-        <p class="muted">
-          Cash App payments can’t be auto-verified from GitHub Pages, so this page submits your payment details
-          for approval. Once approved, your account is upgraded to <strong>Elite</strong>.
-        </p>
+  <footer>
+    © <span id="year"></span> <a href="#">AICreditRepair</a> • Secure Payment Portal
+  </footer>
 
-        <div class="card" style="margin-top:14px;">
-          <h2 style="margin-top:0;">Step 1 — Pay Cash App</h2>
-          <p>Send payment to:</p>
-          <div style="font-size:22px;font-weight:900;letter-spacing:.3px;">
-            $Cory12151983
-          </div>
-          <p class="muted" style="margin-bottom:0;">
-            Put this code in the Cash App <strong>Note</strong> (it helps match you fast):
-            <strong id="payCode">AICR-_____</strong>
-          </p>
-        </div>
+  <script>
+    // Footer Year
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-        <div class="card" style="margin-top:14px;">
-          <h2 style="margin-top:0;">Step 2 — Submit your payment details</h2>
+    // Initialize Firebase if not already
+    if (!firebase.apps.length) {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBfmvzulrzePw4KY2CkQ1-3ydo_O4ImP5I",
+        authDomain: "ai-credit-repair-3995f.firebaseapp.com",
+        projectId: "ai-credit-repair-3995f",
+        storageBucket: "ai-credit-repair-3995f.firebasestorage.app",
+        messagingSenderId: "332853628974",
+        appId: "1:332853628974:web:872612dab4ba965dc6cfbf"
+      };
+      firebase.initializeApp(firebaseConfig);
+    }
 
-          <form id="paymentForm">
-            <div class="grid-3" style="grid-template-columns: 1fr 1fr 1fr;">
-              <div class="form-group">
-                <label>Cash App display name</label>
-                <input id="cashName" type="text" placeholder="Example: Cory S." required />
-              </div>
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-              <div class="form-group">
-                <label>Amount sent (USD)</label>
-                <input id="amount" type="number" min="1" step="0.01" placeholder="Example: 79.00" required />
-              </div>
+    // Utilities
+    function formatDate(ts) {
+      if (!ts) return "--";
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
 
-              <div class="form-group">
-                <label>Date sent</label>
-                <input id="dateSent" type="date" required />
-              </div>
-            </div>
+    function createRow(payment) {
+      return `
+        <tr>
+          <td>${formatDate(payment.timestamp)}</td>
+          <td>$${payment.amount?.toFixed(2) || '0.00'}</td>
+          <td class="status ${payment.status?.toLowerCase() || 'pending'}">${payment.status || '--'}</td>
+          <td>${payment.reference || '--'}</td>
+        </tr>
+      `;
+    }
 
-            <div class="form-group">
-              <label>Cash App note / code</label>
-              <input id="noteCode" type="text" placeholder="Example: AICR-48291" required />
-            </div>
+    // Watch Auth & Load Payments
+    auth.onAuthStateChanged(async (user) => {
+      const body = document.getElementById("paymentsBody");
+      const summary = document.getElementById("summaryFooter");
 
-            <div class="form-group">
-              <label>Anything else to help verify? (optional)</label>
-              <textarea id="extra" rows="3" placeholder="Example: last 4 of phone, exact time sent, etc."></textarea>
-            </div>
+      if (!user) {
+        window.location.href = "member-login.html";
+        return;
+      }
 
-            <button class="btn primary-btn" type="submit">Submit for Approval</button>
-            <p id="statusMsg" class="muted" style="margin-top:10px;"></p>
-          </form>
-        </div>
+      try {
+        const query = await db.collection("payments")
+          .where("userEmail", "==", user.email)
+          .orderBy("timestamp", "desc")
+          .limit(20)
+          .get();
 
-        <div class="card elite-only" style="margin-top:14px;">
-          <h2 style="margin-top:0;">✅ You’re Elite</h2>
-          <p>You already have Elite access. Go upload your reports:</p>
-          <a class="btn primary-btn" href="upload.html">Upload Reports</a>
-        </div>
-      </div>
-    </main>
+        if (query.empty) {
+          body.innerHTML = `<tr><td colspan="4" class="center">No payment records found.</td></tr>`;
+          return;
+        }
 
-    <footer class="site-footer">
-      <div class="container">
-        <p>© <span id="year-span"></span> AI Credit Repair</p>
-      </div>
-    </footer>
+        let html = "";
+        let totalPaid = 0;
+        query.forEach((doc) => {
+          const data = doc.data();
+          html += createRow(data);
+          if (data.status === "Paid") totalPaid += Number(data.amount) || 0;
+        });
 
-  </div>
+        body.innerHTML = html;
+        summary.innerHTML = `Total Paid: <strong>$${totalPaid.toFixed(2)}</strong>`;
+      } catch (err) {
+        console.error("Payment load error:", err);
+        body.innerHTML = `<tr><td colspan="4" class="center">Error loading payments: ${err.message}</td></tr>`;
+      }
+    });
+  </script>
 </body>
 </html>
