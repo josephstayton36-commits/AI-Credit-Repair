@@ -1,266 +1,196 @@
-// admin.js (Fintech UI + Users + Uploads + Payment Approve/Reject)
+/*******************************************************
+ * AICreditRepair Admin Dashboard Logic
+ * -----------------------------------------------------
+ * Handles admin access control, user verification,
+ * and real-time dashboard data loading from Firestore.
+ *******************************************************/
+
+console.log("AICreditRepair Admin dashboard loaded.");
+
+// =========================
+//  FIREBASE INIT
+// =========================
+if (!firebase.apps.length) {
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* =========================================================
-   UI helpers (no inline style, uses style.css classes)
-========================================================= */
+// =========================
+//  AUTH STATE LISTENER
+// =========================
+auth.onAuthStateChanged(async (user) => {
+  const emailDisplay = document.getElementById("userEmail");
 
-function escapeHtml(str = "") {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function pill(text) {
-  return `<span class="badge">${escapeHtml(text)}</span>`;
-}
-
-function kvRow(k, vHtml) {
-  return `
-    <div class="panel panel-pad" style="padding:10px 12px; margin:10px 0;">
-      <div class="spread">
-        <div class="small">${escapeHtml(k)}</div>
-        <div style="font-weight:800; text-align:right; word-break:break-word;">${vHtml}</div>
-      </div>
-    </div>
-  `;
-}
-
-function cardBlock(title, rightHtml, bodyHtml) {
-  return `
-    <section class="card card-pad" style="margin-bottom:14px;">
-      <div class="spread">
-        <h3 style="margin:0;">${escapeHtml(title)}</h3>
-        <div class="row" style="gap:10px;">${rightHtml || ""}</div>
-      </div>
-      <div class="divider"></div>
-      <div>${bodyHtml || ""}</div>
-    </section>
-  `;
-}
-
-function actionsRow(buttonsHtml) {
-  return `<div class="row" style="margin-top:12px; gap:10px; flex-wrap:wrap;">${buttonsHtml}</div>`;
-}
-
-/* =========================================================
-   USERS (latest)
-   - Adds quick role/tier toggles (optional but powerful)
-========================================================= */
-
-db.collection("users").orderBy("createdAt", "desc").limit(50).onSnapshot((snap) => {
-  const box = document.getElementById("usersList");
-  if (!box) return;
-
-  if (snap.empty) {
-    box.innerHTML = `<div class="small">No users yet.</div>`;
+  if (!user) {
+    console.warn("No user detected. Redirecting to login...");
+    window.location.href = "login.html";
     return;
   }
 
-  let html = "";
-  snap.forEach((doc) => {
-    const u = doc.data() || {};
-    const email = u.email || "(no email)";
-    const role = u.role || "member";
-    const tier = u.tier || "free";
-    const paid = !!u.paid;
+  // Display logged-in email
+  if (emailDisplay) emailDisplay.textContent = user.email;
 
-    const right = pill(`${role} • ${tier}`);
+  try {
+    const adminDoc = await db.collection("admins").doc(user.uid).get();
+    const isAdmin = adminDoc.exists && adminDoc.data().role === "admin";
 
-    const body =
-      kvRow("UID", `<code>${escapeHtml(doc.id)}</code>`) +
-      kvRow("Email", escapeHtml(email)) +
-      kvRow("Role", escapeHtml(role)) +
-      kvRow("Tier", escapeHtml(tier)) +
-      kvRow("Paid", paid ? pill("true") : pill("false")) +
-      actionsRow(`
-        <button class="btn-primary" onclick="setUserTier('${doc.id}','elite')">Make Elite</button>
-        <button class="btn btn-ghost" onclick="setUserTier('${doc.id}','free')">Make Free</button>
-        <button class="btn-primary" onclick="setUserRole('${doc.id}','admin')">Make Admin</button>
-        <button class="btn btn-ghost" onclick="setUserRole('${doc.id}','member')">Make Member</button>
-      `);
-
-    html += cardBlock(email, right, body);
-  });
-
-  box.innerHTML = html;
-});
-
-/* =========================================================
-   UPLOADS (latest)
-========================================================= */
-
-db.collection("uploads").orderBy("createdAt", "desc").limit(50).onSnapshot((snap) => {
-  const box = document.getElementById("uploadsList");
-  if (!box) return;
-
-  if (snap.empty) {
-    box.innerHTML = `<div class="small">No uploads yet.</div>`;
-    return;
-  }
-
-  let html = "";
-  snap.forEach((doc) => {
-    const up = doc.data() || {};
-    const fileName = up.fileName || "(no filename)";
-    const email = up.email || "(unknown)";
-    const uid = up.uid || "(unknown)";
-    const path = up.storagePath || "(none)";
-    const link = up.downloadURL
-      ? `<a class="btn btn-ghost" href="${escapeHtml(up.downloadURL)}" target="_blank" rel="noopener noreferrer">Open file</a>`
-      : `<span class="small">(no link)</span>`;
-
-    const right = pill("upload");
-
-    const body =
-      kvRow("Owner Email", escapeHtml(email)) +
-      kvRow("Owner UID", `<code>${escapeHtml(uid)}</code>`) +
-      kvRow("Path", `<code>${escapeHtml(path)}</code>`) +
-      actionsRow(link);
-
-    html += cardBlock(fileName, right, body);
-  });
-
-  box.innerHTML = html;
-});
-
-/* =========================================================
-   PAYMENT REQUESTS (Approve / Reject)
-========================================================= */
-
-db.collection("paymentRequests").orderBy("createdAt", "desc").limit(100).onSnapshot((snap) => {
-  const box = document.getElementById("paymentsList");
-  if (!box) return;
-
-  if (snap.empty) {
-    box.innerHTML = `<div class="small">No payment requests yet.</div>`;
-    return;
-  }
-
-  let html = "";
-  snap.forEach((doc) => {
-    const p = doc.data() || {};
-    const email = p.email || "(no email)";
-    const status = p.status || "pending";
-
-    const right = pill(status);
-
-    let actions = `<div class="small">Status: <strong>${escapeHtml(status)}</strong></div>`;
-    if (status === "pending") {
-      actions = actionsRow(`
-        <button class="btn-primary" onclick="approvePayment('${doc.id}','${escapeHtml(p.uid || "")}','${escapeHtml(email)}')">Approve</button>
-        <button class="btn-danger" onclick="rejectPayment('${doc.id}','${escapeHtml(email)}')">Reject</button>
-      `);
+    if (!isAdmin) {
+      alert("Access Denied: Admin privileges required.");
+      window.location.href = "home.html";
+      return;
     }
 
-    const body =
-      kvRow("Cash App Tag", escapeHtml(p.cashAppTag || "$Cory12151983")) +
-      kvRow("Cash Display Name", escapeHtml(p.cashDisplayName || "(unknown)")) +
-      kvRow("Amount", p.amount != null ? `$${escapeHtml(p.amount)}` : "(unknown)") +
-      kvRow("Date Sent", escapeHtml(p.dateSent || "(unknown)")) +
-      kvRow("Code / Note", escapeHtml(p.noteCode || "(none)")) +
-      kvRow("Extra", escapeHtml(p.extra || "(none)")) +
-      `<div style="margin-top:10px;">${actions}</div>`;
+    console.log("Admin verified:", user.email);
+    loadDashboard();
 
-    html += cardBlock(`Payment — ${email}`, right, body);
-  });
-
-  box.innerHTML = html;
+  } catch (err) {
+    console.error("Error verifying admin:", err);
+    alert("Unable to verify admin privileges.");
+    window.location.href = "home.html";
+  }
 });
 
-/* =========================================================
-   ACTIONS
-========================================================= */
+// =========================
+//  LOGOUT FUNCTION
+// =========================
+function logoutUser() {
+  auth.signOut()
+    .then(() => {
+      console.log("User signed out.");
+      window.location.href = "login.html";
+    })
+    .catch(err => console.error("Logout error:", err));
+}
 
-async function approvePayment(paymentId, userId, email = "") {
-  if (!userId) return alert("Missing userId on payment request.");
-  if (!confirm(`Approve this payment and upgrade ${email || "user"} to Elite?`)) return;
+// =========================
+//  LOAD DASHBOARD DATA
+// =========================
+async function loadDashboard() {
+  await Promise.all([
+    loadUsers(),
+    loadPayments(),
+    loadUploads()
+  ]);
+}
+
+// =========================
+//  LOAD USERS
+// =========================
+async function loadUsers() {
+  const container = document.getElementById("usersList");
+  if (!container) return;
+  container.textContent = "Loading users…";
 
   try {
-    await db.collection("users").doc(userId).set(
-      {
-        tier: "elite",
-        paid: true,
-        upgradedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    const snapshot = await db.collection("users")
+      .orderBy("createdAt", "desc")
+      .limit(10)
+      .get();
 
-    await db.collection("paymentRequests").doc(paymentId).set(
-      {
-        status: "approved",
-        reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    if (snapshot.empty) {
+      container.textContent = "No users found.";
+      return;
+    }
 
-    alert("✅ Approved. User upgraded to Elite.");
+    container.innerHTML = snapshot.docs.map(doc => {
+      const data = doc.data();
+      const created = data.createdAt?.toDate?.().toLocaleDateString() || "—";
+      return `
+        <div class="user-item">
+          <strong>${data.email || "Unknown"}</strong><br>
+          Joined: ${created}<br>
+          Role: ${data.role || "user"}
+        </div>
+      `;
+    }).join("");
+
   } catch (err) {
-    console.error(err);
-    alert("❌ Error approving: " + err.message);
+    console.error("Error loading users:", err);
+    container.textContent = "Failed to load users.";
   }
 }
 
-async function rejectPayment(paymentId, email = "") {
-  if (!confirm(`Reject this payment request${email ? ` for ${email}` : ""}?`)) return;
+// =========================
+//  LOAD PAYMENTS
+// =========================
+async function loadPayments() {
+  const container = document.getElementById("paymentsList");
+  if (!container) return;
+  container.textContent = "Loading payments…";
 
   try {
-    await db.collection("paymentRequests").doc(paymentId).set(
-      {
-        status: "rejected",
-        reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    const snapshot = await db.collection("payments")
+      .orderBy("timestamp", "desc")
+      .limit(10)
+      .get();
 
-    alert("❌ Rejected.");
+    if (snapshot.empty) {
+      container.textContent = "No payment requests found.";
+      return;
+    }
+
+    container.innerHTML = snapshot.docs.map(doc => {
+      const data = doc.data();
+      const date = data.timestamp?.toDate?.().toLocaleString() || "—";
+      return `
+        <div class="payment-item">
+          <strong>User:</strong> ${data.userEmail || "Unknown"}<br>
+          <strong>Amount:</strong> $${data.amount?.toFixed?.(2) || "0.00"}<br>
+          <strong>Status:</strong> ${data.status || "Pending"}<br>
+          <small>Date: ${date}</small>
+        </div>
+      `;
+    }).join("");
+
   } catch (err) {
-    console.error(err);
-    alert("❌ Error rejecting: " + err.message);
+    console.error("Error loading payments:", err);
+    container.textContent = "Failed to load payments.";
   }
 }
 
-/* Optional: quick tier/role controls */
-async function setUserTier(uid, tier) {
-  if (!confirm(`Set user tier to "${tier}"?`)) return;
+// =========================
+//  LOAD UPLOADS
+// =========================
+async function loadUploads() {
+  const container = document.getElementById("uploadsList");
+  if (!container) return;
+  container.textContent = "Loading uploads…";
+
   try {
-    await db.collection("users").doc(uid).set(
-      {
-        tier,
-        paid: tier === "elite",
-        tierUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
-    alert(`✅ Tier updated to ${tier}`);
+    const snapshot = await db.collection("uploads")
+      .orderBy("uploadedAt", "desc")
+      .limit(10)
+      .get();
+
+    if (snapshot.empty) {
+      container.textContent = "No file uploads found.";
+      return;
+    }
+
+    container.innerHTML = snapshot.docs.map(doc => {
+      const data = doc.data();
+      const uploadedAt = data.uploadedAt?.toDate?.().toLocaleString() || "—";
+      return `
+        <div class="upload-item">
+          <strong>${data.filename || "Unnamed File"}</strong><br>
+          User: ${data.userEmail || "Unknown"}<br>
+          Uploaded: ${uploadedAt}
+        </div>
+      `;
+    }).join("");
+
   } catch (err) {
-    console.error(err);
-    alert("❌ Error updating tier: " + err.message);
+    console.error("Error loading uploads:", err);
+    container.textContent = "Failed to load uploads.";
   }
 }
-
-async function setUserRole(uid, role) {
-  if (!confirm(`Set user role to "${role}"?`)) return;
-  try {
-    await db.collection("users").doc(uid).set(
-      {
-        role,
-        roleUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
-    alert(`✅ Role updated to ${role}`);
-  } catch (err) {
-    console.error(err);
-    alert("❌ Error updating role: " + err.message);
-  }
-}
-
-/* expose to onclick */
-window.approvePayment = approvePayment;
-window.rejectPayment = rejectPayment;
-window.setUserTier = setUserTier;
-window.setUserRole = setUserRole;
